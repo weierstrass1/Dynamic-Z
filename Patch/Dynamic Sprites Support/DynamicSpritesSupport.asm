@@ -16,7 +16,7 @@ VRAMTable:
     dw $7F00,$7F20,$7F40,$7F60,$7F80,$7FA0,$7FC0,$7FE0
 
 DynamicSpriteSupport:
-
+    
     LDA !FirstSlot          ;Load First Slot
     STA $0000|!dp           ;Save it on !Scratch0
     CLC

@@ -6,7 +6,51 @@ incsrc "Hijacks/BaseHijack.asm"
 freecode
 
 Routines:
+    dl DynamicRoutine16x16
+    dl DynamicRoutine32x16
+    dl DynamicRoutine32x32
+    dl DynamicRoutine48x48
+    dl DynamicRoutine64x64
+    dl Reserve16x16NormalSpriteOf30FPS
+    dl Reserve16x16NormalSpriteOf60FPS
+    dl Reserve32x16NormalSpriteOf30FPS
+    dl Reserve32x16NormalSpriteOf60FPS
     dl Reserve32x32NormalSpriteOf30FPS
+    dl Reserve32x32NormalSpriteOf60FPS
+    dl Reserve48x48NormalSpriteOf30FPS
+    dl Reserve48x48NormalSpriteOf60FPS
+    dl Reserve64x64NormalSpriteOf30FPS
+    dl Reserve64x64NormalSpriteOf60FPS
+    dl Reserve16x16ClusterSpriteOf30FPS
+    dl Reserve16x16ClusterSpriteOf60FPS
+    dl Reserve32x16ClusterSpriteOf30FPS
+    dl Reserve32x16ClusterSpriteOf60FPS
+    dl Reserve32x32ClusterSpriteOf30FPS
+    dl Reserve32x32ClusterSpriteOf60FPS
+    dl Reserve48x48ClusterSpriteOf30FPS
+    dl Reserve48x48ClusterSpriteOf60FPS
+    dl Reserve64x64ClusterSpriteOf30FPS
+    dl Reserve64x64ClusterSpriteOf60FPS
+    dl SendSignal16x16Normal
+    dl SendSignal32x16Normal
+    dl SendSignal32x32Normal
+    dl SendSignal48x48Normal
+    dl SendSignal64x64Normal
+    dl SendSignal16x16Cluster
+    dl SendSignal32x16Cluster
+    dl SendSignal32x32Cluster
+    dl SendSignal48x48Cluster
+    dl SendSignal64x64Cluster
+    dl SendSignal16x16Extended
+    dl SendSignal32x16Extended
+    dl SendSignal32x32Extended
+    dl SendSignal48x48Extended
+    dl SendSignal64x64Extended
+    dl SendSignal16x16OW
+    dl SendSignal32x16OW
+    dl SendSignal32x32OW
+    dl SendSignal48x48OW
+    dl SendSignal64x64OW
 
 GameModeTable:
     db $00,$00,$00,$00,$00,$00,$01,$01
@@ -66,7 +110,6 @@ RTL
 RTL
 
 DynamicZStart:
-
     REP #$20
     LDA #$FFFF
     STA !DMAMapNext+$00         ;All this clear Next Table
@@ -125,12 +168,28 @@ DynamicZStart:
     STA !SlotSpriteType+$06
     STA !SlotSpriteType+$08
     STA !SlotSpriteType+$0A
-    STA !SignalsSP4SecondHalf   ;Clear Signals
+    STA !SlotSpriteType+$0C     ;Clear Dynamic Sprite Slots
+    STA !SlotSpriteType+$0E
+    STA !SlotSpriteType+$10
+    STA !SlotSpriteType+$12
+    STA !SlotSpriteType+$14
+    STA !SlotSpriteType+$16
+    STA !SlotSpriteType+$18     ;Clear Dynamic Sprite Slots
+    STA !SlotSpriteType+$1A
+    STA !SlotSpriteType+$1C
+    STA !SlotSpriteType+$1E
+    STA !SlotSpriteType+$20
+    STA !SlotSpriteType+$22
+    STA !SignalSP4SecondHalfBottomLeftQuarter       ;Clear Signals
+    STA !SignalSP4SecondHalfBottomLeftQuarter+$02   ;Clear Signals
+    STA !SignalSP4SecondHalfBottomLeftQuarter+$04   ;Clear Signals
+    STA !SignalSP4SecondHalfBottomLeftQuarter+$06   ;Clear Signals
+    STA !SignalSP4SecondHalfBottomLeftQuarter+$08   ;Clear Signals
+    STA !SignalSP4SecondHalfBottomLeftQuarter+$0A   ;Clear Signals
     STA !SlotsUsedEven          ;Slot Used = 0
     SEP #$20
 
-    STA !SignalsSP3SecondHalf
-    LDA #$04
+    LDA #$20
     STA !MaxSlots               ;By Default MaxSlots = 4
     LDA #$01
     STA !NumberOfBlocks         ;By Default You can use complete SP4
@@ -141,20 +200,65 @@ DynamicZUpdateVariables:
     INC A
     STA !DynamicTimer           ;Update Dynamic Timer
 
-    LDA !SignalsSP4SecondHalf
+    LDA !SignalSP4SecondHalfBottomLeftQuarter
     TAX
     LDA SignalUpdateTable,x
-    STA !SignalsSP4SecondHalf   ;Update Signals of SP4 Second Half
+    STA !SignalSP4SecondHalfBottomLeftQuarter
 
-    LDA !SignalsSP4FirstHalf
+    LDA !SignalSP4SecondHalfBottomRightQuarter
     TAX
     LDA SignalUpdateTable,x
-    STA !SignalsSP4FirstHalf    ;Update Signals of SP4 First Half
+    STA !SignalSP4SecondHalfBottomRightQuarter
 
-    LDA !SignalsSP3SecondHalf
+    LDA !SignalSP4SecondHalfTopLeftQuarter
     TAX
     LDA SignalUpdateTable,x
-    STA !SignalsSP3SecondHalf   ;Update Signals of SP3 Second Half
+    STA !SignalSP4SecondHalfTopLeftQuarter
+
+    LDA !SignalSP4SecondHalfTopRightQuarter
+    TAX
+    LDA SignalUpdateTable,x
+    STA !SignalSP4SecondHalfTopRightQuarter
+
+    LDA !SignalSP4FirstHalfBottomLeftQuarter
+    TAX
+    LDA SignalUpdateTable,x
+    STA !SignalSP4FirstHalfBottomLeftQuarter
+
+    LDA !SignalSP4FirstHalfBottomRightQuarter
+    TAX
+    LDA SignalUpdateTable,x
+    STA !SignalSP4FirstHalfBottomRightQuarter
+
+    LDA !SignalSP4FirstHalfTopLeftQuarter
+    TAX
+    LDA SignalUpdateTable,x
+    STA !SignalSP4FirstHalfTopLeftQuarter
+
+    LDA !SignalSP4FirstHalfTopRightQuarter
+    TAX
+    LDA SignalUpdateTable,x
+    STA !SignalSP4FirstHalfTopRightQuarter
+
+    LDA !SignalSP3SecondHalfBottomLeftQuarter
+    TAX
+    LDA SignalUpdateTable,x
+    STA !SignalSP3SecondHalfBottomLeftQuarter
+
+    LDA !SignalSP3SecondHalfBottomRightQuarter
+    TAX
+    LDA SignalUpdateTable,x
+    STA !SignalSP3SecondHalfBottomRightQuarter
+
+    LDA !SignalSP3SecondHalfTopLeftQuarter
+    TAX
+    LDA SignalUpdateTable,x
+    STA !SignalSP3SecondHalfTopLeftQuarter
+
+    LDA !SignalSP3SecondHalfTopRightQuarter
+    TAX
+    LDA SignalUpdateTable,x
+    STA !SignalSP3SecondHalfTopRightQuarter
 
 RTS
 
