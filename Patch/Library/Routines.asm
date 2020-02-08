@@ -230,7 +230,6 @@ RTL
 ;##########################################################################
 
 AssignFrameDistribution:
-    WDM
     LDA #$00
     STA !TransferFrameNormalSprite,x
 
