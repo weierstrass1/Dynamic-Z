@@ -86,8 +86,8 @@ Return:
 RTS
 SpriteCode:
 
-    JSR GraphicRoutine                  ;Calls the graphic routine and updates sprite graphics
 	JSR DynamicRoutine
+    JSR GraphicRoutine                  ;Calls the graphic routine and updates sprite graphics
 
     ;Here you can put code that will be excecuted each frame even if the sprite is locked
 
