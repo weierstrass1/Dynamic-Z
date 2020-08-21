@@ -6,6 +6,7 @@
 !RecoilXSpeed = $20
 !RecoilYSpeed = $C0
 !WalkSpeed = $18
+!Palette = $0A
 ;######################################
 ;############## Defines ###############
 ;######################################
@@ -601,6 +602,8 @@ GraphicRoutine:
 	LDA #$2D
 
     EOR !ScratchF
+	AND #$F1
+	ORA #!Palette
     STA !TileProperty,y                 ;Set the Tile property of the tile Y
 
     LDA !Scratch0

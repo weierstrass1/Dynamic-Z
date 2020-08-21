@@ -9,7 +9,7 @@ endif
 !MinRespawnTime = $10
 !MaxRespawnTime = $40
 !MaxSpawnTime = $80
-!MaxSpawn = $13
+!MaxSpawn = $05
 
 ;######################################
 ;############## Defines ###############
@@ -80,17 +80,20 @@ StartRoutine:
 
 	%CheckSlot(#$00, #$01, "!ClusterNumber,x", $A0, DZ.DSLocUSCluster)
 
-	LDA !FrameIndex,x
-	STA !Scratch0
-	PHX
-	LDA.l DZ.DSLocUSCluster,x
-	TAX
-
-	LDA !Scratch0
-	STA.l DZ.DSLocSharedFrame,x
-	PLX 
 RTS
 +
+	LDA.l DZ.DSLocUsedBy,x
+	AND #$1F
+	TAY
+
+	LDA !AnimationTimer,y
+	STA !AnimationTimer,x
+
+	LDA !AnimationFrameIndex,y
+	STA !AnimationFrameIndex,x
+
+	LDA !FrameIndex,y
+	STA !FrameIndex,x
 RTS
 
 ;>Routine: SpriteCode
@@ -106,7 +109,14 @@ Return:
 
 	LDA #$01
 	STA.l DZ.DSLocSharedUpdated,x
+
+	LDA.l DZ.DSLocUsedBy,x
+	AND #$E0
+	ORA $01,s
+	STA.l DZ.DSLocUsedBy,x
 	PLX
+
+	JSL !CheckIfLastClusterSharedProcessed
 RTS
 +
 	PLY
@@ -144,6 +154,7 @@ RTS
 	LDA.l DZ.DSLocIsValid,x
 	BNE +
 	PLX
+	JSL !CheckIfLastClusterSharedProcessed
 RTS
 +
 	PLX
@@ -184,12 +195,6 @@ RTS
 
 	LDA !FrameIndex,x
 	STA !Scratch0
-	PHX
-	LDA.l DZ.DSLocUSCluster,x
-	TAX
-	LDA !Scratch0
-	STA.l DZ.DSLocSharedFrame,x
-	PLX
     
 	JSL !CheckIfLastClusterSharedProcessed
 RTS
@@ -297,6 +302,8 @@ RTS
 	
 	PHX
 	TYX
+	AND #$EF
+	ORA #$10
 	STA !Properties,x
 	
 	LDA !Scratch0
@@ -528,15 +535,19 @@ RTS
 	LDA !ScratchB
 	BNE +
 	
-	PHX
-	LDA.l DZ.DSLocUSCluster,x
-	TAX
-	LDA.l DZ.DSLocSharedFrame,x
-	PLX
+	LDA !FrameIndex,x
+	STA !Scratch0
 	CMP !LastFrameIndex,x				;|if last frame is different to new frame then
 	BNE +								;|do dynamic routine
 RTS										;/
 +
+	PHX
+	LDA.l DZ.DSLocUSCluster,x
+	TAX
+	LDA !Scratch0
+	STA.l DZ.DSLocSharedFrame,x
+	PLX
+
 	PHX
 
 	PHA
@@ -653,7 +664,7 @@ FindOAM:
 	DEY
 	DEY
 
-	CPY #$F4
+	CPY #$00F4
 	BCC -
 
 	CLC

@@ -1,5 +1,8 @@
 !ResourceIndex = $00
 
+!Palette0 = $06
+!Palette1 = $08
+
 ;######################################
 ;############## Defines ###############
 ;######################################
@@ -580,13 +583,13 @@ GraphicRoutine:
 
     %GetDrawInfo()                     ;Calls GetDrawInfo to get the free slot and the XDisp and YDisp
 
-	LDA #$08
+	LDA #!Palette0
 	STA !ScratchD
 	LDA !ExtraBits,x
 	AND #$04
 	BEQ +
 
-	LDA #$0C
+	LDA #!Palette1
 	STA !ScratchD
 +
 	%GetVramDisp(DZ.DSLocUSNormal)
