@@ -1,0 +1,1 @@
+    %insert_resource({2}, .RSRC{1})

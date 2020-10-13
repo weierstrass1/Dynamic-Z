@@ -1,9 +1,86 @@
-;#########################################################<-----------------
-;#########################################################<-----------------
-;################ END of Dynamic Z Options ###############<-----------------
-;#########################################################<-----------------
-;#########################################################<-----------------
+;dont touch this
+	!dp = $0000
+	!addr = $0000
+    !rom = $800000
+	!sa1 = 0
+    !Variables = $7F0B44 
+    !Variables2 = $7FB080
+    !MaxSprites = $0C
+    !SpriteStatus = $14C8
+    !SpriteNumberNormal = $7FAB9E
+    !SpriteLoadStatus = $161A
+    !SpriteLoadTable = $7FAF00
+    !ExtraByte1 = $7FAB40
+    !MultiplicationResult = $4216
+    !DivisionResult = $4214
+    !RemainderResult = $4216
+    !SpriteOAMIndex = $15EA
+    !SpriteXLow = $E4
+    !SpriteYLow = $D8
+    !SpriteXHigh = $14E0
+    !SpriteYHigh = $14D4
+    !UberASMTool = 0
 
+if read1($00FFD5) == $23
+sa1rom
+	!dp = $3000
+	!addr = $6000
+	!sa1 = 1
+    !rom = $000000
+    !Variables = $418000  
+    !Variables2 = $418B80
+    !MaxSprites = $16
+    !SpriteStatus = $3242
+    !SpriteNumberNormal = $400083
+    !SpriteLoadStatus = $7578
+    !SpriteLoadTable = $418A00
+    !ExtraByte1 = $400099
+    !MultiplicationResult = $2306
+    !DivisionResult = $2306
+    !RemainderResult = $2308
+    !SpriteOAMIndex = $33A2
+    !SpriteYLow = $3216
+    !SpriteXLow = $322C
+    !SpriteYHigh = $3258
+    !SpriteXHigh = $326E
+endif
+
+    !Scratch0 = $00
+    !Scratch1 = $01
+    !Scratch2 = $02
+    !Scratch3 = $03
+    !Scratch4 = $04
+    !Scratch5 = $05
+    !Scratch6 = $06
+    !Scratch7 = $07
+    !Scratch8 = $08
+    !Scratch9 = $09
+    !ScratchA = $0A
+    !ScratchB = $0B
+    !ScratchC = $0C
+    !ScratchD = $0D
+    !ScratchE = $0E
+    !ScratchF = $0F
+    !Scratch45 = $45
+    !Scratch46 = $46
+    !Scratch47 = $47
+    !Scratch48 = $48
+    !Scratch49 = $49
+    !Scratch4A = $4A
+    !Scratch4B = $4B
+    !Scratch4C = $4C
+    !Scratch4D = $4D
+    !Scratch4E = $4E
+    !Scratch4F = $4F
+    !Scratch50 = $50
+    !Scratch51 = $51
+    !Scratch52 = $52
+    !Scratch53 = $53
+
+    !ClusterSpriteNumber = $1892|!addr
+    !ExtendedSpriteNumber = $170B|!addr
+    !OWSpriteNumber = $0DE5|!addr
+    
 ;DS = Dynamic Sprite
 ;GDS = Giant Dynamic Sprite
 ;SDS = Semi-Dynamic Sprite
@@ -53,72 +130,347 @@
 ;############# Dynamic Sprite Support ############
 ;#################################################
 
-struct DZ !Variables
-    .Timer: skip 1
-    .MaxDataPerFrameIn16x16Tiles: skip 1
-    .MaxDataPerFrame: skip 2
+namespace nested on
 
-    .DynamicSprite:
-        .DSLength: skip 1
-        ;Last slot used
-        .DSLastSlot: skip 1
-        ;First slot used
-        .DSFirstSlot: skip 1
-        ;Max space that can be used on the VRAM, must be between $00 and $30
-        .DSMaxSpace: skip 1
-        ;0 = Find starting at the bottom to the top, 1 find starting at the top to the bottom
-        .DSFindSpaceMethod: skip 1
-        ;Where starts the space for dynamic sprites
-        .DSStartingVRAMOffset: skip 2
-        .DSStartingVRAMOffset8x8Tiles: skip 1
-        .DSTotalSpaceUsed: skip 1
-        .DSTotalSpaceUsedOdd: skip 1
-        .DSTotalSpaceUsedEven: skip 1
-        .DSTotalDataSentOdd: skip 1
-        .DSTotalDataSentEven: skip 1
-        .DSCurrentSlotSearcher: skip 1
-        .DSSlotSearchedOffset: skip 1
+base !Variables
 
-        .LocalVars:
-            .DSLocUsedBy: skip 48
-            .DSLocSpriteNumber: skip 48
-            .DSLocSharedUpdated: skip 48
-            .DSLocSpaceUsedOffset: skip 48
-            .DSLocSpaceUsed: skip 48
-            .DSLocIsValid: skip 48
-            .DSLocFrameRateMethod: skip 48
-            .DSLocNextSlot: skip 48
-            .DSLocPreviewSlot: skip 48
-            .DSLocSharedFrame: skip 48
+namespace DZ
+    Timer: skip 1                               ;$7F0B44
+    MaxDataPerFrameIn16x16Tiles: skip 1         ;$7F0B45
+    MaxDataPerFrame: skip 2                     ;$7F0B46
+    CurrentDataSend: skip 2
 
-            .UsedSlots:
-                .DSLocUSNormal: skip !MaxSprites
-                .DSLocUSCluster: skip 20
-                .DSLocUSExtended: skip 10
-                .DSLocUSOW: skip 16
-endstruct
+if !GFXFeatures == !True && !DynamicSpriteSupport == !True
+    namespace DS
+        Length: skip 1                          ;$7F0B48
+        LastSlot: skip 1                        ;$7F0B49
+        FirstSlot: skip 1                       ;$7F0B4A
+        MaxSpace: skip 1                        ;$7F0B4B
+        FindSpaceMethod: skip 1                 ;$7F0B4C
+        StartingVRAMOffset: skip 2              ;$7F0B4D
+        StartingVRAMOffset8x8Tiles: skip 1      ;$7F0B4F
+        TotalSpaceUsed: skip 1                  ;$7F0B50
+        TotalSpaceUsedOdd: skip 1               ;$7F0B51
+        TotalSpaceUsedEven: skip 1              ;$7F0B52
+        TotalDataSentOdd: skip 1                ;$7F0B53
+        TotalDataSentEven: skip 1               ;$7F0B54
 
-struct PPUMirrors extends DZ
-    .Reg420B: skip 1
-    .CGRAM:
-        .CGRAMTransferLength: skip 1
-        .CGRAMTransferSourceBNKLength: skip 128
-        .CGRAMTransferOffset: skip 64
-        .CGRAMTransferSource: skip 128
-        .CGRAMLastPlayerPal: skip 2
-    .VRAM
-        .VRAMTransferLength: skip 1
-        .VRAMTransferSourceLength: skip 190
-        .VRAMTransferOffset skip 190
-        .VRAMTransferSource: skip 190
-        .VRAMTransferSourceBNK: skip 190
-    .WideScreen:
-        .WSEnable: skip 1
-        .WSLinesDeletedOnTheTop: skip 1
-        .WSLinesDeletedOnTheBottom: skip 1
-        .WSBuffer: skip 435
-endstruct
+        namespace Loc
+            UsedBy: skip 48                     ;$7F0B57
+            SpriteNumber: skip 48               ;$7F0B86
+            SpaceUsedOffset: skip 48            ;$7F0BE7
+            SpaceUsed: skip 48                  ;$7F0C17
+            IsValid: skip 48                    ;$7F0C47
+            FrameRateMethod: skip 48            ;$7F0C77
+            NextSlot: skip 48                   ;$7F0CA7
+            PreviewSlot: skip 48                ;$7F0CD7
+    if !SharedDynamicSpriteSupport == !True
+            SharedFrame: skip 48                ;$7F0D07
+            SharedUpdated: skip 48              ;$7F0BB7
+    endif                      
+            namespace US                     
+                Normal: skip !MaxSprites        ;$7F0D37
+                Cluster: skip 20                ;$7F0D43
+                Extended: skip 10               ;$7F0D57
+                OW: skip 16                     ;$7F0D61
+            namespace off
+        namespace off
+    namespace off
+endif
+if !SemiDynamicSpriteSupport == !True
+    namespace SDS
+        namespace Offset
+            Normal: skip !MaxSprites        ;$7F0D37
+            Cluster: skip 20                ;$7F0D43
+            Extended: skip 10               ;$7F0D57
+            OW: skip 16                     ;$7F0D61
+        namespace off
+        namespace PaletteAndPage
+            Normal: skip !MaxSprites        ;$7F0D37
+            Cluster: skip 20                ;$7F0D43
+            Extended: skip 10               ;$7F0D57
+            OW: skip 16                     ;$7F0D61
+        namespace off
+        namespace Size
+            Normal: skip !MaxSprites        ;$7F0D37
+            Cluster: skip 20                ;$7F0D43
+            Extended: skip 10               ;$7F0D57
+            OW: skip 16                     ;$7F0D61
+        namespace off
+        namespace Valid
+            Normal: skip !MaxSprites        ;$7F0D37
+            Cluster: skip 20                ;$7F0D43
+            Extended: skip 10               ;$7F0D57
+            OW: skip 16                     ;$7F0D61
+        namespace off
+        namespace SendOffset
+            Normal: skip !MaxSprites        ;$7F0D37
+            Cluster: skip 20                ;$7F0D43
+            Extended: skip 10               ;$7F0D57
+            OW: skip 16                     ;$7F0D61
+        namespace off
+        namespace SpriteNumber
+            Normal: skip !MaxSprites        ;$7F0D37
+            Cluster: skip 20                ;$7F0D43
+            Extended: skip 10               ;$7F0D57
+            OW: skip 16                     ;$7F0D61
+        namespace off
+        namespace PaletteLoaded
+            Normal: skip !MaxSprites        ;$7F0D37
+            Cluster: skip 20                ;$7F0D43
+            Extended: skip 10               ;$7F0D57
+            OW: skip 16                     ;$7F0D61
+        namespace off
+    namespace off
+endif
+if !PlayerGFX == !True || !PlayerPalette == !True
+    namespace Player
+if !PlayerGFX == !True
+        namespace GFX
+            Enable: skip 1
+            Addr: skip 2
+            BNK: skip 2
+        namespace off
+endif
+if !PlayerPalette == !True
+        namespace Palette
+            Enable: skip 1
+            Addr: skip 2
+            BNK: skip 1
+        namespace off
+endif
+    namespace off
+endif
+    FreeRams:
+    base !Variables2
+    namespace PPUMirrors                          ;$7FB080
+if !PaletteFeatures == !True
+        namespace CGRAM
+            namespace Transfer
+                Length: skip 1                      ;$7FB080
+                SourceLength: skip 128              ;$7FB080
+                Offset: skip 64                     ;$7FB080
+                Source: skip 128                    ;$7FB080
+                SourceBNK: skip 128                 ;$7FB080
+            namespace off
+    if !PlayerPalette == !True
+            LastPlayerPal: skip 2  
+    endif
+    if !HSVSystem == !True || !RGBSystem == !True
+            namespace BufferTransfer
+                Length: skip 1                      ;$7FB080
+                SourceLength: skip 64               ;$7FB080
+                Offset: skip 64                     ;$7FB080
+                Destination: skip 128               ;$7FB080
+                DestinationBNK: skip 128            ;$7FB080
+            namespace off
+            BasePalette: skip 768                   ;$7FB080
+            PaletteWriteMirror: skip 512            ;$7FB080
+    endif
+        namespace off
+endif
+if !Widescreen == !True && !sa1
+        namespace WS
+            Enable: skip 1                          ;$7FB080
+            Buffer: skip 435                        ;$7FB080
+        namespace off
+endif
+if !GFXFeatures == !True
+        namespace VRAM
+            namespace Transfer
+                Length: skip 1                      ;$7FB080 
+                SourceLength: skip 256              ;$7FB080
+                Offset: skip 256                    ;$7FB080
+                Source: skip 256                    ;$7FB080
+                SourceBNK: skip 256                 ;$7FB080
+            namespace off
+        namespace off
+endif
+if !OAMSystem == !True
+        namespace OAM
+            Length: skip 1
+            LastLength: skip 1
+            LengthByPriority: skip 64
+            XOffset: skip 128
+            YOffset: skip 128
+            Property: skip 128
+            Tile: skip 128
+            Priority: skip 128
+            Size: skip 128
+        namespace off
+endif
+    namespace off
+namespace off
 
+
+print "General Variables"
+print "-------------------------------------------------------------------------------"
+print " "
+print "DZ_Timer $", hex(DZ_Timer)
+print "DZ_MaxDataPerFrameIn16x16Tiles $", hex(DZ_MaxDataPerFrameIn16x16Tiles)
+print "DZ_MaxDataPerFrame $", hex(DZ_MaxDataPerFrame)
+print "DZ_CurrentDataSend $", hex(DZ_CurrentDataSend)
+print " "
+if !DynamicSpriteSupport
+print "Dynamic Sprites Variables"
+print "-------------------------------------------------------------------------------"
+print " "
+print "DZ_DS_Length $", hex(DZ_DS_Length)
+print "DZ_DS_LastSlot $", hex(DZ_DS_LastSlot)
+print "DZ_DS_FirstSlot $", hex(DZ_DS_FirstSlot)
+print "DZ_DS_MaxSpace $", hex(DZ_DS_MaxSpace)
+print "DZ_DS_FindSpaceMethod $", hex(DZ_DS_FindSpaceMethod)
+print "DZ_DS_StartingVRAMOffset $", hex(DZ_DS_StartingVRAMOffset)
+print "DZ_DS_StartingVRAMOffset8x8Tiles $", hex(DZ_DS_StartingVRAMOffset8x8Tiles)
+print "DZ_DS_TotalSpaceUsed $", hex(DZ_DS_TotalSpaceUsed)
+print "DZ_DS_TotalSpaceUsedOdd $", hex(DZ_DS_TotalSpaceUsedOdd)
+print "DZ_DS_TotalSpaceUsedEven $", hex(DZ_DS_TotalSpaceUsedEven)
+print "DZ_DS_TotalDataSentOdd $", hex(DZ_DS_TotalDataSentOdd)
+print "DZ_DS_TotalDataSentEven $", hex(DZ_DS_TotalDataSentEven)
+print " "
+print "Dynamic Sprites Local Variables"
+print "-------------------------------------------------------------------------------"
+print " "
+print "DZ_DS_Loc_UsedBy $", hex(DZ_DS_Loc_UsedBy)
+print "DZ_DS_Loc_SpriteNumber $", hex(DZ_DS_Loc_SpriteNumber)
+print "DZ_DS_Loc_SpaceUsedOffset $", hex(DZ_DS_Loc_SpaceUsedOffset)
+print "DZ_DS_Loc_SpaceUsed $", hex(DZ_DS_Loc_SpaceUsed)
+print "DZ_DS_Loc_IsValid $", hex(DZ_DS_Loc_IsValid)
+print "DZ_DS_Loc_FrameRateMethod $", hex(DZ_DS_Loc_FrameRateMethod)
+print "DZ_DS_Loc_NextSlot $", hex(DZ_DS_Loc_NextSlot)
+print "DZ_DS_Loc_PreviewSlot $", hex(DZ_DS_Loc_PreviewSlot)
+if !SharedDynamicSpriteSupport == !True
+print "DZ_DS_Loc_SharedUpdated $", hex(DZ_DS_Loc_SharedUpdated)
+print "DZ_DS_Loc_SharedFrame $", hex(DZ_DS_Loc_SharedFrame)
+endif
+print " "
+print "Dynamic Sprites Local Variables Used Slot Tables"
+print "-------------------------------------------------------------------------------"
+print " "
+print "DZ_DS_Loc_US_Normal $", hex(DZ_DS_Loc_US_Normal)
+print "DZ_DS_Loc_US_Cluster $", hex(DZ_DS_Loc_US_Cluster)
+print "DZ_DS_Loc_US_Extended $", hex(DZ_DS_Loc_US_Extended)
+print "DZ_DS_Loc_US_OW $", hex(DZ_DS_Loc_US_OW)
+print " "
+endif
+if !SemiDynamicSpriteSupport == !True
+print "Semi Dynamic Sprites Variables"
+print "-------------------------------------------------------------------------------"
+print " "
+print "DZ_SDS_Offset_Normal $", hex(DZ_SDS_Offset_Normal)
+print "DZ_SDS_Offset_Cluster $", hex(DZ_SDS_Offset_Cluster)
+print "DZ_SDS_Offset_Extended $", hex(DZ_SDS_Offset_Extended)
+print "DZ_SDS_Offset_OW $", hex(DZ_SDS_Offset_OW)
+print "DZ_SDS_PaletteAndPage_Normal $", hex(DZ_SDS_PaletteAndPage_Normal)
+print "DZ_SDS_PaletteAndPage_Cluster $", hex(DZ_SDS_PaletteAndPage_Cluster)
+print "DZ_SDS_PaletteAndPage_Extended $", hex(DZ_SDS_PaletteAndPage_Extended)
+print "DZ_SDS_PaletteAndPage_OW $", hex(DZ_SDS_PaletteAndPage_OW)
+print "DZ_SDS_Size_Normal $", hex(DZ_SDS_Size_Normal)
+print "DZ_SDS_Size_Cluster $", hex(DZ_SDS_Size_Cluster)
+print "DZ_SDS_Size_Extended $", hex(DZ_SDS_Size_Extended)
+print "DZ_SDS_Size_OW $", hex(DZ_SDS_Size_OW)
+print "DZ_SDS_Valid_Normal $", hex(DZ_SDS_Valid_Normal)
+print "DZ_SDS_Valid_Cluster $", hex(DZ_SDS_Valid_Cluster)
+print "DZ_SDS_Valid_Extended $", hex(DZ_SDS_Valid_Extended)
+print "DZ_SDS_Valid_OW $", hex(DZ_SDS_Valid_OW)
+print "DZ_SDS_SendOffset_Normal $", hex(DZ_SDS_SendOffset_Normal)
+print "DZ_SDS_SendOffset_Cluster $", hex(DZ_SDS_SendOffset_Cluster)
+print "DZ_SDS_SendOffset_Extended $", hex(DZ_SDS_SendOffset_Extended)
+print "DZ_SDS_SendOffset_OW $", hex(DZ_SDS_SendOffset_OW)
+print "DZ_SDS_SpriteNumber_Normal $", hex(DZ_SDS_SpriteNumber_Normal)
+print "DZ_SDS_SpriteNumber_Cluster $", hex(DZ_SDS_SpriteNumber_Cluster)
+print "DZ_SDS_SpriteNumber_Extended $", hex(DZ_SDS_SpriteNumber_Extended)
+print "DZ_SDS_SpriteNumber_OW $", hex(DZ_SDS_SpriteNumber_OW)
+print "DZ_SDS_PaletteLoaded_Normal $", hex(DZ_SDS_PaletteLoaded_Normal)
+print "DZ_SDS_PaletteLoaded_Cluster $", hex(DZ_SDS_PaletteLoaded_Cluster)
+print "DZ_SDS_PaletteLoaded_Extended $", hex(DZ_SDS_PaletteLoaded_Extended)
+print "DZ_SDS_PaletteLoaded_OW $", hex(DZ_SDS_PaletteLoaded_OW)
+print " "
+endif
+print "FreeRams"
+print "-------------------------------------------------------------------------------"
+print " "
+print "DZ_FreeRams $", hex(DZ_FreeRams)
+print " "
+print "PPU Mirrors"
+print "-------------------------------------------------------------------------------"
+print " "
+if !PaletteFeatures == !True
+print "CGRAM Mirrors"
+print "-------------------------------------------------------------------------------"
+print " "
+print "CGRAM Mirrors Transfer From Buffer to CGRAM"
+print "-------------------------------------------------------------------------------"
+print " "
+print "DZ_PPUMirrors_CGRAM_Transfer_Length $", hex(DZ_PPUMirrors_CGRAM_Transfer_Length)
+print "DZ_PPUMirrors_CGRAM_Transfer_SourceLength $", hex(DZ_PPUMirrors_CGRAM_Transfer_SourceLength)
+print "DZ_PPUMirrors_CGRAM_Transfer_Offset $", hex(DZ_PPUMirrors_CGRAM_Transfer_Offset)
+print "DZ_PPUMirrors_CGRAM_Transfer_Source $", hex(DZ_PPUMirrors_CGRAM_Transfer_Source)
+print "DZ_PPUMirrors_CGRAM_Transfer_SourceBNK $", hex(DZ_PPUMirrors_CGRAM_Transfer_SourceBNK)
+print " "
+if !HSVSystem == !True || !RGBSystem == !True
+print "CGRAM Mirrors Transfer From CGRAM to Buffer"
+print "-------------------------------------------------------------------------------"
+print " "
+print "DZ_PPUMirrors_CGRAM_BufferTransfer_Length $", hex(DZ_PPUMirrors_CGRAM_BufferTransfer_Length)
+print "DZ_PPUMirrors_CGRAM_BufferTransfer_SourceLength $", hex(DZ_PPUMirrors_CGRAM_BufferTransfer_SourceLength)
+print "DZ_PPUMirrors_CGRAM_BufferTransfer_Offset $", hex(DZ_PPUMirrors_CGRAM_BufferTransfer_Offset)
+print "DZ_PPUMirrors_CGRAM_BufferTransfer_Destination $", hex(DZ_PPUMirrors_CGRAM_BufferTransfer_Destination)
+print "DZ_PPUMirrors_CGRAM_BufferTransfer_DestinationBNK $", hex(DZ_PPUMirrors_CGRAM_BufferTransfer_DestinationBNK)
+print " "
+print "CGRAM Mirrors Read Buffer"
+print "-------------------------------------------------------------------------------"
+print " "
+print "DZ_PPUMirrors_CGRAM_BasePalette $", hex(DZ_PPUMirrors_CGRAM_BasePalette)
+print " "
+print "CGRAM Mirrors Write Buffer"
+print "-------------------------------------------------------------------------------"
+print " "
+print "DZ_PPUMirrors_CGRAM_PaletteWriteMirror $", hex(DZ_PPUMirrors_CGRAM_PaletteWriteMirror)
+print " "
+endif
+if !PlayerPalette == !True
+print "CGRAM Mirrors Last Palette used by the player"
+print "-------------------------------------------------------------------------------"
+print " "
+print "DZ_PPUMirrors_CGRAM_LastPlayerPal $", hex(DZ_PPUMirrors_CGRAM_LastPlayerPal)
+print "DZ_Player_Palette_Enable $", hex(DZ_Player_Palette_Enable)
+print "DZ_Player_Palette_BNK $", hex(DZ_Player_Palette_BNK)
+print "DZ_Player_Palette_Addr $", hex(DZ_Player_Palette_Addr)
+print " "
+endif
+endif
+if !Widescreen == !True && !sa1
+print "WideScreen Mirrors"
+print "-------------------------------------------------------------------------------"
+print " "
+print "DZ_PPUMirrors_WS_Enable $", hex(DZ_PPUMirrors_WS_Enable)
+print "DZ_PPUMirrors_WS_Buffer $", hex(DZ_PPUMirrors_WS_Buffer)
+print " "
+endif
+if !GFXFeatures == !True
+print "VRAM Mirrors"
+print "-------------------------------------------------------------------------------"
+print " "
+print "DZ_PPUMirrors_VRAM_Transfer_Length $", hex(DZ_PPUMirrors_VRAM_Transfer_Length)
+print "DZ_PPUMirrors_VRAM_Transfer_SourceLength $", hex(DZ_PPUMirrors_VRAM_Transfer_SourceLength)
+print "DZ_PPUMirrors_VRAM_Transfer_Offset $", hex(DZ_PPUMirrors_VRAM_Transfer_Offset)
+print "DZ_PPUMirrors_VRAM_Transfer_Source $", hex(DZ_PPUMirrors_VRAM_Transfer_Source)
+print "DZ_PPUMirrors_VRAM_Transfer_SourceBNK $", hex(DZ_PPUMirrors_VRAM_Transfer_SourceBNK)
+print " "
+endif
+if !PlayerGFX == !True
+print "GFX Player Change"
+print "-------------------------------------------------------------------------------"
+print " "
+print "DZ_Player_GFX_Enable $", hex(DZ_Player_GFX_Enable)
+print "DZ_Player_GFX_BNK $", hex(DZ_Player_GFX_BNK)
+print "DZ_Player_GFX_Addr $", hex(DZ_Player_GFX_Addr)
+print " "
+endif
+
+print "You can use DZ_FreeRams = $", hex(DZ_FreeRams), " ($",hex(DZ_FreeRams),"-$",hex(!Variables+$0800-1),") as freerams. Size of Freerams: 0x0", hex(!Variables+$0800-DZ_FreeRams), "."
+print " "
 ;#################################################
 ;########## Giant Dynamic Sprite Support #########
 ;#################################################
@@ -196,285 +548,35 @@ endstruct
 !CheckIfLastClusterSharedProcessed = read3(!Routines+$2A)
 !CheckIfLastExtendedSharedProcessed = read3(!Routines+$2D)
 !CheckIfLastOWSharedProcessed = read3(!Routines+$30)
+!ChangePaletteHue = read3(!Routines+$33)
+!ChangePaletteSaturation = read3(!Routines+$36)
+!ChangePaletteValue = read3(!Routines+$39)
+!ChangePaletteHueAndSaturation = read3(!Routines+$3C)
+!ChangePaletteHueAndValue = read3(!Routines+$3F)
+!ChangePaletteSaturationAndValue = read3(!Routines+$42)
+!RandomizePalette = read3(!Routines+$45)
+!MixWithColor = read3(!Routines+$48)
+!MixWithBaseColor = read3(!Routines+$4B)
+!SetBaseAsHSV = read3(!Routines+$4E)
+!SetBaseAsRGB = read3(!Routines+$51)
+!MixPaletteHue = read3(!Routines+$54)
+!MixPaletteSaturation = read3(!Routines+$57)
+!MixPaletteValue = read3(!Routines+$5A)
+!MixPaletteHueAndSaturation = read3(!Routines+$5D)
+!MixPaletteHueAndValue = read3(!Routines+$60)
+!MixPaletteSaturationAndValue = read3(!Routines+$63)
+!MixPaletteHueSaturationAndValue = read3(!Routines+$66)
+!LoadGraphicsSDSNormal = read3(!Routines+$69)
+!FindCopyNormal = read3(!Routines+$6C)
+!LoadGraphicsSDSCluster = read3(!Routines+$6F)
+!FindCopyCluster = read3(!Routines+$72)
+!LoadGraphicsSDSExtended = read3(!Routines+$75)
+!FindCopyExtended = read3(!Routines+$78)
+!LoadGraphicsSDSOW = read3(!Routines+$7B)
+!FindCopyOW = read3(!Routines+$7E)
 
-macro FindSpace(DSSlotUsed)
-    LDA.l <DSSlotUsed>
-    STA !Scratch0
-
-    JSL !FindSpace
-endmacro
-
-macro CheckSlot(FrameRateMode, NumberOf16x16Tiles, SpriteNumber, SpriteTypeAndSlot, SpriteUsedSlot)
-    JSL !ClearSlot
-    
-    PHX
-
-    TSC
-    PHA
-
-    TXA
-if <SpriteTypeAndSlot> < $80
-    AND #$0F
-else
-    AND #$E0
-endif
-    ORA <SpriteTypeAndSlot>
-    PHA
-
-    LDA <FrameRateMode>
-    PHA
-
-    LDA <SpriteNumber>
-    PHA
-
-    LDA <NumberOf16x16Tiles>
-    PHA
-    JSL !CheckSlot
-    BCS ?+
-if !sa1
-    PLA
-    PLA
-    PLA
-    PLA
-    PLA
-else
-    LDA #$01
-    XBA
-    LDA $05,s
-    TCS
-endif
-
-    PLX
-    STZ <SpriteNumber>
-    BRA ?++
-?+
-if !sa1
-    PLA
-    PLA
-    PLA
-    PLA
-    PLA
-else
-    LDA #$01
-    XBA
-    LDA $05,s
-    TCS
-endif
-
-    TXA
-    PLX
-	STA.l <SpriteUsedSlot>,x
-?++
-endmacro
-
-macro CheckSlotNormalSprite(NumberOf16x16Tiles, SpriteTypeAndSlot)
-    JSL !ClearSlot
-    
-    TSC
-    PHA
-
-    TXA
-    ORA #<SpriteTypeAndSlot>
-if <SpriteTypeAndSlot> < $80
-    AND #$9F
-else
-    AND #$90
-endif
-    PHA
-
-    LDA !ExtraByte1,x
-    CLC
-    ROL
-    ROL
-    ROL
-    AND #$02
-    PHA
-
-    LDA !SpriteNumberNormal,x
-    PHA
-
-    LDA <NumberOf16x16Tiles>
-    PHA
-    JSL !CheckSlot
-    BCS ?+
-    
-if !sa1
-    PLA
-    PLA
-    PLA
-    PLA
-    PLA
-else
-    LDA #$01
-    XBA
-    LDA $05,s
-    TCS
-endif
-
-    LDX $15E9|!addr
-    STZ !SpriteStatus,x
-    LDA !SpriteLoadStatus,x
-    TAX
-    LDA #$00
-    STA !SpriteLoadTable,x
-    LDX $15E9|!addr
-
-RTL
-?+
-if !sa1
-    PLA
-    PLA
-    PLA
-    PLA
-    PLA
-else
-    LDA #$01
-    XBA
-    LDA $05,s
-    TCS
-endif
-
-    TXA
-    LDX $15E9|!addr
-	STA.l DZ.DSLocUSNormal,x
-endmacro
-
-macro DynamicRoutine(VRAMOffset, ResourceAddr, ResourceBNK, ResourceOffset, size)
-    PHX                     ;B
-
-    TSC
-    PHA                     ;B
-
-    LDA <size>              ;A
-    PHA
-
-    LDA <VRAMOffset>        ;9
-    PHA
-
-    LDA.b <ResourceBNK>     ;8
-    PHA
-
-    REP #$20
-    LDA.w <ResourceAddr>
-    CLC
-    ADC <ResourceOffset>
-    PHA                     ;6
-    SEP #$20
-    JSL !DynamicRoutine
-
-if !sa1
-    PLA
-    PLA
-    PLA
-    PLA
-    PLA
-    PLA
-else
-    LDA #$01
-    XBA
-    LDA $06,s
-    TCS
-endif
-
-    PLX
-
-endmacro
-
-macro GFXTabDef(index)
-    !GraphicsTable #= read3(!SpriteNumberToGraphics+<index>+<index>+<index>)
-endmacro
-
-macro GFXDef(offset)
-    !GFX<offset> = read3(!GraphicsTable+$05+$<offset>+$<offset>+$<offset>)
-endmacro
-
-macro CheckEvenOrOdd(DSLocUS)
-	LDA.l <DSLocUS>,x
-    JSL !CheckEvenOrOdd
-endmacro
-
-macro GetVramDisp(DSLocUS)
-	LDA.l <DSLocUS>,x
-    JSL !GetVramDisp
-endmacro
-
-macro GetVramDispDynamicRoutine(DSLocUS)
-	LDA.l <DSLocUS>,x
-    JSL !GetVramDispDynamicRoutine
-endmacro
-
-macro RemapOamTile(Tile, Offset)
-
-    LDA <Tile>
-    PHA
-
-    LDA <Offset>
-    PHA
-    JSL !RemapOamTile
-    PLA
-    PLA
-endmacro
-
-macro TransferToVRAM(VRAMOffset, ResourceAddr, ResourceBNK, Lenght)
-
-    PHX
-
-    LDA #$00
-    XBA
-    LDA.l DZ.PPUMirrors.VRAMTransferLength
-    INC A
-    STA.l DZ.PPUMirrors.VRAMTransferLength
-    REP #$20
-    ASL
-    TAX
-    
-    LDA <ResourceBNK>
-    STA.l  DZ.PPUMirrors.VRAMTransferSourceBNK,x
-    LDA #$0000
-    STA.l  DZ.PPUMirrors.VRAMTransferSourceBNK+1,x
-
-    LDA <ResourceAddr>
-    STA.l DZ.PPUMirrors.VRAMTransferSource,x
-
-    LDA <Lenght>
-    STA.l DZ.PPUMirrors.VRAMTransferSourceLength,x
-
-    LDA <VRAMOffset>
-    STA.l DZ.PPUMirrors.VRAMTransferOffset,x
-    SEP #$20
-    
-    PLX
-
-endmacro
-
-macro TransferToCGRAM(CGRAMOffset, TableAddr, TableBNK, Lenght)
-
-    PHX
-
-    LDA #$00
-    XBA
-    LDA.l DZ.PPUMirrors.CGRAMTransferLength
-    INC A
-    PHA
-    STA.l DZ.PPUMirrors.CGRAMTransferLength
-    REP #$30
-    ASL
-    TAX
-
-    LDA <TableAddr>
-    STA.l DZ.PPUMirrors.CGRAMTransferSource,x
-
-    LDA <TableBNK>
-    STA.l DZ.PPUMirrors.CGRAMTransferSourceBNKLength,x
-
-    LDA <Lenght>
-    STA.l DZ.PPUMirrors.CGRAMTransferSourceBNKLength+1,x
-    SEP #$30
-    
-    PLX
-    LDA <CGRAMOffset>
-    STA.l DZ.PPUMirrors.CGRAMTransferOffset,x
-
-    PLX
-
-endmacro
+incsrc "./Macros/STDCall.asm"
+incsrc "./Macros/MultAndDiv.asm"
+incsrc "./Macros/DynamicSpritesMacros.asm"
+incsrc "./Macros/Palettes.asm"
+incsrc "./Macros/PPU.asm"

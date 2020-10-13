@@ -1,491 +1,7 @@
-	!dp = $0000
-	!addr = $0000
-    !rom = $800000
-	!sa1 = 0
-	!gsu = 0
-    !sram7000 = $000000
-    !sram7008 = $000000
-    !ram7F9A7B = $000000
-    !ram7FC700 = $000000
-	!PaletteFreeRAM = $7F0B44 
-	!DSXFreeRAM = $7F0B44
-	!MaxSprites = $0C
-	!FreeRams = $7FB700
-
-if read1($00FFD6) == $15
-	sfxrom
-	!dp = $6000
-	!addr = !dp
-	!gsu = 1
-elseif read1($00FFD5) == $23
-	sa1rom
-	!MaxSprites = $16
-	!dp = $3000
-	!addr = $6000
-	!sa1 = 1
-    !rom = $000000
-    !sram7000 = $2E4000
-    !sram7008 = $2E6800
-    !ram7F9A7B = $3E127B
-    !ram7FC700 = $3DFF00
-	!PaletteFreeRAM = $418000  
-	!DSXFreeRAM = $418000
-	!FreeRams = $418800
-endif
-
-;########################################
-;######## Scratchs Rams [$00,$0F] #######
-;########################################
-!Scratch0 = $00
-!Scratch1 = $01
-!Scratch2 = $02
-!Scratch3 = $03
-!Scratch4 = $04
-!Scratch5 = $05
-!Scratch6 = $06
-!Scratch7 = $07
-!Scratch8 = $08
-!Scratch9 = $09
-!ScratchA = $0A
-!ScratchB = $0B
-!ScratchC = $0C
-!ScratchD = $0D
-!ScratchE = $0E
-!ScratchF = $0F
-
-;########################################
-;############## Counters ################
-;########################################
-!TrueFrameCounter = $13
-!EffectiveFrameCounter = $14
-
-;########################################
-;############## Control #################
-;########################################
-!ButtonPressed_BYETUDLR = $15
-!ButtonDown_BYETUDLR = $16
-!ButtonPressed_AXLR0000 = $17
-!ButtonDown_AXLR0000 = $18
-
-;########################################
-;############## Layers ##################
-;########################################
-!Layer1X = $1A
-!Layer1Y = $1C
-!Layer2X = $1E
-!Layer2Y = $20
-!Layer3X = $22
-!Layer3Y = $24
-
-;########################################
-;############## Player ##################
-;########################################
-!PlayerX = $94
-!PlayerY = $96
-!PlayerXSpeed = $7B
-!PlayerYSpeed = $7D
-!PowerUp = $19
-!Lives = $0DBE|!addr
-!Coins = $0DBF|!addr
-!ItemBox = $0DC2|!addr
-!PlayerInAirFlag = $72
-!PlayerDuckingFlag = $73
-!PlayerClimbingFlag_N00SIFHB = $74
-!PlayerWaterFlag = $75
-!PlayerDirection = $76
-!PlayerBlockedStatus_S00MUDLR = $77
-!PlayerHide_DLUCAPLU = $78
-!CurrentPlayer = $0DB3|!addr
-!CapeImage = $13DF|!addr
-!PlayerPose = $13E0|!addr
-!PlayerSlope = $13E1|!addr
-!SpinjumpTimer = $13E2|!addr
-!PlayerWallRunningFlag = $13E3|!addr
-!PlayerFrozenFlag = $13FB|!addr
-!PlayerCarryingFlag = $1470|!addr
-!PlayerCarryingFlagImage = $148F|!addr
-!PlayerAnimationTimer = $1496|!addr
-!PlayerFlashingTimer = $1497|!addr
-!P1PowerUp = $0DB8|!addr
-!P2PowerUp = $0DB9|!addr
-!P1Lives = $0DB4|!addr
-!P2Lives = $0DB5|!addr
-!P1Coins = $0DB6|!addr
-!P2Coins = $0DB7|!addr
-!P1YoshiColor = $0DBA|!addr
-!P2YoshiColor = $0DBB|!addr
-!P1ItemBox = $0DBC|!addr
-!P2ItemBox = $0DBD|!addr
-
-;########################################
-;############### Global #################
-;########################################
-!LockAnimationFlag = $9D
-!HScrollEnable = $1411|!addr
-!VScrollEnable = $1412|!addr
-!HScrollLayer2Type = $1413|!addr
-!VScrollLayer2Type = $1414|!addr
-!WaterFlag = $85
-!SlipperyFlag = $86
-!GameMode = $0100|!addr
-!TwoPlayersFlag = $0DB2|!addr
-
-;########################################
-;################ OAM ###################
-;########################################
-!TileXPosition200 = $0200|!addr
-!TileYPosition200 = $0201|!addr
-!TileCode200 = $0202|!addr
-!TileProperty200 = $0203|!addr
-!TileSize420 = $0420|!addr
-!TileXPosition = $0300|!addr
-!TileYPosition = $0301|!addr
-!TileCode = $0302|!addr
-!TileProperty = $0303|!addr
-!TileSize460 = $0460|!addr
-
-;########################################
-;############### Yoshi ##################
-;########################################
-!YoshiX = $18B0|!addr
-!YoshiY = $18B2|!addr
-!YoshiKeyInMouthFlag = $191C|!addr
-
-;########################################
-;############## Clusters ################
-;########################################
-!ClusterNumber = $1892|!addr
-!ClusterXLow = $1E16|!addr
-!ClusterYLow = $1E02|!addr
-!ClusterXHigh = $1E3E|!addr
-!ClusterYHigh = $1E2A|!addr
-!ClusterMiscTable1 = $0F4A|!addr
-!ClusterMiscTable2 = $0F5E|!addr
-!ClusterMiscTable3 = $0F72|!addr
-!ClusterMiscTable4 = $0F86|!addr
-!ClusterMiscTable5 = $0F9A|!addr
-!ClusterMiscTable6 = $1E52|!addr
-!ClusterMiscTable7 = $1E66|!addr
-!ClusterMiscTable8 = $1E7A|!addr
-!ClusterMiscTable9 = $1E8E|!addr
-
-;########################################
-;############## Extended ################
-;########################################
-!ExtendedNumber = $170B|!addr
-!ExtendedXLow = $171F|!addr
-!ExtendedYLow = $1715|!addr
-!ExtendedXHigh = $1733|!addr
-!ExtendedYHigh = $1729|!addr
-!ExtendedXSpeed = $1747|!addr
-!ExtendedYSpeed = $173D|!addr
-!ExtendedXSpeedAccumulatingFraction = $175B|!addr
-!ExtendedYSpeedAccumulatingFraction = $1751|!addr
-!ExtendedBehindLayersFlag = $1779|!addr
-!ExtendedMiscTable1 = $1765|!addr
-!ExtendedMiscTable2 = $176F|!addr
-
-;########################################
-;############### Sprites ################
-;########################################
-!SpriteIndex = $15E9|!addr
-!SpriteNumber = $9E
-!SpriteStatus = $14C8
-!SpriteXLow = $E4
-!SpriteYLow = $D8
-!SpriteXHigh = $14E0
-!SpriteYHigh = $14D4
-!SpriteXSpeed = $B6
-!SpriteYSpeed = $AA
-!SpriteXSpeedAccumulatingFraction = $14F8
-!SpriteYSpeedAccumulatingFraction = $14EC
-!SpriteDirection = $157C
-!SpriteBlockedStatus_ASB0UDLR = $1588
-!SpriteHOffScreenFlag = $15A0
-!SpriteVOffScreenFlag = $186C
-!SpriteHMoreThan4TilesOffScreenFlag = $15C4
-!SpriteSlope = $15B8
-!SpriteYoshiTongueFlag = $15D0
-!SpriteInteractionWithObjectEnable = $15DC
-!SpriteIndexOAM = $15EA
-!SpriteProperties_YXPPCCCT = $15F6
-!SpriteLoadStatus = $161A
-!SpriteBehindEscenaryFlag = $1632
-!SpriteInLiquidFlag = $164A
-!SpriteDecTimer1 = $1540
-!SpriteDecTimer2 = $154C
-!SpriteDecTimer3 = $1558
-!SpriteDecTimer4 = $1564
-!SpriteDecTimer5 = $15AC
-!SpriteDecTimer6 = $163E
-!SpriteDecTimer7 = $1FE2
-!SpriteTweaker1656_SSJJCCCC = $1656
-!SpriteTweaker1662_DSCCCCCC = $1662
-!SpriteTweaker166E_LWCFPPPG = $166E
-!SpriteTweaker167A_DPMKSPIS = $167A
-!SpriteTweaker1686_DNCTSWYE = $1686
-!SpriteTweaker190F_WCDJ5SDP = $190F
-!SpriteMiscTable1 = $0DF5|!addr
-!SpriteMiscTable2 = $0E0B|!addr
-!SpriteMiscTable3 = $C2
-!SpriteMiscTable4 = $1504
-!SpriteMiscTable5 = $1510
-!SpriteMiscTable6 = $151C
-!SpriteMiscTable7 = $1528
-!SpriteMiscTable8 = $1534
-!SpriteMiscTable9 = $1570
-!SpriteMiscTable10 = $1594
-!SpriteMiscTable11 = $1602
-!SpriteMiscTable12 = $160E
-!SpriteMiscTable13 = $1626
-!SpriteMiscTable14 = $187B
-!SpriteMiscTable15 = $1FD6
-
-;########################################
-;############### GIEPY ##################
-;########################################
-!ExtraBits = $7FAB10
-!NewCodeFlag = $7FAB1C
-!ExtraProp1 = $7FAB28
-!ExtraProp2 = $7FAB34
-!ExtraByte1 = $7FAB40
-!ExtraByte2 = $7FAB4C
-!ExtraByte3 = $7FAB58
-!ExtraByte4 = $7FAB64
-!ShooterExtraByte = $7FAB70
-!GeneratorExtraByte = $7FAB78
-!ScrollerExtraByte = $7FAB79
-!CustomSpriteNumber = $7FAB9E
-!ShooterExtraBits = $7FABAA
-!GeneratorExtraBits = $7FABB2
-!Layer1ExtraBits = $7FABB3
-!Layer2ExtraBits = $7FABB4
-!SpriteFlags = $7FABB5
-
-if !sa1
-
-!SpriteNumber = $3200
-!SpriteYSpeed = $9E
-!SpriteXSpeed = $B6
-!SpriteMiscTable3 = $D8
-!SpriteYLow = $3216
-!SpriteXLow = $322C
-!SpriteStatus = $3242
-!SpriteYHigh = $3258
-!SpriteXHigh = $326E
-!SpriteYSpeedAccumulatingFraction = $74C8
-!SpriteXSpeedAccumulatingFraction = $74DE
-!SpriteMiscTable4 = $74F4
-!SpriteMiscTable5 = $750A
-!SpriteMiscTable6 = $3284
-!SpriteMiscTable7 = $329A
-!SpriteMiscTable8 = $32B0
-!SpriteDecTimer1 = $32C6
-!SpriteDecTimer2 = $32DC
-!SpriteDecTimer3 = $32F2
-!SpriteDecTimer4 = $3308
-!SpriteMiscTable9 = $331E
-!SpriteDirection = $3334
-!SpriteBlockedStatus_ASB0UDLR = $334A
-!SpriteMiscTable10 = $3360
-!SpriteHOffScreenFlag = $3376
-!SpriteDecTimer5 = $338C
-!SpriteSlope = $7520
-!SpriteHMoreThan4TilesOffScreenFlag = $7536
-!SpriteYoshiTongueFlag = $754C
-!SpriteInteractionWithObjectEnable = $7562
-!SpriteIndexOAM = $33A2
-!SpriteProperties_YXPPCCCT = $33B8
-!SpriteMiscTable11 = $33CE
-!SpriteMiscTable12 = $33E4
-!SpriteLoadStatus = $7578
-!SpriteMiscTable13 = $758E
-!SpriteBehindEscenaryFlag = $75A4
-!SpriteDecTimer6 = $33FA
-!SpriteInLiquidFlag = $75BA
-!SpriteTweaker1656_SSJJCCCC = $75D0
-!SpriteTweaker1662_DSCCCCCC = $75EA
-!SpriteTweaker166E_LWCFPPPG = $7600
-!SpriteTweaker167A_DPMKSPIS = $7616
-!SpriteTweaker1686_DNCTSWYE = $762C
-!SpriteVOffScreenFlag = $7642
-!SpriteMiscTable14 = $3410
-!SpriteTweaker190F_WCDJ5SDP = $7658
-!SpriteMiscTable15 = $766E
-!SpriteDecTimer7 = $7FD6
-
-!ExtraBits = $400040
-!NewCodeFlag = $400056
-!ExtraProp1 = $400057
-!ExtraProp2 = $40006D
-!ExtraByte1 = $4000A4
-!ExtraByte2 = $4000BA
-!ExtraByte3 = $4000D0
-!ExtraByte4 = $4000E6
-!ShooterExtraByte = $400110
-!GeneratorExtraByte = $4000FC
-!ScrollerExtraByte = $4000FD
-!CustomSpriteNumber = $400083
-!ShooterExtraBits = $400099
-!GeneratorExtraBits = $4000A1
-!Layer1ExtraBits = $4000A2
-!Layer2ExtraBits = $4000A3
-!SpriteFlags = $400118
-
-endif 
-
-!Variables = !PaletteFreeRAM+$180
-
-;#################################################
-;############# Dynamic Sprite Support ############
-;#################################################
-
-!DynamicTimer = !Variables
-!SignalSP4SecondHalfBottomLeftQuarter = !Variables+$0001
-!SignalSP4SecondHalfBottomRightQuarter = !Variables+$0002
-!SignalSP4SecondHalfTopLeftQuarter = !Variables+$0003
-!SignalSP4SecondHalfTopRightQuarter = !Variables+$0004
-!SignalSP4FirstHalfBottomLeftQuarter = !Variables+$0005
-!SignalSP4FirstHalfBottomRightQuarter = !Variables+$0006
-!SignalSP4FirstHalfTopLeftQuarter = !Variables+$0007
-!SignalSP4FirstHalfTopRightQuarter = !Variables+$0008
-!SignalSP3SecondHalfBottomLeftQuarter = !Variables+$0009
-!SignalSP3SecondHalfBottomRightQuarter = !Variables+$000A
-!SignalSP3SecondHalfTopLeftQuarter = !Variables+$000B
-!SignalSP3SecondHalfTopRightQuarter = !Variables+$000C
-!SlotsUsedEven = !Variables+$000D
-!SlotsUsedOdd = !Variables+$000E
-!MaxSlots = !Variables+$000F
-!NumberOfBlocks = !Variables+$0010
-!VRAMDispNormalSprite = !Variables+$0011
-!VRAMDispExtendedSprite = !Variables+!MaxSprites+$0011
-!VRAMDispClusterSprite = !Variables+!MaxSprites+$001B
-!VRAMDispOWSprite = !Variables+!MaxSprites+$002F
-!TransferFrameNormalSprite = !Variables+!MaxSprites+$003F
-!TransferFrameExtendedSprite = !Variables+!MaxSprites+!MaxSprites+$003F
-!TransferFrameClusterSprite = !Variables+!MaxSprites+!MaxSprites+$0049
-!TransferFrameOWSprite = !Variables+!MaxSprites+!MaxSprites+$005D
-!SlotsUsedBySprite = !Variables+!MaxSprites+!MaxSprites+$006D
-!FPSSprite = !Variables+!MaxSprites+!MaxSprites+$009D
-!SlotSpriteType = !Variables+!MaxSprites+!MaxSprites+$00CD
-!SlotSpriteID = !Variables+!MaxSprites+!MaxSprites+$00FD
-!SlotSpriteNumber = !Variables+!MaxSprites+!MaxSprites+$012D
-!DMAMapResource = !Variables+!MaxSprites+!MaxSprites+$015D
-!DMAMapBNK = !Variables+!MaxSprites+!MaxSprites+$021D
-!DMAMapLenght = !Variables+!MaxSprites+!MaxSprites+$027D
-!DMAMapNext = !Variables+!MaxSprites+!MaxSprites+$033D
-!FirstSlot = !Variables+!MaxSprites+!MaxSprites+$039D
-!LastSlot = !Variables+!MaxSprites+!MaxSprites+$039E
-!Mode50More = !Variables+!MaxSprites+!MaxSprites+$039F
-
-!Routines = (read1($0082DA+4)<<16)+read2($00823D+4)
-
-!DynamicRoutine16x16 = read3(!Routines+0)
-!DynamicRoutine32x16 = read3(!Routines+3)
-!DynamicRoutine32x32 = read3(!Routines+6)
-!DynamicRoutine48x48 = read3(!Routines+9)
-!DynamicRoutine64x64 = read3(!Routines+12)
-!Reserve16x16NormalSpriteOf30FPS = read3(!Routines+15)
-!Reserve16x16NormalSpriteOf60FPS = read3(!Routines+18)
-!Reserve32x16NormalSpriteOf30FPS = read3(!Routines+21)
-!Reserve32x16NormalSpriteOf60FPS = read3(!Routines+24)
-!Reserve32x32NormalSpriteOf30FPS = read3(!Routines+27)
-!Reserve32x32NormalSpriteOf60FPS = read3(!Routines+30)
-!Reserve48x48NormalSpriteOf30FPS = read3(!Routines+33)
-!Reserve48x48NormalSpriteOf60FPS = read3(!Routines+36)
-!Reserve64x64NormalSpriteOf30FPS = read3(!Routines+39)
-!Reserve64x64NormalSpriteOf60FPS = read3(!Routines+42)
-!Reserve16x16ClusterSpriteOf30FPS = read3(!Routines+45)
-!Reserve16x16ClusterSpriteOf60FPS = read3(!Routines+48)
-!Reserve32x16ClusterSpriteOf30FPS = read3(!Routines+51)
-!Reserve32x16ClusterSpriteOf60FPS = read3(!Routines+54)
-!Reserve32x32ClusterSpriteOf30FPS = read3(!Routines+57)
-!Reserve32x32ClusterSpriteOf60FPS = read3(!Routines+60)
-!Reserve48x48ClusterSpriteOf30FPS = read3(!Routines+63)
-!Reserve48x48ClusterSpriteOf60FPS = read3(!Routines+66)
-!Reserve64x64ClusterSpriteOf30FPS = read3(!Routines+69)
-!Reserve64x64ClusterSpriteOf60FPS = read3(!Routines+72)
-!SendSignal16x16Normal = read3(!Routines+75)
-!SendSignal32x16Normal = read3(!Routines+78)
-!SendSignal32x32Normal = read3(!Routines+81)
-!SendSignal48x48Normal = read3(!Routines+84)
-!SendSignal64x64Normal = read3(!Routines+87)
-!SendSignal16x16Cluster = read3(!Routines+90)
-!SendSignal32x16Cluster = read3(!Routines+93)
-!SendSignal32x32Cluster = read3(!Routines+96)
-!SendSignal48x48Cluster = read3(!Routines+99)
-!SendSignal64x64Cluster = read3(!Routines+102)
-!SendSignal16x16Extended = read3(!Routines+105)
-!SendSignal32x16Extended = read3(!Routines+108)
-!SendSignal32x32Extended = read3(!Routines+111)
-!SendSignal48x48Extended = read3(!Routines+114)
-!SendSignal64x64Extended = read3(!Routines+117)
-!SendSignal16x16OW = read3(!Routines+120)
-!SendSignal32x16OW = read3(!Routines+123)
-!SendSignal32x32OW = read3(!Routines+126)
-!SendSignal48x48OW = read3(!Routines+129)
-!SendSignal64x64OW = read3(!Routines+132)
-
-;Call
-!FrameIndex = $45
-!BNK = $46
-!GFXPointer = $47
-!ResourceOffset = $4A
-!ResourceSize = $4D
-
-macro DynamicRoutine(FPS, SignalRoutine, TransferFrame, FrameIndex, LastFrameIndex, VRAMDisp, BNK, DynamicRoutine, GFXPointer, ResourceOffset, ResourceSize)
-	JSL <SignalRoutine>					;Send Signal to Dynamic Z to avoid be overrited for other dynamic sprite
-
-if <FPS>
-	LDA <TransferFrame>,x	;\
-	AND #$01							;|
-	STA $00								;|Check if it is possible change frame
-										;|
-	LDA !DynamicTimer					;|
-	AND #$01							;|
-	CMP $00								;|
-	BEQ ?+								;/
-RTS
-?+
-endif
-
-	LDA <FrameIndex>,x					;\
-	CMP <LastFrameIndex>,x				;|If the frame didnt change, then don't reupload graphics
-	BNE ?+								;/
-RTS
-?+
-    STA <LastFrameIndex>,x				;Updates last frame
-    STA $02
-
-    LDA <BNK>
-    STA !BNK
-
-    LDA.b #<GFXPointer>&$FF
-    STA !GFXPointer
-    LDA.b #<GFXPointer>>>$08
-    STA !GFXPointer+1
-    LDA.b #<GFXPointer>>>$10
-    STA !GFXPointer+2
-
-    LDA.b #<ResourceOffset>&$FF
-    STA !ResourceOffset
-    LDA.b #<ResourceOffset>>>$08
-    STA !ResourceOffset+1
-    LDA.b #<ResourceOffset>>>$10
-    STA !ResourceOffset+2
-
-    LDA.b #<ResourceSize>&$FF
-    STA !ResourceSize
-    LDA.b #<ResourceSize>>>$08
-    STA !ResourceSize+1
-    LDA.b #<ResourceSize>>>$10
-    STA !ResourceSize+2
-
-    LDA	<VRAMDisp>,x			;|
-    PHX
-    JSL <DynamicRoutine>
-    PLX
-endmacro
+;@Zinger.bin
+!ResourceIndex = $02
+%GFXTabDef(!ResourceIndex)
+%GFXDef(00)
 
 ;######################################
 ;############## Defines ###############
@@ -498,114 +14,289 @@ endmacro
 !LocalFlip = !SpriteMiscTable4
 !GlobalFlip = !SpriteMiscTable5
 !LastFrameIndex = !SpriteMiscTable6
-!MovementType = !ExtraByte1					;0 = Constant
-											;1 = R*Sin(RT2*t)
-											;2 = R*Cos(RT2*t)
-											;3 = R*Sin(RT*Sin(RT2*t))
-											;4 = R*Cos(RT*Sin(RT2*t))
-											;5 = t*Sin(RT2*t)
-											;6 = t*Cos(RT2*t)
-											;7 = t + R*Sin(RT2*t)
-											;8 = t + R*Cos(RT2*t)
-											;9 = t + R*Sin(RT1*Sin(RT2*t))
-											;A = t + R*Cos(RT1*Sin(RT2*t))
-											;B = t + t*Sin(RT2*t)
-											;C = t + t*Cos(RT2*t)
-											;D = LineGuided
-!AngularSpeed = !ExtraByte2			
-!AngleLow = !ExtraByte3
-!AngleHigh = !ExtraByte4
 !State = !SpriteMiscTable8
-!InitialXLow = !SpriteMiscTable9
-!InitialXHigh = !SpriteMiscTable10		
-!RatioX = !SpriteMiscTable11		
-!RatioY = !SpriteMiscTable12	
-!RatioT1X = !SpriteMiscTable13
-!RatioT1Y = !SpriteMiscTable14
-!HitPoints = !SpriteMiscTable15			
-!InitialYLow = !FreeRams
-!InitialYHigh = !InitialYLow+!MaxSprites
-!RatioT2X = !InitialYHigh+!MaxSprites	
-!RatioT2Y = !RatioT2X+!MaxSprites
-!PhaseLow = !RatioT2Y+!MaxSprites
-!PhaseHigh = !PhaseLow+!MaxSprites
+
+!MovTypeY = !ExtraByte2
+!MaxSpeedX = !ExtraByte3
+!MaxSpeedY = !ExtraByte4
+!AccelX = !SpriteMiscTable9
+!AccelY = !SpriteMiscTable10
+!AngleLow = !SpriteMiscTable11
+!AngleHigh = !SpriteMiscTable12
+!AngleSpeed = !SpriteMiscTable13
+!AmplitudeX = !SpriteMiscTable14
+!AmplitudeY = !SpriteMiscTable15
+!PosXL = !Variables+$0800-!MaxSprites
+!PosXH = !PosXL-!MaxSprites
+!PosYL = !PosXH-!MaxSprites
+!PosYH = !PosYL-!MaxSprites
+!MovTypeX = !PosYH-!MaxSprites
+!PhaseLow = !MovTypeX-!MaxSprites
+!PhaseHigh = !PhaseLow-!MaxSprites
+!RatioX = !PhaseHigh-!MaxSprites
+!RatioY = !RatioX-!MaxSprites
+!RatioIncreaseX = !RatioY-!MaxSprites
+!RatioIncreaseY = !RatioIncreaseX-!MaxSprites
+!RatioIncreaseTimerX = !RatioIncreaseY-!MaxSprites
+!RatioIncreaseTimerY = !RatioIncreaseTimerX-!MaxSprites
+!RatioAccelX = !RatioIncreaseTimerY-!MaxSprites
+!RatioAccelY = !RatioAccelX-!MaxSprites
+!RatioMaxX = !RatioAccelY-!MaxSprites
+!RatioMaxY = !RatioMaxX-!MaxSprites
+!Hitpoints = !RatioMaxY-!MaxSprites
+
+;1 => Basic Dynamic Sprite Extra Byte
+;2 => xxxx yyyy, Movement Type, xxxx = For X Axis, yyyy = For Y Axis
+;3 => xxxx yyyy, Speed on Constant Movement, Max Speed on Follow Movement, xxxx = For X Axis, yyyy = For Y Axis
+;4 => xxxx yyyy, Acceleration on Follow Movement, xxxx = For X Axis, yyyy = For Y Axis
+;5 => xxxx xxxx, Phase Angle for Types 3 or more (Min value $00, Max Value $B3)
+;6 => xxxx xxxx, Angle Speed for Types 3 or more
+;7 => xxxx yyyy, Amplitude for Types 3 or more, xxxx = For X Axis, yyyy = For Y Axis
+;8 => xxxx yyyy, Ratio for Types 3 or more, xxxx = For X Axis, yyyy = For Y Axis
+;9 => xxxx yyyy, Ratio Increase for Types 3 or more, xxxx = For X Axis, yyyy = For Y Axis
 
 ;######################################
 ;########### Init Routine #############
 ;######################################
 print "INIT ",pc
+	LDA #$02
+	STA !Hitpoints,x
 	LDA #$00
 	STA !GlobalFlip,x
-	JSL InitWrapperChangeAnimationFromStart
+	STA !State,x
 	LDA #$FF
 	STA !LastFrameIndex,x
-    ;Here you can write your Init Code
-    ;This will be excecuted when the sprite is spawned 
-	JSL !Reserve48x48NormalSpriteOf30FPS
-	BCS +
-	RTL
-+
-	JSL !SendSignal48x48Normal
 
-	JSR RecievesExtraBytes
 	LDA #$00
 	STA !AngleLow,x
 	STA !AngleHigh,x
+	STA !RatioIncreaseTimerX,x
+	STA !RatioIncreaseTimerY,x
 
-	LDA !SpriteXHigh,x
-	STA !InitialXHigh,x
 	LDA !SpriteXLow,x
-	STA !InitialXLow,x
-	
-	LDA !SpriteYHigh,x
-	STA !InitialYHigh,x
+	STA !PosXL,x
+	LDA !SpriteXHigh,x
+	STA !PosXH,x
+
 	LDA !SpriteYLow,x
-	STA !InitialYLow,x
+	STA !PosYL,x
+	LDA !SpriteYHigh,x
+	STA !PosYH,x
+
+	JSR SetMiscs
+
+	
+	LDA !MovTypeX,x
+	TAX
+	LDA.l MustSetInitialAngle,x
+	PHA
+	LDA !MovTypeY,x
+	TAX
+	PLA
+	ORA.l MustSetInitialAngle,x
+	BEQ +
+	LDX !SpriteIndex
+	LDA !PhaseLow,x
+	STA !AngleLow,x
+	LDA !PhaseHigh,x
+	STA !AngleHigh,x
++
+	LDX !SpriteIndex
+
+	LDA !MovTypeX,x
+	TAX
+	LDA.l HasConstSpeed,x
+	BNE +
+	LDX !SpriteIndex
+
+	STZ !SpriteXSpeed,x
+	BRA ++
++
+	LDX !SpriteIndex
+
+	LDA !MaxSpeedX,x
+	STA !SpriteXSpeed,x
+++
+	LDA !MovTypeY,x
+	TAX
+	LDA.l HasConstSpeed,x
+	BNE +
+	LDX !SpriteIndex
+	STZ !SpriteYSpeed,x
+	BRA ++
++
+	LDX !SpriteIndex
+	LDA !MaxSpeedY,x
+	STA !SpriteYSpeed,x
+++
+	JSL !CheckNormalSharedDynamicExisted
+	BCS +
+	JSL InitWrapperChangeAnimationFromStart
+
+	%CheckSlotNormalSprite(#$08, $80)
+
+	PHB
+	PHK
+	PLB
+	JSR MovementState
+	PLB
+    ;Here you can write your Init Code
+    ;This will be excecuted when the sprite is spawned 
+RTL
++
+	LDA.l DZ_DS_Loc_UsedBy,x
+	AND #$1F
+	TAY
+
+	LDA !LocalFlip,y
+	STA !LocalFlip,x
+
+	LDA !AnimationIndex,y
+	STA !AnimationIndex,x
+
+	LDA !AnimationTimer,y
+	STA !AnimationTimer,x
+
+	LDA !AnimationFrameIndex,y
+	STA !AnimationFrameIndex,x
+
+	LDA !FrameIndex,y
+	STA !FrameIndex,x
+
+	PHB
+	PHK
+	PLB
+	JSR MovementState
+	PLB
 RTL
 
-RecievesExtraBytes:
-	LDA !ExtraByte1,x
-	STA $00
-	LDA !ExtraByte2,x
-	STA $01
-	LDA !ExtraByte3,x
-	STA $02
-	LDY #$00
-	LDA [$00],y
-	STA !MovementType,x	;EB1
-	INY
-	LDA	[$00],y
-	STA !AngularSpeed,x ;EB2
-	INY
-	LDA	[$00],y
-	STA !PhaseLow,x		;EB3
-	STA !AngleLow,x
-	INY
-	LDA	[$00],y
-	STA !PhaseHigh,x	;EB4
-	STA !AngleHigh,x
-	INY
-	LDA	[$00],y
-	STA !RatioX,x		;EB5
-	INY
-	LDA	[$00],y
-	STA !RatioY,x		;EB6
-	INY
-	LDA	[$00],y
-	STA !RatioT1X,x		;EB7
-	INY
-	LDA	[$00],y
-	STA !RatioT1Y,x		;EB8
-	INY
-	LDA	[$00],y
-	STA !RatioT2X,x		;EB9
-	INY
-	LDA	[$00],y
-	STA !RatioT2Y,x		;EBA
-	INY
-	LDA	[$00],y
-	STA !HitPoints,x	;EBB	
+HasConstSpeed:
+	db $00,$01,$00,$01,$01,$01,$01,$01,$01,$00,$00,$00,$00,$00,$00,$00
+MustSetInitialAngle:
+	db $00,$00,$00,$01,$01,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
+SetMiscs:
+	LDA !ExtraByte1,x
+	STA !Scratch0
+	LDA !ExtraByte2,x
+	STA !Scratch1
+	LDA !ExtraByte3,x
+	STA !Scratch2
+
+	LDY #$00
+	LDA [!Scratch0],y
+	STA !ExtraByte1,x
+	INY 
+
+	;Mov Type
+	LDA [!Scratch0],y
+	LSR
+	LSR
+	LSR
+	LSR
+	STA !MovTypeX,x
+	LDA [!Scratch0],y
+	AND #$0F
+	STA !MovTypeY,x
+	INY 
+
+	;Max Speed
+	LDA [!Scratch0],y
+	AND #$F0
+	STA !MaxSpeedX,x
+	LDA [!Scratch0],y
+	AND #$0F
+	CLC
+	ASL
+	ASL
+	ASL
+	ASL
+	STA !MaxSpeedY,x
+	INY 
+
+	;Accel
+	LDA [!Scratch0],y
+	LSR
+	LSR
+	LSR
+	LSR
+	STA !AccelX,x
+	LDA [!Scratch0],y
+	AND #$0F
+	STA !AccelY,x
+	INY 
+
+	;Initial Angle
+	LDA #$00
+	XBA
+	LDA [!Scratch0],y
+	CLC
+	REP #$20
+	ASL
+	ASL
+	STA !Scratch3
+	SEP #$20
+
+	LDA !Scratch3
+	STA !PhaseLow,x
+	LDA !Scratch4
+	STA !PhaseHigh,x
+	INY
+
+	;Angle Speed
+	LDA [!Scratch0],y
+	STA !AngleSpeed,x
+	INY
+
+	;Amplitude
+	LDA [!Scratch0],y
+	AND #$F0
+	STA !AmplitudeX,x
+	LDA [!Scratch0],y
+	AND #$0F
+	ASL
+	ASL
+	ASL
+	ASL
+	STA !AmplitudeY,x
+	INY
+
+	LDA [!Scratch0],y
+	AND #$F0
+	STA !RatioX,x
+	LDA [!Scratch0],y
+	AND #$0F
+	ASL
+	ASL
+	ASL
+	ASL
+	STA !RatioY,x
+	INY
+
+	LDA [!Scratch0],y
+	LSR
+	LSR
+	LSR
+	LSR
+	STA !RatioIncreaseX,x
+	LDA [!Scratch0],y
+	AND #$0F
+	STA !RatioIncreaseY,x
+	INY
+
+	LDA [!Scratch0],y
+	AND #$F0
+	STA !RatioMaxX,x
+	LDA [!Scratch0],y
+	AND #$0F
+	CLC
+	ASL
+	ASL
+	ASL
+	ASL
+	STA !RatioMaxY,x
+	INY
+	
 RTS
 
 ;######################################
@@ -623,20 +314,84 @@ RTL
 ;>Description: This routine excecute the logic of the sprite
 ;>RoutineLength: Short
 Return:
+	PHX
+	LDA.l DZ_DS_Loc_US_Normal,x
+	TAX
+	LDA DZ_DS_Loc_UsedBy,x
+	AND #$80
+	BNE +
+
+	PLX
+RTS
++
+
+	LDA.l DZ_DS_Loc_SharedUpdated,x
+	BNE +
+
+	LDA #$01
+	STA.l DZ_DS_Loc_SharedUpdated,x
+
+	LDA.l DZ_DS_Loc_UsedBy,x
+	AND #$E0
+	ORA $01,s
+	STA.l DZ_DS_Loc_UsedBy,x
+	PLX
+
+	JSL !CheckIfLastNormalSharedProcessed
+RTS
++
+	PLY
+	LDA.l DZ_DS_Loc_UsedBy,x
+	AND #$1F
+	TAX
+
+	LDA !LocalFlip,x
+	STA !LocalFlip,y
+
+	LDA !AnimationIndex,x
+	STA !AnimationIndex,y
+
+	LDA !AnimationTimer,x
+	STA !AnimationTimer,y
+
+	LDA !AnimationFrameIndex,x
+	STA !AnimationFrameIndex,y
+
+	LDA !FrameIndex,x
+	STA !FrameIndex,y
+	TYX
+
+	JSL !CheckIfLastNormalSharedProcessed
 RTS
 SpriteCode:
-    JSR GraphicRoutine                  ;Calls the graphic routine and updates sprite graphics
+
 	JSR DynamicRoutine
+
+	LDA DZ_DS_Loc_US_Normal,x
+	TAX
+
+	LDA DZ_DS_Loc_IsValid,x
+	BNE +
+	LDX !SpriteIndex
+	BRA Return
++
+	LDX !SpriteIndex 
+    JSR GraphicRoutine                  ;Calls the graphic routine and updates sprite graphics
 
     ;Here you can put code that will be excecuted each frame even if the sprite is locked
 
-    LDA !SpriteStatus,x			        
+    LDA !SpriteStatus,x			      
+	CMP #$02
+	BEQ +  
 	CMP #$08                            ;if sprite dead return
-	BNE Return	
+	BEQ +
+	JMP Return	
++
 
 	LDA !LockAnimationFlag				    
-	BNE Return			                    ;if locked animation return.
-
+	BEQ +
+	JMP Return			                    ;if locked animation return.
++
     %SubOffScreen()
 
     JSR InteractMarioSprite
@@ -647,16 +402,64 @@ SpriteCode:
     ;This will be excecuted once per frame excepts when 
     ;the animation is locked or when sprite status is not #$08
 
+	PHX
+	LDA.l DZ_DS_Loc_US_Normal,x
+	TAX
+	LDA DZ_DS_Loc_UsedBy,x
+	AND #$80
+	BNE +
+
+	PLX
+
+    JSR AnimationRoutine                ;Calls animation routine and decides the next frame to draw
+RTS
++
+	LDA.l DZ_DS_Loc_SharedUpdated,x
+	BNE +
+
+	LDA #$01
+	STA.l DZ_DS_Loc_SharedUpdated,x
+
+	LDA.l DZ_DS_Loc_UsedBy,x
+	AND #$E0
+	ORA $01,s
+	STA.l DZ_DS_Loc_UsedBy,x
+	PLX
+
     JSR AnimationRoutine                ;Calls animation routine and decides the next frame to draw
     
-    RTS
+	JSL !CheckIfLastNormalSharedProcessed
+RTS
++
+	PLY
+	LDA.l DZ_DS_Loc_UsedBy,x
+	AND #$1F
+	TAX
+
+	LDA !LocalFlip,x
+	STA !LocalFlip,y
+
+	LDA !AnimationIndex,x
+	STA !AnimationIndex,y
+
+	LDA !AnimationTimer,x
+	STA !AnimationTimer,y
+
+	LDA !AnimationFrameIndex,x
+	STA !AnimationFrameIndex,y
+
+	LDA !FrameIndex,x
+	STA !FrameIndex,y
+	TYX
+
+	JSL !CheckIfLastNormalSharedProcessed
+RTS
 
 ;>EndRoutine
 
 ;######################################
 ;######## Sub Routine Space ###########
 ;######################################
-
 StateMachine:
 	LDA !State,x
 	ASL
@@ -674,788 +477,947 @@ RTS
 States:
 	dw Idle
 	dw Flip
-	dw Damage
 	dw Dead
-
-StartIdle:
-RTS
+	dw Hurt
 
 Idle:
 	LDX !SpriteIndex
-	JSR UpdateAngle
-	JSR MovementX
-	JSR MovementY
-RTS
 
-StartFlip:
+	JSR MovementState
+
+	LDA !SpriteXHigh,x
+	XBA
+	LDA !SpriteXLow,x
+	REP #$20
+	CLC
+	ADC #$000C
+	CMP !PlayerX
+	SEP #$20
+	BCS +
+
+	LDA !GlobalFlip,x
+	BNE ++
+
+	JSR ChangeToDynamic
+	BCC ++
+	JSR ChangeAnimationFromStart_flip
+	LDA #$01
+	STA !State,x
+	BRA ++
++
+	LDA !GlobalFlip,x
+	BEQ ++
+
+	JSR ChangeToDynamic
+	BCC ++
+	JSR ChangeAnimationFromStart_flip
+	LDA #$01
+	STA !State,x
+++
+	LDX !SpriteIndex
 RTS
 
 Flip:
 	LDX !SpriteIndex
-	JSR UpdateAngle
-	JSR MovementX
-	JSR MovementY
+
+	JSR MovementState
+
+	LDA !AnimationTimer,x
+	BNE +
+
+	LDA !AnimationFrameIndex,x
+	CMP #$03
+	BCC +
+
+	JSR ChangeToSharedDynamic
+	BCC +
+	BEQ ++
+	JSR ChangeAnimationFromStart_idle
+++
+	STZ !State,x
+
+	LDA !GlobalFlip,x
+	EOR #$01
+	STA !GlobalFlip,x
 RTS
-
-
-StartDamage:
-RTS
-
-Damage:
++
 	LDX !SpriteIndex
-RTS
-
-
-StartDead:
 RTS
 
 Dead:
 	LDX !SpriteIndex
+
+	LDA !AnimationIndex,x
+	CMP #$02
+	BEQ +
+
+	JSR ChangeToDynamic
+	BCS ++
+RTS
+++
+	JSR ChangeAnimationFromStart_dead
+	LDA #$C0
+	STA !SpriteYSpeed,x
+	LDA !GlobalFlip,x
+	TAY
+	LDA DeadSpeed,y
+	STA !SpriteXSpeed,x
+
+	LDA #$28
+	STA $1DFC|!addr
+
++
+	JSL $01802A|!rom
 RTS
 
-UpdateAngle:
-	STZ !Scratch1
-	LDA !AngularSpeed,x
+DeadSpeed: db $10,$F0
+
+Hurt:
+	LDX !SpriteIndex
+
+	LDA !AnimationIndex,x
+	CMP #$03
+	BEQ +
+
+	JSR ChangeToDynamic
+	BCS ++
+RTS
+++
+	JSR ChangeAnimationFromStart_Hurt
+
+	LDA #$28
+	STA $1DFC|!addr
+
++
+RTS
+
+ExtraByteTab: 
+	db $80,$40
+ChangeToDynamic:
+
+	LDA DZ_DS_Loc_US_Normal,x
+	TAX
+	LDA DZ_DS_Loc_UsedBy,x
+	LDX !SpriteIndex
+	AND #$80
+	BNE +
+	CLC
+RTS
++
+
+	LDA DZ_Timer
+	AND #$01
+	TAY
+	LDA !ExtraByte1,x
+	PHA
+	LDA ExtraByteTab,y
+	STA !ExtraByte1,x
+
+	LDA DZ_DS_Loc_US_Normal,x
+	PHA
+	LDA #$FF
+	STA DZ_DS_Loc_US_Normal,x
+	%CheckSlotNormalSpriteNoRemove(#$08, $00)
+	PLA
+	BCS +
+	STA DZ_DS_Loc_US_Normal,x
+	PLA
+	STA !ExtraByte1,x 
+	CLC
+RTS
++
+	PLA
+	LDA #$FF
+	STA !LastFrameIndex,x
+	SEC
+RTS
+
+ChangeToSharedDynamic:
+	LDA DZ_DS_Loc_US_Normal,x
+	TAX
+	LDA DZ_DS_Loc_UsedBy,x
+	LDX !SpriteIndex
+	AND #$80
+	BEQ +
+	CLC
+RTS
++
+	LDA DZ_DS_Loc_US_Normal,x
 	STA !Scratch0
+
+	JSL !CheckNormalSharedDynamicExisted
+	BCS +
+
+	JSL !ClearSlot
+
+	LDA DZ_DS_Loc_US_Normal,x
+	TAX
+	LDA DZ_DS_Loc_UsedBy,x
+	ORA #$80
+	STA DZ_DS_Loc_UsedBy,x
+	LDA #$00
+	STA DZ_DS_Loc_SharedUpdated,x
+	LDX !SpriteIndex
+
+	LDA #$01
+	SEC
+RTS
++
+	PHX
+	LDX !Scratch0
+	LDA #$FF
+	STA DZ_DS_Loc_UsedBy,x
+	PLX
+	LDA DZ_DS_Loc_US_Normal,x
+	TAX
+	LDA.l DZ_DS_Loc_UsedBy,x
+	AND #$1F
+	TAY
+
+	LDX !SpriteIndex
+
+	LDA !LocalFlip,y
+	STA !LocalFlip,x
+
+	LDA !AnimationIndex,y
+	STA !AnimationIndex,x
+
+	LDA !AnimationTimer,y
+	STA !AnimationTimer,x
+
+	LDA !AnimationFrameIndex,y
+	STA !AnimationFrameIndex,x
+
+	LDA !FrameIndex,y
+	STA !FrameIndex,x
+
+	TYX
+	LDA !ExtraByte1,x
+	LDX !SpriteIndex
+	STA !ExtraByte1,x
+
+	JSL !ClearSlot
+
+	LDA #$00
+	SEC
+RTS
+;Here you can write routines or tables
+ApplyAngleSpeed:
+	db $00,$00,$00,$01,$01,$01,$01,$01,$01,$00
+
+MovementState:
+	LDA !MovTypeX,x
+	TAY
+	LDA.w ApplyAngleSpeed,y
+	PHA
+	LDA !MovTypeY,x
+	TAY
+	PLA
+	ORA.w ApplyAngleSpeed,y
+	BEQ +
+
+	STZ !Scratch1
+	LDA !AngleSpeed,x
+	STA !Scratch0
+	BPL ++
+	LDA #$FF
+	STA !Scratch1
+++
+
 	LDA !AngleHigh,x
 	XBA
 	LDA !AngleLow,x
 	REP #$20
 	CLC
 	ADC !Scratch0
-	STA !Scratch2
-	SEP #$20
-	LDA !Scratch2
-	STA !AngleLow,x
-	LDA !Scratch3
-	STA !AngleHigh,x
-
-RTS
-
-MovementX:
-	LDA !MovementType,x
-	AND #$0F
-	ASL
-	TAY
-
-	REP #$20
-	LDA MovementXType,y
 	STA !Scratch0
-	SEP #$20
-
-	LDX #$00
-	JSR ($0000|!dp,x)
-RTS
-
-MovementXType:
-	dw Static
-	dw XRSint
-	dw XRCost
-	dw XRSinRT1SinRT2t
-	dw XRCosRT1SinRT2t
-	dw XtSint
-	dw XtCost
-	dw XtplusRSint
-	dw XtplusRCost
-	dw XtplusRSinRT1SinRT2t
-	dw XtplusRCosRT1SinRT2t
-	dw XtplustSint
-	dw XtplustCost	
-	dw XLineGuided
-
-MovementY:
-	LDA !MovementType,x
-	CLC
-	LSR
-	LSR
-	LSR
-	TAY
-
-	REP #$20
-	LDA MovementYType,y
+	CMP #$02D0
+	BCC ++
+	SEC
+	SBC #$02D0
 	STA !Scratch0
-	SEP #$20
-
-	LDX #$00
-	JSR ($0000|!dp,x)
-RTS
-
-MovementYType:
-	dw Static
-	dw YRSint
-	dw YRCost
-	dw YRSinRT1SinRT2t
-	dw YRCosRT1SinRT2t
-	dw YtSint
-	dw YtCost
-	dw YtplusRSint
-	dw YtplusRCost
-	dw YtplusRSinRT1SinRT2t
-	dw YtplusRCosRT1SinRT2t
-	dw YtplustSint
-	dw YtplustCost	
-	dw YLineGuided
-
-Static:
-	LDX !SpriteIndex
-RTS
-XRSint:
-	LDX !SpriteIndex
-
-	LDA !RatioT2X,x
-	STA !Scratch8
-	JSR AngleDegrees
-
-	LDA !RatioX,x
-	STA !Scratch2
-
-	JSL Sin
-
-	STZ !Scratch4
-	LDA !Scratch3
-	BPL +
-	LDA #$FF
-	STA !Scratch4
-+
-	LDA !InitialXHigh,x
-	XBA
-	LDA !InitialXLow,x
-	REP #$20
-	CLC
-	ADC !Scratch3
-	STA !Scratch3
-	SEP #$20
-	LDA !Scratch3
-	STA !SpriteXLow,x
-	LDA !Scratch4
-	STA !SpriteXHigh,x
-RTS
-XRCost:
-	LDX !SpriteIndex
-
-	LDA !RatioT2X,x
-	STA !Scratch8
-	JSR AngleDegrees
-
-	LDA !RatioX,x
-	STA !Scratch2
-
-	JSL Cos
-
-	STZ !Scratch4
-	LDA !Scratch3
-	BPL +
-	LDA #$FF
-	STA !Scratch4
-+
-	LDA !InitialXHigh,x
-	XBA
-	LDA !InitialXLow,x
-	REP #$20
-	CLC
-	ADC !Scratch3
-	STA !Scratch3
-	SEP #$20
-	LDA !Scratch3
-	STA !SpriteXLow,x
-	LDA !Scratch4
-	STA !SpriteXHigh,x
-RTS
-XRSinRT1SinRT2t:
-	LDX !SpriteIndex
-
-	LDA !RatioT2X,x
-	STA !Scratch8
-	JSR AngleDegrees
-
-	LDA !RatioT1X,x
-	STA !Scratch2
-
-	JSL Sin
-
-	STZ !Scratch4
-	LDA !Scratch3
-	BPL +
-	LDA #$FF
-	STA !Scratch4
-+
-	LDA !PhaseHigh,x
-	XBA
-	LDA !PhaseLow,x
-	REP #$20
-	ADC !Scratch3
-	ADC !Scratch3
-	ADC !Scratch3
-	STA !Scratch0
-	SEP #$20
-
-	LDA !RatioX,x
-	STA !Scratch2
-	JSL Sin
-
-	STZ !Scratch4
-	LDA !Scratch3
-	BPL +
-	LDA #$FF
-	STA !Scratch4
-+
-	LDA !InitialXHigh,x
-	XBA
-	LDA !InitialXLow,x
-	REP #$20
-	CLC
-	ADC !Scratch3
-	STA !Scratch3
-	SEP #$20
-	LDA !Scratch3
-	STA !SpriteXLow,x
-	LDA !Scratch4
-	STA !SpriteXHigh,x
-RTS
-XRCosRT1SinRT2t:
-	LDX !SpriteIndex
-
-	LDA !RatioT2X,x
-	STA !Scratch8
-	JSR AngleDegrees
-
-	LDA !RatioT1X,x
-	STA !Scratch2
-
-	JSL Sin
-
-	STZ !Scratch4
-	LDA !Scratch3
-	BPL +
-	LDA #$FF
-	STA !Scratch4
-+
-	LDA !PhaseHigh,x
-	XBA
-	LDA !PhaseLow,x
-	REP #$20
-	CLC
-	ADC !Scratch3
-	ADC !Scratch3
-	ADC !Scratch3
-	STA !Scratch0
-	SEP #$20
-
-	LDA !RatioX,x
-	STA !Scratch2
-	JSL Cos
-
-	STZ !Scratch4
-	LDA !Scratch3
-	BPL +
-	LDA #$FF
-	STA !Scratch4
-+
-	LDA !InitialXHigh,x
-	XBA
-	LDA !InitialXLow,x
-	REP #$20
-	CLC
-	ADC !Scratch3
-	STA !Scratch3
-	SEP #$20
-	LDA !Scratch3
-	STA !SpriteXLow,x
-	LDA !Scratch4
-	STA !SpriteXHigh,x
-RTS
-XtSint:
-	LDX !SpriteIndex
-RTS
-XtCost:
-	LDX !SpriteIndex
-RTS
-XtplusRSint:
-	LDX !SpriteIndex
-RTS
-XtplusRCost:
-	LDX !SpriteIndex
-RTS
-XtplusRSinRT1SinRT2t:
-	LDX !SpriteIndex
-RTS
-XtplusRCosRT1SinRT2t:
-	LDX !SpriteIndex
-RTS
-XtplustSint:
-	LDX !SpriteIndex
-RTS
-XtplustCost:
-	LDX !SpriteIndex
-RTS
-XLineGuided:
-	LDX !SpriteIndex
-RTS
-
-YRSint:
-	LDX !SpriteIndex
-
-	LDA !RatioT2Y,x
-	STA !Scratch8
-	JSR AngleDegrees
-
-	LDA !RatioY,x
-	STA !Scratch2
-
-	JSL Sin
-
-	STZ !Scratch4
-	LDA !Scratch3
-	BPL +
-	LDA #$FF
-	STA !Scratch4
-+
-	LDA !InitialYHigh,x
-	XBA
-	LDA !InitialYLow,x
-	REP #$20
-	CLC
-	ADC !Scratch3
-	STA !Scratch3
-	SEP #$20
-	LDA !Scratch3
-	STA !SpriteYLow,x
-	LDA !Scratch4
-	STA !SpriteYHigh,x
-RTS
-YRCost:
-	LDX !SpriteIndex
-
-	LDA !RatioT2Y,x
-	STA !Scratch8
-	JSR AngleDegrees
-
-	LDA !RatioY,x
-	STA !Scratch2
-
-	JSL Cos
-
-	STZ !Scratch4
-	LDA !Scratch3
-	BPL +
-	LDA #$FF
-	STA !Scratch4
-+
-	LDA !InitialYHigh,x
-	XBA
-	LDA !InitialYLow,x
-	REP #$20
-	CLC
-	ADC !Scratch3
-	STA !Scratch3
-	SEP #$20
-	LDA !Scratch3
-	STA !SpriteYLow,x
-	LDA !Scratch4
-	STA !SpriteYHigh,x
-RTS
-YRSinRT1SinRT2t:
-	LDX !SpriteIndex
-
-	LDA !RatioT2Y,x
-	STA !Scratch8
-	JSR AngleDegrees
-
-	LDA !RatioT1Y,x
-	STA !Scratch2
-
-	JSL Sin
-
-	STZ !Scratch4
-	LDA !Scratch3
-	BPL +
-	LDA #$FF
-	STA !Scratch4
-+
-	LDA !PhaseHigh,x
-	XBA
-	LDA !PhaseLow,x
-	REP #$20
-	CLC
-	ADC !Scratch3
-	ADC !Scratch3
-	ADC !Scratch3
-	STA !Scratch0
-	SEP #$20
-
-	LDA !RatioY,x
-	STA !Scratch2
-	JSL Sin
-
-	STZ !Scratch4
-	LDA !Scratch3
-	BPL +
-	LDA #$FF
-	STA !Scratch4
-+
-	LDA !InitialYHigh,x
-	XBA
-	LDA !InitialYLow,x
-	REP #$20
-	CLC
-	ADC !Scratch3
-	STA !Scratch3
-	SEP #$20
-	LDA !Scratch3
-	STA !SpriteYLow,x
-	LDA !Scratch4
-	STA !SpriteYHigh,x
-RTS
-YRCosRT1SinRT2t:
-	LDX !SpriteIndex
-
-	LDA !RatioT2Y,x
-	STA !Scratch8
-	JSR AngleDegrees
-
-	LDA !RatioT1Y,x
-	STA !Scratch2
-
-	JSL Sin
-
-	STZ !Scratch4
-	LDA !Scratch3
-	
-	BPL +
-	LDA #$FF
-	STA !Scratch4
-+
-	LDA !PhaseHigh,x
-	XBA
-	LDA !PhaseLow,x
-	REP #$20
-	CLC
-	ADC !Scratch3
-	ADC !Scratch3
-	ADC !Scratch3
-	STA !Scratch0
-	SEP #$20
-
-	LDA !RatioY,x
-	STA !Scratch2
-	JSL Cos
-
-	STZ !Scratch4
-	LDA !Scratch3
-	BPL +
-	LDA #$FF
-	STA !Scratch4
-+
-	LDA !InitialYHigh,x
-	XBA
-	LDA !InitialYLow,x
-	REP #$20
-	CLC
-	ADC !Scratch3
-	STA !Scratch3
-	SEP #$20
-	LDA !Scratch3
-	STA !SpriteYLow,x
-	LDA !Scratch4
-	STA !SpriteYHigh,x
-RTS
-YtSint:
-	LDX !SpriteIndex
-RTS
-YtCost:
-	LDX !SpriteIndex
-RTS
-YtplusRSint:
-	LDX !SpriteIndex
-RTS
-YtplusRCost:
-	LDX !SpriteIndex
-RTS
-YtplusRSinRT1SinRT2t:
-	LDX !SpriteIndex
-RTS
-YtplusRCosRT1SinRT2t:
-	LDX !SpriteIndex
-RTS
-YtplustSint:
-	LDX !SpriteIndex
-RTS
-YtplustCost:
-	LDX !SpriteIndex
-RTS
-YLineGuided:
-	LDX !SpriteIndex
-RTS
-
-AngleDegrees:
-	STA !Scratch8
-	LDA !AngleHigh,x
-	STA !Scratch1
-	LDA !AngleLow,x
-	STA !Scratch0
-
-	JSR Multiply
-
-RTS
-
-Multiply:
-	REP #$20
-	LDA !Scratch0
-	LDY !Scratch8
--
-	BMI +
-	BEQ +
-	ASL
-	DEY
-	BRA -
-+
-	STA !Scratch0
-	SEP #$20
-RTS
-
-;########################################
-;Input:
-;   $00 = Angle (a number between 0 and $2CF) must be of 16 bits
-;   $02 = Ratio (a number between 0 and FF) must be of 8 bits
-;Output:
-;   $03 = Sin(Angle/2)*Ratio
-Sin:
-    PHX
-    PHB
-    PHK
-    PLB
-	JSR CalculateMod720
-    REP #$10                ;Y of 16 bits
-    LDY $00
-    LDA SinTable,y          ;A = Sin($00/2)*127
-    JSR SinCosExcecute
-    PLB
-    PLX
-    RTL
-
-Cos:
-    PHX
-    PHB
-    PHK
-    PLB
-	JSR CalculateMod720
-    REP #$10                ;Y of 16 bits
-    LDY $00
-    LDA CosTable,y          ;A = Sin($00/2)*127
-    JSR SinCosExcecute
-    PLB
-    PLX
-    RTL
- 
-SinCosExcecute:
-    SEP #$10                ;Y of 8 bits
-    BPL +                   ;if negative then do A = -A
-    PHA                     ;s = A
-    LDA #$00                
-    SEC
-    SBC $01,s               ;A = -A
-    PLY                     ;
-    LDY #$01                ;Y = 1
-    BRA ++
-+
-    LDY #$00                ;Y = 0
 ++
-if !sa1
-    STZ $2250
-    STA $2251
-    STZ $2252
-    LDA $02
-    INC
-    STA $2253
-    STZ $2254
-    NOP
-    BRA $00
- 
-    LDA #$01
-    STA $2250
-    REP #$20
-    LDA $2306               ;A = Result of Sin($00/2)*127*Ratio
-    STA $2251
-    SEP #$20
-    LDA #$7F
-    STA $2253
-    STZ $2254
- 
-    NOP
-    BRA $00
-    LDA $2306
-else
-    STA $4202
-    LDA $02
-    CLC
-    ADC #$01
-    STA $4203               ;A*Ratio = Sin($00/2)*127*Ratio
- 
-    NOP #$03                ;Wait Mul
-    REP #$20
-    LDA $4216               ;A = Result of Sin($00/2)*127*Ratio
-    STA $4204
-    SEP #$20
- 
-    LDA #$7F
-    STA $4206               ;
- 
-    NOP #$08                ;Wait Division
-    LDA $4214               ;A = Sin($00/2)*Ratio
-endif
-    CPY #$00
-    BEQ +
-    PHA
-    LDA #$00
-    SEC
-    SBC $01,s
-    PLY                     ;If at the start Sin($00/2)*127 was negative then now is A=-A
-+
-    STA $03
- 
-    RTS
- 
-SinTable:
-	db $00,$01,$02,$03,$04,$06,$07,$08,$09,$0A,$0B,$0C,$0D,$0E,$0F,$11
-	db $12,$13,$14,$15,$16,$17,$18,$19,$1A,$1B,$1D,$1E,$1F,$20,$21,$22
-	db $23,$24,$25,$26,$27,$28,$29,$2A,$2B,$2C,$2E,$2F,$30,$31,$32,$33
-	db $34,$35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F,$40,$40,$41,$42
-	db $43,$44,$45,$46,$47,$48,$49,$4A,$4B,$4C,$4C,$4D,$4E,$4F,$50,$51
-	db $52,$52,$53,$54,$55,$56,$57,$57,$58,$59,$5A,$5B,$5B,$5C,$5D,$5E
-	db $5E,$5F,$60,$61,$61,$62,$63,$63,$64,$65,$65,$66,$67,$67,$68,$69
-	db $69,$6A,$6B,$6B,$6C,$6C,$6D,$6D,$6E,$6F,$6F,$70,$70,$71,$71,$72
-	db $72,$73,$73,$74,$74,$74,$75,$75,$76,$76,$77,$77,$77,$78,$78,$78
-	db $79,$79,$79,$7A,$7A,$7A,$7B,$7B,$7B,$7B,$7C,$7C,$7C,$7C,$7D,$7D
-	db $7D,$7D,$7D,$7E,$7E,$7E,$7E,$7E,$7E,$7E,$7F,$7F,$7F,$7F,$7F,$7F
-	db $7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7E
-	db $7E,$7E,$7E,$7E,$7E,$7E,$7D,$7D,$7D,$7D,$7D,$7C,$7C,$7C,$7C,$7B
-	db $7B,$7B,$7B,$7A,$7A,$7A,$79,$79,$79,$78,$78,$78,$77,$77,$77,$76
-	db $76,$75,$75,$74,$74,$74,$73,$73,$72,$72,$71,$71,$70,$70,$6F,$6F
-	db $6E,$6D,$6D,$6C,$6C,$6B,$6B,$6A,$69,$69,$68,$67,$67,$66,$65,$65
-	db $64,$63,$63,$62,$61,$61,$60,$5F,$5E,$5E,$5D,$5C,$5B,$5B,$5A,$59
-	db $58,$57,$57,$56,$55,$54,$53,$52,$52,$51,$50,$4F,$4E,$4D,$4C,$4C
-	db $4B,$4A,$49,$48,$47,$46,$45,$44,$43,$42,$41,$40,$40,$3F,$3E,$3D
-	db $3C,$3B,$3A,$39,$38,$37,$36,$35,$34,$33,$32,$31,$30,$2F,$2E,$2C
-	db $2B,$2A,$29,$28,$27,$26,$25,$24,$23,$22,$21,$20,$1F,$1E,$1D,$1B
-	db $1A,$19,$18,$17,$16,$15,$14,$13,$12,$11,$0F,$0E,$0D,$0C,$0B,$0A
-	db $09,$08,$07,$06,$04,$03,$02,$01,$00,$FF,$FE,$FD,$FC,$FA,$F9,$F8
-	db $F7,$F6,$F5,$F4,$F3,$F2,$F1,$EF,$EE,$ED,$EC,$EB,$EA,$E9,$E8,$E7
-	db $E6,$E5,$E3,$E2,$E1,$E0,$DF,$DE,$DD,$DC,$DB,$DA,$D9,$D8,$D7,$D6
-	db $D5,$D4,$D2,$D1,$D0,$CF,$CE,$CD,$CC,$CB,$CA,$C9,$C8,$C7,$C6,$C5
-	db $C4,$C3,$C2,$C1,$C0,$C0,$BF,$BE,$BD,$BC,$BB,$BA,$B9,$B8,$B7,$B6
-	db $B5,$B4,$B4,$B3,$B2,$B1,$B0,$AF,$AE,$AE,$AD,$AC,$AB,$AA,$A9,$A9
-	db $A8,$A7,$A6,$A5,$A5,$A4,$A3,$A2,$A2,$A1,$A0,$9F,$9F,$9E,$9D,$9D
-	db $9C,$9B,$9B,$9A,$99,$99,$98,$97,$97,$96,$95,$95,$94,$94,$93,$93
-	db $92,$91,$91,$90,$90,$8F,$8F,$8E,$8E,$8D,$8D,$8C,$8C,$8C,$8B,$8B
-	db $8A,$8A,$89,$89,$89,$88,$88,$88,$87,$87,$87,$86,$86,$86,$85,$85
-	db $85,$85,$84,$84,$84,$84,$83,$83,$83,$83,$83,$82,$82,$82,$82,$82
-	db $82,$82,$81,$81,$81,$81,$81,$81,$81,$81,$81,$81,$81,$81,$81,$81
-	db $81,$81,$81,$81,$81,$81,$81,$82,$82,$82,$82,$82,$82,$82,$83,$83
-	db $83,$83,$83,$84,$84,$84,$84,$85,$85,$85,$85,$86,$86,$86,$87,$87
-	db $87,$88,$88,$88,$89,$89,$89,$8A,$8A,$8B,$8B,$8C,$8C,$8C,$8D,$8D
-	db $8E,$8E,$8F,$8F,$90,$90,$91,$91,$92,$93,$93,$94,$94,$95,$95,$96
-	db $97,$97,$98,$99,$99,$9A,$9B,$9B,$9C,$9D,$9D,$9E,$9F,$9F,$A0,$A1
-	db $A2,$A2,$A3,$A4,$A5,$A5,$A6,$A7,$A8,$A9,$A9,$AA,$AB,$AC,$AD,$AE
-	db $AE,$AF,$B0,$B1,$B2,$B3,$B4,$B4,$B5,$B6,$B7,$B8,$B9,$BA,$BB,$BC
-	db $BD,$BE,$BF,$C0,$C0,$C1,$C2,$C3,$C4,$C5,$C6,$C7,$C8,$C9,$CA,$CB
-	db $CC,$CD,$CE,$CF,$D0,$D1,$D2,$D4,$D5,$D6,$D7,$D8,$D9,$DA,$DB,$DC
-	db $DD,$DE,$DF,$E0,$E1,$E2,$E3,$E5,$E6,$E7,$E8,$E9,$EA,$EB,$EC,$ED
-	db $EE,$EF,$F1,$F2,$F3,$F4,$F5,$F6,$F7,$F8,$F9,$FA,$FC,$FD,$FE,$FF
-
-;Here you can write routines or tables
-
-CosTable:
-	db $7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7E,$7E,$7E,$7E,$7E
-	db $7E,$7E,$7D,$7D,$7D,$7D,$7D,$7C,$7C,$7C,$7C,$7B,$7B,$7B,$7B,$7A
-	db $7A,$7A,$79,$79,$79,$78,$78,$78,$77,$77,$77,$76,$76,$75,$75,$74
-	db $74,$74,$73,$73,$72,$72,$71,$71,$70,$70,$6F,$6F,$6E,$6D,$6D,$6C
-	db $6C,$6B,$6B,$6A,$69,$69,$68,$67,$67,$66,$65,$65,$64,$63,$63,$62
-	db $61,$61,$60,$5F,$5E,$5E,$5D,$5C,$5B,$5B,$5A,$59,$58,$57,$57,$56
-	db $55,$54,$53,$52,$52,$51,$50,$4F,$4E,$4D,$4C,$4C,$4B,$4A,$49,$48
-	db $47,$46,$45,$44,$43,$42,$41,$40,$40,$3F,$3E,$3D,$3C,$3B,$3A,$39
-	db $38,$37,$36,$35,$34,$33,$32,$31,$30,$2F,$2E,$2C,$2B,$2A,$29,$28
-	db $27,$26,$25,$24,$23,$22,$21,$20,$1F,$1E,$1D,$1B,$1A,$19,$18,$17
-	db $16,$15,$14,$13,$12,$11,$0F,$0E,$0D,$0C,$0B,$0A,$09,$08,$07,$06
-	db $04,$03,$02,$01,$00,$FF,$FE,$FD,$FC,$FA,$F9,$F8,$F7,$F6,$F5,$F4
-	db $F3,$F2,$F1,$EF,$EE,$ED,$EC,$EB,$EA,$E9,$E8,$E7,$E6,$E5,$E3,$E2
-	db $E1,$E0,$DF,$DE,$DD,$DC,$DB,$DA,$D9,$D8,$D7,$D6,$D5,$D4,$D2,$D1
-	db $D0,$CF,$CE,$CD,$CC,$CB,$CA,$C9,$C8,$C7,$C6,$C5,$C4,$C3,$C2,$C1
-	db $C0,$C0,$BF,$BE,$BD,$BC,$BB,$BA,$B9,$B8,$B7,$B6,$B5,$B4,$B4,$B3
-	db $B2,$B1,$B0,$AF,$AE,$AE,$AD,$AC,$AB,$AA,$A9,$A9,$A8,$A7,$A6,$A5
-	db $A5,$A4,$A3,$A2,$A2,$A1,$A0,$9F,$9F,$9E,$9D,$9D,$9C,$9B,$9B,$9A
-	db $99,$99,$98,$97,$97,$96,$95,$95,$94,$94,$93,$93,$92,$91,$91,$90
-	db $90,$8F,$8F,$8E,$8E,$8D,$8D,$8C,$8C,$8C,$8B,$8B,$8A,$8A,$89,$89
-	db $89,$88,$88,$88,$87,$87,$87,$86,$86,$86,$85,$85,$85,$85,$84,$84
-	db $84,$84,$83,$83,$83,$83,$83,$82,$82,$82,$82,$82,$82,$82,$81,$81
-	db $81,$81,$81,$81,$81,$81,$81,$81,$81,$81,$81,$81,$81,$81,$81,$81
-	db $81,$81,$81,$82,$82,$82,$82,$82,$82,$82,$83,$83,$83,$83,$83,$84
-	db $84,$84,$84,$85,$85,$85,$85,$86,$86,$86,$87,$87,$87,$88,$88,$88
-	db $89,$89,$89,$8A,$8A,$8B,$8B,$8C,$8C,$8C,$8D,$8D,$8E,$8E,$8F,$8F
-	db $90,$90,$91,$91,$92,$93,$93,$94,$94,$95,$95,$96,$97,$97,$98,$99
-	db $99,$9A,$9B,$9B,$9C,$9D,$9D,$9E,$9F,$9F,$A0,$A1,$A2,$A2,$A3,$A4
-	db $A5,$A5,$A6,$A7,$A8,$A9,$A9,$AA,$AB,$AC,$AD,$AE,$AE,$AF,$B0,$B1
-	db $B2,$B3,$B4,$B4,$B5,$B6,$B7,$B8,$B9,$BA,$BB,$BC,$BD,$BE,$BF,$C0
-	db $C0,$C1,$C2,$C3,$C4,$C5,$C6,$C7,$C8,$C9,$CA,$CB,$CC,$CD,$CE,$CF
-	db $D0,$D1,$D2,$D4,$D5,$D6,$D7,$D8,$D9,$DA,$DB,$DC,$DD,$DE,$DF,$E0
-	db $E1,$E2,$E3,$E5,$E6,$E7,$E8,$E9,$EA,$EB,$EC,$ED,$EE,$EF,$F1,$F2
-	db $F3,$F4,$F5,$F6,$F7,$F8,$F9,$FA,$FC,$FD,$FE,$FF,$00,$01,$02,$03
-	db $04,$06,$07,$08,$09,$0A,$0B,$0C,$0D,$0E,$0F,$11,$12,$13,$14,$15
-	db $16,$17,$18,$19,$1A,$1B,$1D,$1E,$1F,$20,$21,$22,$23,$24,$25,$26
-	db $27,$28,$29,$2A,$2B,$2C,$2E,$2F,$30,$31,$32,$33,$34,$35,$36,$37
-	db $38,$39,$3A,$3B,$3C,$3D,$3E,$3F,$40,$40,$41,$42,$43,$44,$45,$46
-	db $47,$48,$49,$4A,$4B,$4C,$4C,$4D,$4E,$4F,$50,$51,$52,$52,$53,$54
-	db $55,$56,$57,$57,$58,$59,$5A,$5B,$5B,$5C,$5D,$5E,$5E,$5F,$60,$61
-	db $61,$62,$63,$63,$64,$65,$65,$66,$67,$67,$68,$69,$69,$6A,$6B,$6B
-	db $6C,$6C,$6D,$6D,$6E,$6F,$6F,$70,$70,$71,$71,$72,$72,$73,$73,$74
-	db $74,$74,$75,$75,$76,$76,$77,$77,$77,$78,$78,$78,$79,$79,$79,$7A
-	db $7A,$7A,$7B,$7B,$7B,$7B,$7C,$7C,$7C,$7C,$7D,$7D,$7D,$7D,$7D,$7E
-	db $7E,$7E,$7E,$7E,$7E,$7E,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F
-
-CalculateMod720:
-	REP #$20
-	LDA !Scratch0
-	STA !Scratch4
-	LDA #$02D0
-	STA !Scratch6
 	SEP #$20
+	LDA !Scratch0
+	STA !AngleLow,x
+	LDA !Scratch1
+	STA !AngleHigh,x
++
 
-	JSR MathDiv
+	LDA !MovTypeX,x
+	ASL
+	TAX
+	
+	JSR (MoveX,x)
 
-	LDA !Scratch6
+	LDA !MovTypeY,x
+	ASL
+	TAX
+	
+	JSR (MoveY,x)
+RTS
+
+MoveX:
+	dw NoMovement
+	dw ConstantX
+	dw FollowX
+	dw SinX
+	dw CosX
+	dw SinSinX
+	dw SinCosX
+	dw CosSinX
+	dw CosCosX
+
+MoveY:
+	dw NoMovement
+	dw ConstantY
+	dw FollowY
+	dw SinY
+	dw CosY
+	dw SinSinY
+	dw SinCosY
+	dw CosSinY
+	dw CosCosY
+
+NoMovement:
+	LDX !SpriteIndex
+RTS
+
+ConstantX:
+	LDX !SpriteIndex
+
+	JSL $018022|!rom
+RTS
+
+ConstantY:
+	LDX !SpriteIndex
+
+	JSL $01801A|!rom
+RTS
+
+FollowX:
+	LDX !SpriteIndex
+
+	LDA !SpriteXHigh,x
+	XBA
+	LDA !SpriteXLow,x
+	REP #$20
+	CLC
+	ADC #$000C
+	CMP !PlayerX
+	SEP #$20
+	BCC +
+
+	LDA !MaxSpeedX,x
+	EOR #$FF
+	INC A
 	STA !Scratch0
 
-	LDA !Scratch7
-	STA !Scratch1
+	LDA !SpriteXSpeed,x
+	SEC
+	SBC !AccelX,x
+	STA !SpriteXSpeed,x
+	BPL ++
+	CMP !Scratch0
+	BCS ++
+	LDA !Scratch0
+	STA !SpriteXSpeed,x
+	JSL $018022|!rom
+RTS
++
+	LDA !SpriteXSpeed,x
+	CLC
+	ADC !AccelX,x
+	STA !SpriteXSpeed,x
+	BMI ++
+	CMP !MaxSpeedX,x
+	BCC ++
+	LDA !MaxSpeedX,x
+	STA !SpriteXSpeed,x
+++
+	JSL $018022|!rom
+RTS
+
+FollowY:
+	LDX !SpriteIndex
+
+	LDA !SpriteYHigh,x
+	XBA
+	LDA !SpriteYLow,x
+	REP #$20
+	SEC
+	SBC #$0008
+	CMP !PlayerY
+	SEP #$20
+	BCC +
+
+	LDA !MaxSpeedY,x
+	EOR #$FF
+	INC A
+	STA !Scratch0
+
+	LDA !SpriteYSpeed,x
+	SEC
+	SBC !AccelY,x
+	STA !SpriteYSpeed,x
+	BPL ++
+	CMP !Scratch0
+	BCS ++
+	LDA !Scratch0
+	STA !SpriteYSpeed,x
+	JSL $01801A|!rom
+RTS
++
+	LDA !SpriteYSpeed,x
+	CLC
+	ADC !AccelY,x
+	STA !SpriteYSpeed,x
+	BMI ++
+	CMP !MaxSpeedY,x
+	BCC ++
+	LDA !MaxSpeedY,x
+	STA !SpriteYSpeed,x
+++
+	JSL $01801A|!rom
+RTS
+
+SinX:
+	JSR ApplyRatioXIncrease
+	JSR Follow2X
+	JSR SinCosXStart
+	%Sin()
+	JSR SinCosXEnd
 
 RTS
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; 16bit / 16bit Division
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Arguments
-; $00-$01 : Dividend
-; $02-$03 : Divisor
-; Return values
-; $00-$01 : Quotient
-; $02-$03 : Remainder
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+SinY:
+	JSR ApplyRatioYIncrease
+	JSR Follow2Y
+	JSR SinCosYStart
+	%Sin()
+	JSR SinCosYEnd
 
-MathDiv:	
-	REP #$20
-	ASL !Scratch4
-	LDY #$0F
-	LDA.w #$0000
--		
-	ROL A
-	CMP !Scratch6
-	BCC +
-	SBC !Scratch6
-+		
-	ROL !Scratch4
-	DEY
-	BPL -
-	STA !Scratch6
+RTS
+
+CosX:
+	JSR ApplyRatioXIncrease
+	JSR Follow2X
+	JSR SinCosXStart
+	%Cos()
+	JSR SinCosXEnd
+RTS
+
+CosY:
+	JSR ApplyRatioYIncrease
+	JSR Follow2Y
+	JSR SinCosYStart
+	%Cos()
+	JSR SinCosYEnd
+
+RTS
+
+SinSinX:
+	JSR ApplyRatioXIncrease
+	JSR Follow2X
+	JSR SSSCCSCCXStart
+	%Sin()
+	JSR SSSCCSCCMiddle
+	%Sin()
+	JSR SinCosXEnd
+
+RTS
+
+SinSinY:
+	JSR ApplyRatioYIncrease
+	JSR Follow2Y
+	JSR SSSCCSCCYStart
+	%Sin()
+	JSR SSSCCSCCMiddle
+	%Sin()
+	JSR SinCosYEnd
+
+RTS
+
+SinCosX:
+	JSR ApplyRatioXIncrease
+	JSR Follow2X
+	JSR SSSCCSCCXStart
+	%Cos()
+	JSR SSSCCSCCMiddle
+	%Sin()
+	JSR SinCosXEnd
+
+RTS
+
+SinCosY:
+	JSR ApplyRatioYIncrease
+	JSR Follow2Y
+	JSR SSSCCSCCYStart
+	%Cos()
+	JSR SSSCCSCCMiddle
+	%Sin()
+	JSR SinCosYEnd
+
+RTS
+
+CosSinX:
+	JSR ApplyRatioXIncrease
+	JSR Follow2X
+	JSR SSSCCSCCXStart
+	%Sin()
+	JSR SSSCCSCCMiddle
+	%Cos()
+	JSR SinCosXEnd
+
+RTS
+
+CosSinY:
+	JSR ApplyRatioYIncrease
+	JSR Follow2Y
+	JSR SSSCCSCCYStart
+	%Sin()
+	JSR SSSCCSCCMiddle
+	%Cos()
+	JSR SinCosYEnd
+
+RTS
+
+CosCosX:
+	JSR ApplyRatioXIncrease
+	JSR Follow2X
+	JSR SSSCCSCCXStart
+	%Cos()
+	JSR SSSCCSCCMiddle
+	%Cos()
+	JSR SinCosXEnd
+
+RTS
+
+CosCosY:
+	JSR ApplyRatioYIncrease
+	JSR Follow2Y
+	JSR SSSCCSCCYStart
+	%Cos()
+	JSR SSSCCSCCMiddle
+	%Cos()
+	JSR SinCosYEnd
+
+RTS
+
+SinCosXStart:
+
+	LDA !PosXL,x
+	STA !SpriteXLow,x
+	LDA !PosXH,x
+	STA !SpriteXHigh,x
+
+	JSL $018022|!rom
+
+	LDA !SpriteXLow,x
+	STA !PosXL,x
+	STA !ScratchC
+	LDA !SpriteXHigh,x
+	STA !PosXH,x
+	STA !ScratchD
+
+	LDA !RatioX,x
+	PHA
+	LDA !AngleHigh,x
+	XBA
+	LDA !AngleLow,x
+	REP #$10
+	TAX
+	PLA
+RTS
+
+SinCosXEnd:
+	CLC
+	ADC !ScratchC
+	STA !ScratchC
+	SEP #$30
+	LDX !SpriteIndex
+
+	LDA !ScratchC
+	STA !SpriteXLow,x
+	LDA !ScratchD
+	STA !SpriteXHigh,x
+
+RTS
+
+SinCosYStart:
+
+	LDA !PosYL,x
+	STA !SpriteYLow,x
+	LDA !PosYH,x
+	STA !SpriteYHigh,x
+
+	JSL $01801A|!rom
+
+	LDA !SpriteYLow,x
+	STA !PosYL,x
+	STA !ScratchC
+	LDA !SpriteYHigh,x
+	STA !PosYH,x
+	STA !ScratchD
+
+	LDA !RatioY,x
+	PHA
+	LDA !AngleHigh,x
+	XBA
+	LDA !AngleLow,x
+	REP #$10
+	TAX
+	PLA
+RTS
+
+SinCosYEnd:
+	CLC
+	ADC !ScratchC
+	STA !ScratchC
+	SEP #$30
+	LDX !SpriteIndex
+
+	LDA !ScratchC
+	STA !SpriteYLow,x
+	LDA !ScratchD
+	STA !SpriteYHigh,x
+
+RTS
+
+SSSCCSCCXStart:
+
+	LDA !PosXL,x
+	STA !SpriteXLow,x
+	LDA !PosXH,x
+	STA !SpriteXHigh,x
+
+	JSL $018022|!rom
+
+	LDA !SpriteXLow,x
+	STA !PosXL,x
+	STA !ScratchC
+	LDA !SpriteXHigh,x
+	STA !PosXH,x
+	STA !ScratchD
+
+	LDA !RatioX,x
+	STA !Scratch9
+
+	LDA !PhaseHigh,x
+	STA !ScratchB
+	LDA !PhaseLow,x
+	STA !ScratchA
+
+	LDA !AmplitudeX,x
+	PHA
+	LDA !AngleHigh,x
+	XBA
+	LDA !AngleLow,x
+	REP #$10
+	TAX
+	PLA
+RTS
+
+SSSCCSCCMiddle:
+	CLC
+	ADC !ScratchA
+	BPL +
+	CLC
+	ADC #$02D0
+	BRA ++
++
+	CMP #$02D0
+	BCC ++
+
+	SEC
+	SBC #$02D0
+++
+	TAX
 	SEP #$20
+	LDA !Scratch9
+RTS
+
+SSSCCSCCYStart:
+	LDA !PosYL,x
+	STA !SpriteYLow,x
+	LDA !PosYH,x
+	STA !SpriteYHigh,x
+
+	JSL $01801A|!rom
+
+	LDA !SpriteYLow,x
+	STA !PosYL,x
+	STA !ScratchC
+	LDA !SpriteYHigh,x
+	STA !PosYH,x
+	STA !ScratchD
+
+	LDA !RatioY,x
+	STA !Scratch9
+
+	LDA !PhaseHigh,x
+	STA !ScratchB
+	LDA !PhaseLow,x
+	STA !ScratchA
+
+	LDA !AmplitudeY,x
+	PHA
+	LDA !AngleHigh,x
+	XBA
+	LDA !AngleLow,x
+	REP #$10
+	TAX
+	PLA
+RTS
+
+ApplyRatioXIncrease:
+	LDX !SpriteIndex
+
+	LDA !RatioIncreaseX,x
+	BNE +
+RTS
++
+	LDY #$00
+	LDA !RatioIncreaseTimerX,x
+	CLC
+	ADC !RatioIncreaseX,x
+	STA !RatioIncreaseTimerX,x			;Ratio += Ratio Increase
+	BPL +
+	LDY #$01
+	EOR #$FF
+	INC A
++
+	LSR
+	LSR
+	LSR
+	LSR
+	STA !Scratch0
+	BNE +
+RTS
++
+	CPY #$01
+	BNE +
+	EOR #$FF
+	INC A
+	STA !Scratch0
+	LDA !RatioIncreaseTimerX,x
+	CLC
+	ADC #$10
+	STA !RatioIncreaseTimerX,x
+	BRA ++
++
+	LDA !RatioIncreaseTimerX,x
+	CLC
+	ADC #$F0
+	STA !RatioIncreaseTimerX,x	
+++
+
+	LDA !RatioX,x
+	PHP
+	CLC
+	ADC !Scratch0
+	STA !RatioX,x			;Ratio += Ratio Increase
+	PLA
+	BMI +
+
+	LDA !RatioIncreaseX,x
+	BPL +
+
+	LDA !RatioX,x
+	BPL +
+
+	LDA !RatioIncreaseX,x
+
+	LDA #$00
+	STA !RatioX,x
+	LDA !RatioIncreaseX,x
+	EOR #$FF
+	INC A
+	STA !RatioIncreaseX,x
+RTS
+
++
+
+	LDA !RatioMaxX,x
+	CMP !RatioX,x
+	BCS +
+
+	STA !RatioX,x
+	
+	LDA !RatioIncreaseX,x
+	EOR #$FF
+	INC A
+	STA !RatioIncreaseX,x
+
++
+
+RTS
+
+ApplyRatioYIncrease:
+	LDX !SpriteIndex
+
+	LDA !RatioIncreaseY,x
+	BNE +
+RTS
++
+	LDY #$00
+	LDA !RatioIncreaseTimerY,x
+	CLC
+	ADC !RatioIncreaseY,x
+	STA !RatioIncreaseTimerY,x			;Ratio += Ratio Increase
+	BPL +
+	LDY #$01
+	EOR #$FF
+	INC A
++
+	LSR
+	LSR
+	LSR
+	LSR
+	STA !Scratch0
+	BNE +
+RTS
++
+	CPY #$01
+	BNE +
+	EOR #$FF
+	INC A
+	STA !Scratch0
+	LDA !RatioIncreaseTimerY,x
+	CLC
+	ADC #$10
+	STA !RatioIncreaseTimerY,x
+	BRA ++
++
+	LDA !RatioIncreaseTimerY,x
+	CLC
+	ADC #$F0
+	STA !RatioIncreaseTimerY,x	
+++
+	LDA !RatioY,x
+	PHP
+	CLC
+	ADC !Scratch0
+	STA !RatioY,x			;Ratio += Ratio Increase
+	PLA
+	BMI +
+
+	LDA !RatioIncreaseY,x
+	BPL +
+
+	LDA !RatioY,x
+	BPL +
+
+	LDA #$00
+	STA !RatioY,x
+	LDA !RatioIncreaseY,x
+	EOR #$FF
+	INC A
+	STA !RatioIncreaseY,x
+RTS
+
++
+
+	LDA !RatioMaxY,x
+	CMP !RatioY,x
+	BCS +
+
+	STA !RatioY,x
+	
+	LDA !RatioIncreaseY,x
+	EOR #$FF
+	INC A
+	STA !RatioIncreaseY,x
+
++
+RTS
+
+Follow2X:
+	LDA !AccelX,x
+	BNE +
+RTS
++
+
+	LDA !PosXH,x
+	XBA
+	LDA !PosXL,x
+	REP #$20
+	CLC
+	ADC #$000C
+	CMP !PlayerX
+	SEP #$20
+	BCC +
+
+	LDA !MaxSpeedX,x
+	EOR #$FF
+	INC A
+	STA !Scratch0
+
+	LDA !SpriteXSpeed,x
+	SEC
+	SBC !AccelX,x
+	STA !SpriteXSpeed,x
+	BPL ++
+	CMP !Scratch0
+	BCS ++
+	LDA !Scratch0
+	STA !SpriteXSpeed,x
+RTS
++
+	LDA !SpriteXSpeed,x
+	CLC
+	ADC !AccelX,x
+	STA !SpriteXSpeed,x
+	BMI ++
+	CMP !MaxSpeedX,x
+	BCC ++
+	LDA !MaxSpeedX,x
+	STA !SpriteXSpeed,x
+++
+RTS
+
+Follow2Y:
+	LDA !AccelY,x
+	BNE +
+RTS
++
+
+	LDA !PosYH,x
+	XBA
+	LDA !PosYL,x
+	REP #$20
+	SEC
+	SBC #$0008
+	CMP !PlayerY
+	SEP #$20
+	BCC +
+
+	LDA !MaxSpeedY,x
+	EOR #$FF
+	INC A
+	STA !Scratch0
+
+	LDA !SpriteYSpeed,x
+	SEC
+	SBC !AccelY,x
+	STA !SpriteYSpeed,x
+	BPL ++
+	CMP !Scratch0
+	BCS ++
+	LDA !Scratch0
+	STA !SpriteYSpeed,x
+RTS
++
+	LDA !SpriteYSpeed,x
+	CLC
+	ADC !AccelY,x
+	STA !SpriteYSpeed,x
+	BMI ++
+	CMP !MaxSpeedY,x
+	BCC ++
+	LDA !MaxSpeedY,x
+	STA !SpriteYSpeed,x
+++
 RTS
 
 ;>Section Dynamic
@@ -1466,9 +1428,9 @@ ResourceOffset:
 Frame0_ResourceOffset:
 	dw $0000,$0160
 Frame1_ResourceOffset:
-	dw $02A0,$0460
+	dw $02A0,$0480
 Frame2_ResourceOffset:
-	dw $0600,$07E0
+	dw $0660,$0820
 Frame3_ResourceOffset:
 	dw $09A0,$0BA0
 Frame4_ResourceOffset:
@@ -1476,9 +1438,9 @@ Frame4_ResourceOffset:
 Frame5_ResourceOffset:
 	dw $1080,$1280
 Frame6_ResourceOffset:
-	dw $1440,$1600
+	dw $1440,$1620
 Frame7_ResourceOffset:
-	dw $1780,$1960
+	dw $17E0,$19A0
 Frame8_ResourceOffset:
 	dw $1B40,$1D00
 Frame9_ResourceOffset:
@@ -1497,50 +1459,151 @@ Frame14_ResourceOffset:
 
 ResourceSize:
 Frame0_ResourceSize:
-	dw $0160,$0140
+	db $0B,$0A
 Frame1_ResourceSize:
-	dw $01C0,$01A0
+	db $0F,$0F
 Frame2_ResourceSize:
-	dw $01E0,$01C0
+	db $0E,$0C
 Frame3_ResourceSize:
-	dw $03C0,$0000
+	db $1E,$00
 Frame4_ResourceSize:
-	dw $01A0,$0180
+	db $0D,$0C
 Frame5_ResourceSize:
-	dw $03C0,$0000
+	db $1E,$00
 Frame6_ResourceSize:
-	dw $01C0,$0180
+	db $0F,$0E
 Frame7_ResourceSize:
-	dw $01E0,$01E0
+	db $0E,$0D
 Frame8_ResourceSize:
-	dw $01C0,$01C0
+	db $0E,$0E
 Frame9_ResourceSize:
-	dw $0160,$0140
+	db $0B,$0A
 Frame10_ResourceSize:
-	dw $01A0,$0180
+	db $0D,$0C
 Frame11_ResourceSize:
-	dw $01C0,$01C0
+	db $0E,$0E
 Frame12_ResourceSize:
-	dw $01E0,$0180
+	db $0F,$0C
 Frame13_ResourceSize:
-	dw $01C0,$01C0
+	db $0E,$0E
 Frame14_ResourceSize:
-	dw $0180,$0180
+	db $0C,$0C
+
 
 DynamicRoutine:
-	PHB
-	PLA
-	STA $53
-	%DynamicRoutine(1, !SendSignal48x48Normal, !TransferFrameNormalSprite, !FrameIndex, !LastFrameIndex, !VRAMDispNormalSprite, $53, !DynamicRoutine48x48, GFXPointer, ResourceOffset, ResourceSize)
+	PHX
+	
+	LDA.l DZ_DS_Loc_US_Normal,x
+	TAX
+
+	LDA DZ_DS_Loc_UsedBy,x
+	AND #$80
+	BEQ +
+
+	LDA DZ_DS_Loc_SharedUpdated,x
+	BEQ +
+	PLX
 RTS
++
+	PLX
 
-GFXPointer:
-dw resource
+	%CheckEvenOrOdd("DZ_DS_Loc_US_Normal")
+	BEQ +								;/
+RTS
++
+	%FindSpace("DZ_DS_Loc_US_Normal,x")
+	BCS +
 
-;fill this with the name of your exgfx (replace "resource.bin" for the name of your graphic.bin)
-resource:
-incbin "sprites\Zinger.bin"
+	LDA.l DZ_DS_Loc_US_Normal,x
+	TAX
 
+	LDA.l DZ_DS_Loc_IsValid,x
+	BNE ++
+    LDX $15E9|!addr
+    STZ !SpriteStatus,x
+    LDA !SpriteLoadStatus,x
+    TAX
+    LDA #$00
+    STA !SpriteLoadTable,x
+++
+    LDX $15E9|!addr
+RTS
++
+	LDA !ScratchB
+	BNE +
+	
+	LDA !FrameIndex,x
+	STA !Scratch0
+	CMP !LastFrameIndex,x				;|if last frame is different to new frame then
+	BNE ++								;|do dynamic routine
+RTS										;/
++
+	LDA !FrameIndex,x
+	STA !Scratch0
+++
+	LDA.l DZ_DS_Loc_US_Normal,x
+	TAX
+	LDA !Scratch0
+	STA.l DZ_DS_Loc_SharedFrame,x
+
+	LDX $15E9|!addr
+
+	LDA #$00
+	XBA
+	LDA !FrameIndex,x
+	STA !LastFrameIndex,x
+	REP #$30
+	ASL
+	TAY
+	PHY
+	SEP #$20
+	LDA ResourceSize,y
+	STA !Scratch0
+	REP #$20
+	TYA
+	ASL
+	TAY
+	PHY
+	LDA ResourceOffset,y
+	STA !Scratch1
+	SEP #$30
+
+	LDA !LastFrameIndex,x
+	TAY
+
+
+	%GetVramDispDynamicRoutine(DZ_DS_Loc_US_Normal)
+	STA !ScratchD
+
+	LDA.l DZ_DS_Loc_US_Normal,x
+	TAX
+
+	LDA #$01
+	STA.l DZ_DS_Loc_IsValid,x
+
+	%DynamicRoutine(!ScratchD, #!GFX00, #!GFX00>>16, !Scratch1, !Scratch0)
+
+	REP #$30
+	PLY
+	LDA ResourceOffset+2,y
+	STA !Scratch1
+	PLY
+	SEP #$20
+	LDA ResourceSize+1,y
+	STA !Scratch0
+	SEP #$10
+	BEQ +
+
+	LDA !ScratchD
+	CLC
+	ADC #$10
+	STA !ScratchE
+
+	%DynamicRoutine(!ScratchE, #!GFX00, #!GFX00>>16, !Scratch1, !Scratch0)
++
+
+	LDX $15E9|!addr
+RTS
 ;>End Dynamic Section
 
 ;Don't Delete or write another >Section Graphics or >End Section
@@ -1558,26 +1621,21 @@ incbin "sprites\Zinger.bin"
 ;>Description: Updates tiles on the oam map
 ;results will be visible the next frame.
 ;>RoutineLength: Short
-OAMOffset:
-	db $40,$60
-	db $80,$A0
-	db $C0,$E0
 GraphicRoutine:
-
-	LDA !LastFrameIndex,x
-	CMP #$FF
-	BNE +
-	RTS
-+
 
     %GetDrawInfo()                     ;Calls GetDrawInfo to get the free slot and the XDisp and YDisp
 
-	PHX
-	LDA	!VRAMDispNormalSprite,x
-	TAX  
-	LDA OAMOffset,x
+	%GetVramDisp(DZ_DS_Loc_US_Normal)
 	STA !ScratchE
-	PLX
+
+	LDA #$04
+	STA !ScratchD
+	LDA !ExtraBits,x
+	AND #$04
+	BEQ +
+	LDA #$02
+	STA !ScratchD
++
 
     STZ !Scratch3                       ;$02 = Free Slot but in 16bits
     STY !Scratch2
@@ -1598,9 +1656,10 @@ GraphicRoutine:
 
 
     PHX                                 ;Preserve X
-    
     STZ !Scratch7
-    LDA !FrameIndex,x
+	LDA.l DZ_DS_Loc_US_Normal,x
+	TAX
+	LDA.l DZ_DS_Loc_SharedFrame,x
     STA !Scratch6                       ;$06 = Frame Index but in 16bits
 
     REP #$30                            ;A/X/Y 16bits mode
@@ -1630,13 +1689,11 @@ GraphicRoutine:
     CPY #$00FD
     BCS .return                         ;Y can't be more than #$00FD
 -
-    LDA Tiles,x
-	CLC
-	ADC !ScratchE
+	%RemapOamTile("Tiles,x", !ScratchE)
     STA !TileCode,y                     ;Set the Tile code of the tile Y
 
-	LDA #$2F
-
+	LDA #$21
+	ORA !ScratchD
     EOR !ScratchF
     STA !TileProperty,y                 ;Set the Tile property of the tile Y
 
@@ -1728,23 +1785,23 @@ FramesEndPosition:
 Tiles:
     
 Frame0_Frame0_Tiles:
-	db $08,$06,$04,$02,$00,$0A
+	db $08,$06,$04,$02,$0A,$00
 Frame1_Frame1_Tiles:
-	db $0B,$0D,$09,$07,$05,$00,$03,$01
-Frame2_Frame2_Tiles:
-	db $0C,$0A,$08,$06,$04,$02,$00,$0E
-Frame3_Frame3_Tiles:
-	db $0C,$0A,$0F,$08,$06,$04,$02,$00,$0E
-Frame4_Frame4_Tiles:
-	db $0A,$08,$06,$04,$02,$0C,$00
-Frame5_Frame5_Tiles:
-	db $0C,$0F,$0A,$08,$06,$04,$02,$00,$0E
-Frame6_Frame6_Tiles:
-	db $0D,$0A,$08,$06,$04,$02,$00,$0C
-Frame7_Frame7_Tiles:
 	db $0D,$0B,$09,$07,$05,$00,$03,$01
+Frame2_Frame2_Tiles:
+	db $0A,$08,$0D,$06,$04,$02,$00,$0C
+Frame3_Frame3_Tiles:
+	db $0C,$0F,$0A,$08,$06,$04,$02,$00,$0E
+Frame4_Frame4_Tiles:
+	db $0A,$08,$06,$00,$0C,$04,$02
+Frame5_Frame5_Tiles:
+	db $0C,$0A,$0F,$08,$06,$04,$02,$00,$0E
+Frame6_Frame6_Tiles:
+	db $0C,$0A,$08,$06,$04,$0E,$02,$00
+Frame7_Frame7_Tiles:
+	db $0B,$0D,$09,$07,$05,$00,$03,$01
 Frame8_Frame8_Tiles:
-	db $0C,$0A,$08,$06,$04,$02,$00
+	db $0C,$0A,$08,$06,$02,$00,$04
 Frame9_Frame9_Tiles:
 	db $08,$06,$0A,$04,$02,$00
 Frame10_Frame10_Tiles:
@@ -1758,23 +1815,23 @@ Frame13_Frame13_Tiles:
 Frame14_Frame14_Tiles:
 	db $0A,$08,$06,$04,$02,$00
 Frame0_Frame0_TilesFlipX:
-	db $08,$06,$04,$02,$00,$0A
+	db $08,$06,$04,$02,$0A,$00
 Frame1_Frame1_TilesFlipX:
-	db $0B,$0D,$09,$07,$05,$00,$03,$01
-Frame2_Frame2_TilesFlipX:
-	db $0C,$0A,$08,$06,$04,$02,$00,$0E
-Frame3_Frame3_TilesFlipX:
-	db $0C,$0A,$0F,$08,$06,$04,$02,$00,$0E
-Frame4_Frame4_TilesFlipX:
-	db $0A,$08,$06,$04,$02,$0C,$00
-Frame5_Frame5_TilesFlipX:
-	db $0C,$0F,$0A,$08,$06,$04,$02,$00,$0E
-Frame6_Frame6_TilesFlipX:
-	db $0D,$0A,$08,$06,$04,$02,$00,$0C
-Frame7_Frame7_TilesFlipX:
 	db $0D,$0B,$09,$07,$05,$00,$03,$01
+Frame2_Frame2_TilesFlipX:
+	db $0A,$08,$0D,$06,$04,$02,$00,$0C
+Frame3_Frame3_TilesFlipX:
+	db $0C,$0F,$0A,$08,$06,$04,$02,$00,$0E
+Frame4_Frame4_TilesFlipX:
+	db $0A,$08,$06,$00,$0C,$04,$02
+Frame5_Frame5_TilesFlipX:
+	db $0C,$0A,$0F,$08,$06,$04,$02,$00,$0E
+Frame6_Frame6_TilesFlipX:
+	db $0C,$0A,$08,$06,$04,$0E,$02,$00
+Frame7_Frame7_TilesFlipX:
+	db $0B,$0D,$09,$07,$05,$00,$03,$01
 Frame8_Frame8_TilesFlipX:
-	db $0C,$0A,$08,$06,$04,$02,$00
+	db $0C,$0A,$08,$06,$02,$00,$04
 Frame9_Frame9_TilesFlipX:
 	db $08,$06,$0A,$04,$02,$00
 Frame10_Frame10_TilesFlipX:
@@ -1795,65 +1852,65 @@ Frame14_Frame14_TilesFlipX:
 XDisplacements:
     
 Frame0_Frame0_XDisp:
-	db $E9,$F5,$F9,$05,$08,$09
+	db $F0,$FD,$00,$0D,$10,$10
 Frame1_Frame1_XDisp:
-	db $E8,$F6,$F6,$F6,$05,$05,$06,$0D
+	db $F0,$FD,$FD,$FD,$0D,$0D,$0E,$15
 Frame2_Frame2_XDisp:
-	db $E8,$F6,$F8,$FA,$06,$06,$08,$08
+	db $F1,$FE,$01,$02,$02,$0E,$10,$15
 Frame3_Frame3_XDisp:
-	db $E9,$F5,$F6,$F6,$FE,$FE,$08,$09,$0E
+	db $F1,$FD,$FD,$FE,$0D,$0D,$0E,$11,$19
 Frame4_Frame4_XDisp:
-	db $E9,$F6,$F9,$06,$07,$07,$09
+	db $F1,$FE,$01,$0E,$0E,$0F,$11
 Frame5_Frame5_XDisp:
-	db $E9,$F5,$F5,$F6,$05,$05,$06,$09,$11
+	db $F1,$FD,$FE,$FE,$06,$06,$10,$11,$16
 Frame6_Frame6_XDisp:
-	db $E9,$F1,$F6,$FA,$FA,$06,$08,$0D
+	db $F0,$FE,$00,$02,$0E,$0E,$0E,$10
 Frame7_Frame7_XDisp:
-	db $E8,$F5,$F5,$F5,$05,$05,$06,$0D
+	db $F0,$FE,$FE,$FE,$0D,$0D,$0E,$15
 Frame8_Frame8_XDisp:
-	db $ED,$F7,$F7,$FD,$05,$05,$05
+	db $F7,$FF,$01,$01,$0D,$0D,$0F
 Frame9_Frame9_XDisp:
-	db $F5,$FF,$FF,$01,$01,$08
+	db $00,$0A,$0A,$0C,$0C,$13
 Frame10_Frame10_XDisp:
-	db $F7,$FB,$FB,$09,$0B,$0B,$14
+	db $FE,$02,$02,$10,$12,$12,$1B
 Frame11_Frame11_XDisp:
-	db $F5,$03,$03,$03,$0D,$0D,$13
+	db $01,$0F,$0F,$0F,$19,$19,$1F
 Frame12_Frame12_XDisp:
-	db $FC,$00,$03,$03,$0B,$10,$10,$13,$1D
+	db $03,$08,$08,$0A,$10,$17,$17,$18,$24
 Frame13_Frame13_XDisp:
-	db $03,$08,$11,$11,$18,$20,$20
+	db $0A,$0F,$18,$18,$1F,$27,$27
 Frame14_Frame14_XDisp:
-	db $04,$05,$14,$14,$20,$20
+	db $0C,$0D,$1C,$1C,$28,$28
 Frame0_Frame0_XDispFlipX:
-	db $17,$0B,$07,$FB,$F8,$FF
+	db $2A,$1D,$1A,$0D,$12,$0A
 Frame1_Frame1_XDispFlipX:
-	db $18,$12,$0A,$0A,$FB,$FB,$FA,$F3
+	db $2A,$1D,$1D,$1D,$0D,$0D,$0C,$05
 Frame2_Frame2_XDispFlipX:
-	db $18,$0A,$08,$06,$FA,$FA,$F8,$00
+	db $29,$1C,$21,$18,$18,$0C,$0A,$0D
 Frame3_Frame3_XDispFlipX:
-	db $17,$0B,$12,$0A,$02,$02,$F8,$F7,$FA
+	db $29,$25,$1D,$1C,$0D,$0D,$0C,$09,$09
 Frame4_Frame4_XDispFlipX:
-	db $17,$0A,$07,$FA,$F9,$01,$F7
+	db $29,$1C,$19,$0C,$14,$0B,$09
 Frame5_Frame5_XDispFlipX:
-	db $17,$13,$0B,$0A,$FB,$FB,$FA,$F7,$F7
+	db $29,$1D,$24,$1C,$14,$14,$0A,$09,$0C
 Frame6_Frame6_XDispFlipX:
-	db $1F,$0F,$0A,$06,$06,$FA,$F8,$FB
+	db $2A,$1C,$1A,$18,$0C,$14,$0C,$0A
 Frame7_Frame7_XDispFlipX:
-	db $18,$0B,$0B,$0B,$FB,$FB,$FA,$F3
+	db $2A,$24,$1C,$1C,$0D,$0D,$0C,$05
 Frame8_Frame8_XDispFlipX:
-	db $13,$09,$09,$03,$FB,$FB,$FB
+	db $23,$1B,$19,$19,$0D,$0D,$0B
 Frame9_Frame9_XDispFlipX:
-	db $0B,$01,$09,$FF,$FF,$F8
+	db $1A,$10,$18,$0E,$0E,$07
 Frame10_Frame10_XDispFlipX:
-	db $09,$05,$05,$F7,$F5,$F5,$F4
+	db $1C,$18,$18,$0A,$08,$08,$07
 Frame11_Frame11_XDispFlipX:
-	db $0B,$FD,$FD,$FD,$F3,$F3,$ED
+	db $19,$0B,$0B,$0B,$01,$01,$FB
 Frame12_Frame12_XDispFlipX:
-	db $0C,$00,$05,$FD,$FD,$F0,$F0,$ED,$E3
+	db $1F,$12,$1A,$10,$12,$03,$03,$02,$F6
 Frame13_Frame13_XDispFlipX:
-	db $FD,$F8,$EF,$EF,$E8,$E0,$E0
+	db $10,$0B,$02,$02,$FB,$F3,$F3
 Frame14_Frame14_XDispFlipX:
-	db $FC,$FB,$EC,$EC,$E0,$E0
+	db $0E,$0D,$FE,$FE,$F2,$F2
 ;>EndTable
 ;>Table: YDisplacements
 ;>Description: Y Displacement of each tile of each frame
@@ -1861,65 +1918,65 @@ Frame14_Frame14_XDispFlipX:
 YDisplacements:
     
 Frame0_Frame0_YDisp:
-	db $F7,$06,$F9,$09,$F9,$F6
+	db $FD,$0C,$FF,$0F,$FC,$FF
 Frame1_Frame1_YDisp:
-	db $01,$EE,$F6,$06,$EF,$FF,$09,$FF
+	db $05,$F4,$04,$0D,$F5,$05,$0F,$05
 Frame2_Frame2_YDisp:
-	db $01,$06,$F9,$E9,$F6,$06,$FF,$12
+	db $05,$0C,$04,$EF,$FF,$0F,$FF,$F7
 Frame3_Frame3_YDisp:
-	db $F4,$EE,$FE,$06,$EF,$FF,$0A,$FF,$F8
+	db $05,$F5,$FC,$0C,$F5,$05,$10,$06,$FE
 Frame4_Frame4_YDisp:
-	db $F7,$05,$FA,$0A,$F5,$02,$FF
+	db $FD,$0B,$FF,$FB,$0F,$10,$00
 Frame5_Frame5_YDisp:
-	db $FF,$EF,$F6,$06,$EF,$FF,$0A,$00,$F8
+	db $FA,$F4,$04,$0C,$F5,$05,$10,$05,$FE
 Frame6_Frame6_YDisp:
-	db $FF,$FF,$06,$E9,$F9,$09,$F9,$F1
+	db $07,$0C,$FF,$EF,$FC,$0C,$10,$05
 Frame7_Frame7_YDisp:
-	db $FF,$EE,$FE,$07,$EF,$FF,$09,$FF
+	db $07,$F4,$FC,$0C,$F5,$05,$0F,$05
 Frame8_Frame8_YDisp:
-	db $01,$EB,$FB,$09,$EC,$FC,$06
+	db $FC,$0A,$F1,$01,$F2,$02,$0F
 Frame9_Frame9_YDisp:
-	db $03,$EB,$FB,$FB,$0A,$03
+	db $08,$F0,$00,$00,$0F,$08
 Frame10_Frame10_YDisp:
-	db $00,$EB,$FB,$08,$EC,$FC,$0C
+	db $09,$F4,$04,$11,$F5,$05,$15
 Frame11_Frame11_YDisp:
-	db $FA,$E9,$F9,$09,$FF,$03,$EF
+	db $06,$F5,$05,$15,$0B,$0F,$FB
 Frame12_Frame12_YDisp:
-	db $01,$F4,$04,$0B,$03,$E6,$F6,$06,$F9
+	db $07,$00,$10,$17,$0F,$F2,$02,$12,$05
 Frame13_Frame13_YDisp:
-	db $FC,$0C,$F0,$00,$07,$EA,$FA
+	db $08,$18,$F8,$08,$13,$F6,$06
 Frame14_Frame14_YDisp:
-	db $FE,$0E,$F8,$06,$FA,$0A
+	db $09,$19,$03,$11,$05,$15
 Frame0_Frame0_YDispFlipX:
-	db $F7,$06,$F9,$09,$F9,$F6
+	db $FD,$0C,$FF,$0F,$FC,$FF
 Frame1_Frame1_YDispFlipX:
-	db $01,$EE,$F6,$06,$EF,$FF,$09,$FF
+	db $05,$F4,$04,$0D,$F5,$05,$0F,$05
 Frame2_Frame2_YDispFlipX:
-	db $01,$06,$F9,$E9,$F6,$06,$FF,$12
+	db $05,$0C,$04,$EF,$FF,$0F,$FF,$F7
 Frame3_Frame3_YDispFlipX:
-	db $F4,$EE,$FE,$06,$EF,$FF,$0A,$FF,$F8
+	db $05,$F5,$FC,$0C,$F5,$05,$10,$06,$FE
 Frame4_Frame4_YDispFlipX:
-	db $F7,$05,$FA,$0A,$F5,$02,$FF
+	db $FD,$0B,$FF,$FB,$0F,$10,$00
 Frame5_Frame5_YDispFlipX:
-	db $FF,$EF,$F6,$06,$EF,$FF,$0A,$00,$F8
+	db $FA,$F4,$04,$0C,$F5,$05,$10,$05,$FE
 Frame6_Frame6_YDispFlipX:
-	db $FF,$FF,$06,$E9,$F9,$09,$F9,$F1
+	db $07,$0C,$FF,$EF,$FC,$0C,$10,$05
 Frame7_Frame7_YDispFlipX:
-	db $FF,$EE,$FE,$07,$EF,$FF,$09,$FF
+	db $07,$F4,$FC,$0C,$F5,$05,$0F,$05
 Frame8_Frame8_YDispFlipX:
-	db $01,$EB,$FB,$09,$EC,$FC,$06
+	db $FC,$0A,$F1,$01,$F2,$02,$0F
 Frame9_Frame9_YDispFlipX:
-	db $03,$EB,$FB,$FB,$0A,$03
+	db $08,$F0,$00,$00,$0F,$08
 Frame10_Frame10_YDispFlipX:
-	db $00,$EB,$FB,$08,$EC,$FC,$0C
+	db $09,$F4,$04,$11,$F5,$05,$15
 Frame11_Frame11_YDispFlipX:
-	db $FA,$E9,$F9,$09,$FF,$03,$EF
+	db $06,$F5,$05,$15,$0B,$0F,$FB
 Frame12_Frame12_YDispFlipX:
-	db $01,$F4,$04,$0B,$03,$E6,$F6,$06,$F9
+	db $07,$00,$10,$17,$0F,$F2,$02,$12,$05
 Frame13_Frame13_YDispFlipX:
-	db $FC,$0C,$F0,$00,$07,$EA,$FA
+	db $08,$18,$F8,$08,$13,$F6,$06
 Frame14_Frame14_YDispFlipX:
-	db $FE,$0E,$F8,$06,$FA,$0A
+	db $09,$19,$03,$11,$05,$15
 ;>EndTable
 ;>Table: Sizes.
 ;>Description: size of each tile of each frame
@@ -1927,21 +1984,21 @@ Frame14_Frame14_YDispFlipX:
 Sizes:
     
 Frame0_Frame0_Sizes:
-	db $02,$02,$02,$02,$02,$00
+	db $02,$02,$02,$02,$00,$02
 Frame1_Frame1_Sizes:
-	db $02,$00,$02,$02,$02,$02,$02,$02
-Frame2_Frame2_Sizes:
-	db $02,$02,$02,$02,$02,$02,$02,$00
-Frame3_Frame3_Sizes:
-	db $02,$02,$00,$02,$02,$02,$02,$02,$00
-Frame4_Frame4_Sizes:
-	db $02,$02,$02,$02,$02,$00,$02
-Frame5_Frame5_Sizes:
-	db $02,$00,$02,$02,$02,$02,$02,$02,$00
-Frame6_Frame6_Sizes:
-	db $00,$02,$02,$02,$02,$02,$02,$00
-Frame7_Frame7_Sizes:
 	db $02,$02,$02,$02,$02,$02,$02,$02
+Frame2_Frame2_Sizes:
+	db $02,$02,$00,$02,$02,$02,$02,$00
+Frame3_Frame3_Sizes:
+	db $02,$00,$02,$02,$02,$02,$02,$02,$00
+Frame4_Frame4_Sizes:
+	db $02,$02,$02,$02,$00,$02,$02
+Frame5_Frame5_Sizes:
+	db $02,$02,$00,$02,$02,$02,$02,$02,$00
+Frame6_Frame6_Sizes:
+	db $02,$02,$02,$02,$02,$00,$02,$02
+Frame7_Frame7_Sizes:
+	db $02,$00,$02,$02,$02,$02,$02,$02
 Frame8_Frame8_Sizes:
 	db $02,$02,$02,$02,$02,$02,$02
 Frame9_Frame9_Sizes:
@@ -1957,21 +2014,21 @@ Frame13_Frame13_Sizes:
 Frame14_Frame14_Sizes:
 	db $02,$02,$02,$02,$02,$02
 Frame0_Frame0_SizesFlipX:
-	db $02,$02,$02,$02,$02,$00
+	db $02,$02,$02,$02,$00,$02
 Frame1_Frame1_SizesFlipX:
-	db $02,$00,$02,$02,$02,$02,$02,$02
-Frame2_Frame2_SizesFlipX:
-	db $02,$02,$02,$02,$02,$02,$02,$00
-Frame3_Frame3_SizesFlipX:
-	db $02,$02,$00,$02,$02,$02,$02,$02,$00
-Frame4_Frame4_SizesFlipX:
-	db $02,$02,$02,$02,$02,$00,$02
-Frame5_Frame5_SizesFlipX:
-	db $02,$00,$02,$02,$02,$02,$02,$02,$00
-Frame6_Frame6_SizesFlipX:
-	db $00,$02,$02,$02,$02,$02,$02,$00
-Frame7_Frame7_SizesFlipX:
 	db $02,$02,$02,$02,$02,$02,$02,$02
+Frame2_Frame2_SizesFlipX:
+	db $02,$02,$00,$02,$02,$02,$02,$00
+Frame3_Frame3_SizesFlipX:
+	db $02,$00,$02,$02,$02,$02,$02,$02,$00
+Frame4_Frame4_SizesFlipX:
+	db $02,$02,$02,$02,$00,$02,$02
+Frame5_Frame5_SizesFlipX:
+	db $02,$02,$00,$02,$02,$02,$02,$02,$00
+Frame6_Frame6_SizesFlipX:
+	db $02,$02,$02,$02,$02,$00,$02,$02
+Frame7_Frame7_SizesFlipX:
+	db $02,$00,$02,$02,$02,$02,$02,$02
 Frame8_Frame8_SizesFlipX:
 	db $02,$02,$02,$02,$02,$02,$02
 Frame9_Frame9_SizesFlipX:
@@ -2009,21 +2066,20 @@ InitWrapperChangeAnimationFromStart:
 	PLB
 	RTL
 
-ChangeAnimationFromStart_fly:
+ChangeAnimationFromStart_idle:
 	STZ !AnimationIndex,x
-	JMP ChangeAnimationFromStart
+	BRA ChangeAnimationFromStart
 ChangeAnimationFromStart_flip:
 	LDA #$01
 	STA !AnimationIndex,x
-	JMP ChangeAnimationFromStart
-ChangeAnimationFromStart_damage:
+	BRA ChangeAnimationFromStart
+ChangeAnimationFromStart_dead:
 	LDA #$02
 	STA !AnimationIndex,x
-	JMP ChangeAnimationFromStart
-ChangeAnimationFromStart_dead:
+	BRA ChangeAnimationFromStart
+ChangeAnimationFromStart_Hurt:
 	LDA #$03
 	STA !AnimationIndex,x
-
 
 ChangeAnimationFromStart:
 	STZ !AnimationFrameIndex,x
@@ -2074,17 +2130,10 @@ RTS
 ;>Description: Decides what will be the next frame.
 ;>RoutineLength: Short
 AnimationRoutine:
-	LDA !TransferFrameNormalSprite,x
-	AND #$01
-	STA $00
-
-	LDA !DynamicTimer
-	AND #$01
-	CMP $00
+	%CheckEvenOrOdd("DZ_DS_Loc_US_Normal")
 	BNE +
 RTS
 +
-
     LDA !AnimationTimer,x
     BEQ +
 
@@ -2149,46 +2198,46 @@ RTS
 ;All words that starts with '>' and finish with '.' will be replaced by Dyzen
 
 AnimationLenght:
-	dw $0008,$0004,$0005,$0005
+	dw $0008,$0004,$0005,$0009
 
 AnimationLastTransition:
-	dw $0000,$0003,$0004,$0004
+	dw $0000,$0003,$0004,$0008
 
 AnimationIndexer:
 	dw $0000,$0008,$000C,$0011
 
 Frames:
 	
-Animation0_fly_Frames:
+Animation0_idle_Frames:
 	db $00,$01,$02,$03,$04,$05,$06,$07
 Animation1_flip_Frames:
 	db $08,$09,$09,$08
-Animation2_damage_Frames:
-	db $0A,$0B,$0C,$0B,$0A
-Animation3_dead_Frames:
+Animation2_dead_Frames:
 	db $0A,$0B,$0C,$0D,$0E
+Animation3_hurt_Frames:
+	db $0A,$0B,$0C,$0D,$0E,$0D,$0C,$0B,$0A
 
 Times:
 	
-Animation0_fly_Times:
+Animation0_idle_Times:
 	db $02,$02,$02,$02,$02,$02,$02,$02
 Animation1_flip_Times:
 	db $02,$02,$02,$02
-Animation2_damage_Times:
-	db $04,$04,$0A,$04,$04
-Animation3_dead_Times:
-	db $04,$04,$04,$04,$04
+Animation2_dead_Times:
+	db $02,$02,$02,$02,$02
+Animation3_hurt_Times:
+	db $02,$02,$02,$02,$02,$02,$02,$02,$02
 
 Flips:
 	
-Animation0_fly_Flips:
+Animation0_idle_Flips:
 	db $00,$00,$00,$00,$00,$00,$00,$00
 Animation1_flip_Flips:
 	db $00,$00,$01,$01
-Animation2_damage_Flips:
+Animation2_dead_Flips:
 	db $00,$00,$00,$00,$00
-Animation3_dead_Flips:
-	db $00,$00,$00,$00,$00
+Animation3_hurt_Flips:
+	db $00,$00,$00,$00,$00,$00,$00,$00,$00
 
 ;>End Animations Section
 
@@ -2237,17 +2286,68 @@ ProcessInteract:
 	JSL $03B664|!rom				; MarioClipping
 	JSR Interaction
 
-	BCC ReturnNoContact2
+	BCC +
 	LDA !ScratchE
 	CMP #$01
 	BNE +
 	JSR DefaultAction
 +
+	LDX #!MaxSprites-1
+-
+	LDA !SpriteStatus,x
+	CMP #$09
+	BEQ +
+	CMP #$0A
+	BNE .next
++
+	LDA !SpriteNumber,x
+	CMP #$03
+	BCC .next
+	CMP #$08
+	BCS .next
+
+	STX !Scratch45
+
+	JSL $03B6E5|!rom
+
+	LDX !SpriteIndex
+	JSR Interaction
+	BCC .next
+	CMP #$01
+	BNE .next
+
+	JSR SpriteSpriteAction
 	SEC
-	RTS
+RTS
+.next
+	DEX
+	BPL -
+
 ReturnNoContact2:
+	LDX !SpriteIndex
 	CLC
 	RTS
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;This subroutine checks if the two hitboxes of A and B to see if they are in contact.
+;Carry is set if true, else false.
+;Syntax:
+; $00 = X low byte position/displacement B
+; $01 = Y low byte position/displacement B
+; $02 = Hitbox width (8-bit) B
+; $03 = Hitbox height (8-bit) B
+; $04 = X low byte position/displacement A
+; $05 = Y low byte position/displacement A
+; $06 = Hitbox width (8-bit) A
+; $07 = Hitbox height (8-bit) A
+; $08 = X high byte position/displacement B
+; $09 = Y high byte position/displacement B
+; $0A = X high byte position/displacement A
+; $0B = Y high byte position/displacement A
+;Destroyed values:
+; $0C = used as part of the high byte to check if they are too far
+; $0F = used as the furthest distance to check if the hitboxes are at least edge
+;       to edge on contact.
 
 Interaction:
     STZ !ScratchE
@@ -2394,83 +2494,72 @@ HitboxAdder:
     dw $0000,$001E
 
 FrameHitboxesIndexer:
-    dw $0000,$0003,$0006,$0009,$000C,$000F,$0012,$0015,$0018,$001B,$001E,$0021,$0024,$0027,$002A
-	dw $002D,$0030,$0033,$0036,$0039,$003C,$003F,$0042,$0045,$0048,$004B,$004E,$0051,$0054,$0057
+    dw $0000,$0002,$0004,$0006,$0008,$000A,$000C,$000E,$0010,$0012,$0014,$0015,$0016,$0017,$0018
+	dw $0019,$001B,$001D,$001F,$0021,$0023,$0025,$0027,$0029,$002B,$002D,$002E,$002F,$0030,$0031
 
 FrameHitBoxes:
-    db $00,$01,$FF
-	db $00,$01,$FF
-	db $00,$01,$FF
-	db $00,$01,$FF
-	db $00,$01,$FF
-	db $00,$01,$FF
-	db $00,$01,$FF
-	db $00,$01,$FF
-	db $02,$03,$FF
-	db $04,$05,$FF
-	db $00,$01,$FF
-	db $00,$01,$FF
-	db $00,$01,$FF
-	db $00,$01,$FF
-	db $00,$01,$FF
+    db $00,$FF
+	db $00,$FF
+	db $00,$FF
+	db $00,$FF
+	db $00,$FF
+	db $00,$FF
+	db $00,$FF
+	db $00,$FF
+	db $01,$FF
+	db $02,$FF
+	db $FF
+	db $FF
+	db $FF
+	db $FF
+	db $FF
 	
-	db $06,$07,$FF
-	db $06,$07,$FF
-	db $06,$07,$FF
-	db $06,$07,$FF
-	db $06,$07,$FF
-	db $06,$07,$FF
-	db $06,$07,$FF
-	db $06,$07,$FF
-	db $08,$09,$FF
-	db $0A,$0B,$FF
-	db $06,$07,$FF
-	db $06,$07,$FF
-	db $06,$07,$FF
-	db $06,$07,$FF
-	db $06,$07,$FF
+	db $03,$FF
+	db $03,$FF
+	db $03,$FF
+	db $03,$FF
+	db $03,$FF
+	db $03,$FF
+	db $03,$FF
+	db $03,$FF
+	db $04,$FF
+	db $05,$FF
+	db $FF
+	db $FF
+	db $FF
+	db $FF
+	db $FF
 	
 
 HitboxesStart:
-    dw $0000,$0006,$000C,$0012,$0018,$001E,$0024,$002A,$0030,$0036,$003C,$0042
+    dw $0000,$0006,$000C,$0012,$0018,$001E
 
 Hitboxes:
-    db $01,$F8,$00,$1A,$0E,$00
-	db $01,$05,$FD,$0C,$11,$00
-	db $01,$FC,$00,$15,$0E,$00
-	db $01,$05,$FD,$0A,$11,$00
-	db $01,$03,$00,$0B,$0E,$00
-	db $01,$05,$FD,$08,$11,$00
-	db $01,$FE,$00,$1A,$0E,$00
-	db $01,$FF,$FD,$0C,$11,$00
-	db $01,$FF,$00,$15,$0E,$00
-	db $01,$01,$FD,$0A,$11,$00
-	db $01,$02,$00,$0B,$0E,$00
-	db $01,$03,$FD,$08,$11,$00
+    db $01,$FF,$06,$1A,$0E,$00
+	db $01,$06,$06,$13,$0E,$00
+	db $01,$0D,$06,$0C,$0E,$00
+	db $01,$11,$06,$1A,$0E,$00
+	db $01,$11,$06,$13,$0E,$00
+	db $01,$11,$06,$0C,$0E,$00
 	
 
 ;This routine will be executed when mario interact with a standar hitbox.
 ;It will be excecuted if $0E is 1 after execute Interaction routine
 DefaultAction:
+	LDX !SpriteIndex
 	JSR SpikyInteraction
 RTS
     
+;>End Hitboxes Interaction Section
 SpikyInteraction:
     LDA $1490|!addr ;if player is using the star
     BEQ +           ;kill the sprite
-    %Star()
+	%Star()
     RTS
 +
-    LDA $187A|!addr ;If player is riding yoshi then skip spinjump check
-    BNE +
- 
-    LDA $140D|!addr ;if player is doing spin jump then check if can do spin jump over the sprite; otherwise damage the player
-    BEQ +++
-+  
-    LDA !PlayerYSpeed   ;\
-    SEC                 ;|Get relative speed between player and the sprite, if it is negative then damage the player
-    SBC !SpriteYSpeed,x ;/
-    BMI +++             ;other wise check the position of the player
+	LDA !PlayerYSpeed	;\
+	CMP !SpriteYSpeed,x	;/
+	BMI +++				;other wise check the position of the player
  
     STZ !ScratchD
     LDA !Scratch3
@@ -2499,6 +2588,7 @@ SpikyInteraction:
     LDA !ScratchC       ;|
     SEC                 ;|
     SBC $01,s           ;|
+	CLC
     ADC #$0008          ;|Moves the player to the top of the sprite hitbox
     STA !ScratchC       ;|
     PLA                 ;|
@@ -2508,18 +2598,22 @@ SpikyInteraction:
     SBC !ScratchC       ;|
     STA !PlayerY        ;|
                         ;|
+	LDA !RidingYoshi
+	AND #$00FF
+	BNE ++
+	LDA !SpinJumpFlag
+	AND #$00FF
+	BEQ +++
+
+++
     SEP #$20            ;/
  
     JSL $01AB99|!rom    ;Display White Star                
     JSL $01AA33|!rom    ;Do the player boost its Y Speed   
  
-    LDA #$02
+	LDA #$02
     STA $1DF9|!addr     ;Play Spin Jump Sound
- 
-    ;#######################################################################
-    ;Here you can add code that happend when the player spin jump the sprite
-    ;#######################################################################
- 
+
     RTS                 ;Return
 +++
     SEP #$20
@@ -2615,3 +2709,217 @@ RTS                       ; Return
 YoshiOffset:
     db $04,$10
 ;>End Hitboxes Interaction Section
+
+SpriteSpriteAction:
+	LDX !Scratch45
+
+	STZ !SpriteStatus,x
+	
+	STZ $00 : STZ $01
+	LDA #$1B : STA $02
+	LDA #$01
+	%SpawnSmoke()
+
+	LDX !SpriteIndex
+
+	LDA !ExtraBits,x
+	AND #$04
+	BEQ +
+	LDA #$02
+    STA $1DF9|!addr     ;Play Spin Jump Sound
+RTS
++
+	LDA !Hitpoints,x
+	BEQ +
+	DEC A
+	STA !Hitpoints,x
+	LDA #$03
+	STA !State,x
+RTS
++
+	LDA #$02
+	STA !State,x
+RTS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

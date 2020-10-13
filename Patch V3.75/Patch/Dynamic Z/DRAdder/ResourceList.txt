@@ -1,0 +1,5 @@
+PIXI:
+.Normal
+.Cluster
+.Extended
+OTHER:

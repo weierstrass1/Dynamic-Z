@@ -1,16 +1,29 @@
+if read1($00FFD5) == $23
+sa1rom
+endif
+
 ;dont touch this
 	!dp = $0000
 	!addr = $0000
     !rom = $800000
 	!sa1 = 0
     !Variables = $7F0B44 
+    !Variables2 = $7FB080
     !MaxSprites = $0C
     !SpriteStatus = $14C8
     !SpriteNumberNormal = $7FAB9E
     !SpriteLoadStatus = $161A
     !SpriteLoadTable = $7FAF00
     !ExtraByte1 = $7FAB40
-
+    !MultiplicationResult = $4216
+    !DivisionResult = $4214
+    !RemainderResult = $4216
+    !SpriteOAMIndex = $15EA
+    !SpriteXLow = $E4
+    !SpriteYLow = $D8
+    !SpriteXHigh = $14E0
+    !SpriteYHigh = $14D4
+    !UberASMTool = 0
 
 if read1($00FFD5) == $23
 sa1rom
@@ -19,79 +32,63 @@ sa1rom
 	!sa1 = 1
     !rom = $000000
     !Variables = $418000  
+    !Variables2 = $418B80
     !MaxSprites = $16
     !SpriteStatus = $3242
     !SpriteNumberNormal = $400083
     !SpriteLoadStatus = $7578
     !SpriteLoadTable = $418A00
     !ExtraByte1 = $400099
+    !MultiplicationResult = $2306
+    !DivisionResult = $2306
+    !RemainderResult = $2308
+    !SpriteOAMIndex = $33A2
+    !SpriteYLow = $3216
+    !SpriteXLow = $322C
+    !SpriteYHigh = $3258
+    !SpriteXHigh = $326E
 endif
-
-    !Scratch0 = $00
-    !Scratch1 = $01
-    !Scratch2 = $02
-    !Scratch3 = $03
-    !Scratch4 = $04
-    !Scratch5 = $05
-    !Scratch6 = $06
-    !Scratch7 = $07
-    !Scratch8 = $08
-    !Scratch9 = $09
-    !ScratchA = $0A
-    !ScratchB = $0B
-    !ScratchC = $0C
-    !ScratchD = $0D
-    !ScratchE = $0E
-    !ScratchF = $0F
-    !Scratch45 = $45
-    !Scratch46 = $46
-    !Scratch47 = $47
-    !Scratch48 = $48
-    !Scratch49 = $49
-    !Scratch4A = $4A
-    !Scratch4B = $4B
-    !Scratch4C = $4C
-    !Scratch4D = $4D
-    !Scratch4E = $4E
-    !Scratch4F = $4F
-    !Scratch50 = $50
-    !Scratch51 = $51
-    !Scratch52 = $52
-    !Scratch53 = $53
-
-    !ClusterSpriteNumber = $1892|!addr
-    !ExtendedSpriteNumber = $170B|!addr
-    !OWSpriteNumber = $0DE5|!addr
 
 incsrc "Hijacks/BaseHijack.asm"
 incsrc "Options.asm"
-incsrc "Hijacks/MarioGFXDMAOptimizationHijack.asm"
 incsrc "header.asm"
+incsrc "Hijacks/MarioGFXDMAOptimizationHijack.asm"
+incsrc "Hijacks/OAMHijack.asm"
 
 freecode
 
 Routines:
+if !DynamicSpriteSupport == !True
     dl ClearSlot|!rom
     dl CheckSlot|!rom
     dl FindSpace|!rom
     dl DynamicRoutine|!rom
+else
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+endif 
 if read2($00823D+4) == $8449
     dl $000000
-    print "A"
 else
-    print "B"
     !__main_clean = read3((read1($0082DA+4)<<16+read2($00823D+4))+$0C)
-    print hex(!__main_clean)
-    if read3(!__main_clean-3) != $FFFFFF
+    if !__main_clean == $000000
         dl $000000
     else
-        dl !__main_clean
+        if read3(!__main_clean-3) != $FFFFFF
+            dl $000000
+        else
+            dl !__main_clean
+        endif
     endif
 endif
+if !DynamicSpriteSupport == !True
     dl CheckEvenOrOdd|!rom
     dl GetVramDisp|!rom
     dl GetVramDispDynamicRoutine|!rom
     dl RemapOamTile|!rom
+    if !SharedDynamicSpriteSupport == !True
     dl CheckNormalSharedDynamicExisted|!rom
     dl CheckClusterSharedDynamicExisted|!rom
     dl CheckExtendedSharedDynamicExisted|!rom
@@ -100,8 +97,88 @@ endif
     dl CheckIfLastClusterSharedProcessed|!rom
     dl CheckIfLastExtendedSharedProcessed|!rom
     dl CheckIfLastOWSharedProcessed|!rom
-
-print hex(Routines)
+    else
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    endif
+else
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+endif
+if !HSVSystem == !True
+    dl ChangePaletteHue|!rom
+    dl ChangePaletteSaturation|!rom
+    dl ChangePaletteValue|!rom
+    dl ChangePaletteHueAndSaturation|!rom
+    dl ChangePaletteHueAndValue|!rom
+    dl ChangePaletteSaturationAndValue|!rom
+    dl RandomizePalette|!rom
+    dl MixWithColor|!rom
+    dl MixWithBaseColor|!rom
+    dl SetBaseAsHSV|!rom
+    dl SetBaseAsRGB|!rom
+    dl MixPaletteHue|!rom
+    dl MixPaletteSaturation|!rom
+    dl MixPaletteValue|!rom
+    dl MixPaletteHueAndSaturation|!rom
+    dl MixPaletteHueAndValue|!rom
+    dl MixPaletteSaturationAndValue|!rom
+    dl MixPaletteHueSaturationAndValue|!rom
+else
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+endif
+if !SemiDynamicSpriteSupport == !True
+    dl LoadGraphicsSDSNormal|!rom
+    dl FindCopyNormal|!rom
+    dl LoadGraphicsSDSCluster|!rom
+    dl FindCopyCluster|!rom
+    dl LoadGraphicsSDSExtended|!rom
+    dl FindCopyExtended|!rom
+    dl LoadGraphicsSDSOW|!rom
+    dl FindCopyOW|!rom
+else 
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+    dl $000000
+endif
 
 GameModeTable:
     db $00,$00,$00,$00,$00,$00,$01,$01
@@ -138,27 +215,67 @@ RTL
 
     SEP #$30
 
-    LDA.l DZ.PPUMirrors.Reg420B
-    BEQ +
-    STY $420B
-    LDA #$00
-    STA.l DZ.PPUMirrors.Reg420B
-+
+if !GFXFeatures == !True
     JSR VRAMDMA
+endif
+if !PaletteFeatures == !True
     JSR CGRAMDMA
+    if !HSVSystem == !True || !RGBSystem == !True
+    JSR CGRAMToBufferDMA
+    endif
+endif
 
-    LDA DZ.Timer
+    LDA DZ_Timer
     INC A
-    STA DZ.Timer
+    STA DZ_Timer
+
+if !DynamicSpriteSupport == !True
+    AND #$01
+    TAX
+    LDA #$00
+    XBA
+    LDA DZ_DS_TotalDataSentOdd,x
+    REP #$30
+    CLC
+    ASL
+    TAX
+    LDA.l X128,x
+    STA DZ_CurrentDataSend
+    SEP #$30
+else
+    LDA #$00
+    STA DZ_CurrentDataSend
+    STA DZ_CurrentDataSend+1
+endif
 
     PLD
 RTL
 
-DynamicZStart:
+if !DynamicSpriteSupport == !True
+X128:
+    dw $0000,$0080,$0100,$0180,$0200,$0280,$0300,$0380,$0400,$0480,$0500,$0580,$0600,$0680,$0700,$0780
+    dw $0800,$0880,$0900,$0980,$0A00,$0A80,$0B00,$0B80,$0C00,$0C80,$0D00,$0D80,$0E00,$0E80,$0F00,$0F80
+    dw $1000,$1080,$1100,$1180,$1200,$1280,$1300,$1380,$1400,$1480,$1500,$1580,$1600,$1680,$1700,$1780
+    dw $1800,$1880,$1900,$1980,$1A00,$1A80,$1B00,$1B80,$1C00,$1C80,$1D00,$1D80,$1E00,$1E80,$1F00,$1F80
+    dw $2000,$2080,$2100,$2180,$2200,$2280,$2300,$2380,$2400,$2480,$2500,$2580,$2600,$2680,$2700,$2780
+    dw $2800,$2880,$2900,$2980,$2A00,$2A80,$2B00,$2B80,$2C00,$2C80,$2D00,$2D80,$2E00,$2E80,$2F00,$2F80
+    dw $3000,$3080,$3100,$3180,$3200,$3280,$3300,$3380,$3400,$3480,$3500,$3580,$3600,$3680,$3700,$3780
+    dw $3800,$3880,$3900,$3980,$3A00,$3A80,$3B00,$3B80,$3C00,$3C80,$3D00,$3D80,$3E00,$3E80,$3F00,$3F80
+    dw $4000,$4080,$4100,$4180,$4200,$4280,$4300,$4380,$4400,$4480,$4500,$4580,$4600,$4680,$4700,$4780
+    dw $4800,$4880,$4900,$4980,$4A00,$4A80,$4B00,$4B80,$4C00,$4C80,$4D00,$4D80,$4E00,$4E80,$4F00,$4F80
+    dw $5000,$5080,$5100,$5180,$5200,$5280,$5300,$5380,$5400,$5480,$5500,$5580,$5600,$5680,$5700,$5780
+    dw $5800,$5880,$5900,$5980,$5A00,$5A80,$5B00,$5B80,$5C00,$5C80,$5D00,$5D80,$5E00,$5E80,$5F00,$5F80
+    dw $6000,$6080,$6100,$6180,$6200,$6280,$6300,$6380,$6400,$6480,$6500,$6580,$6600,$6680,$6700,$6780
+    dw $6800,$6880,$6900,$6980,$6A00,$6A80,$6B00,$6B80,$6C00,$6C80,$6D00,$6D80,$6E00,$6E80,$6F00,$6F80
+    dw $7000,$7080,$7100,$7180,$7200,$7280,$7300,$7380,$7400,$7480,$7500,$7580,$7600,$7680,$7700,$7780
+    dw $7800,$7880,$7900,$7980,$7A00,$7A80,$7B00,$7B80,$7C00,$7C80,$7D00,$7D80,$7E00,$7E80,$7F00,$7F80
+endif
 
-if !PlayerFeatures == !True
+DynamicZStart:
+if !PlayerGFX == !True || !PlayerPalette == !True
     REP #$20
     LDA #$FFFF
+if !PlayerGFX == !True
     STA $0D85|!addr
     STA $0D87|!addr
     STA $0D89|!addr
@@ -170,6 +287,11 @@ if !PlayerFeatures == !True
     STA $0D95|!addr
     STA $0D97|!addr
     STA $0D99|!addr
+endif
+if !PlayerPalette == !True
+    LDA $0D82|!addr
+    STA.l DZ_Player_Palette_Addr
+endif
     SEP #$20
 endif
 
@@ -179,116 +301,207 @@ endif
     PLB
 
     REP #$20
+if !DynamicSpriteSupport == !True
     LDA.w #!DefaultLevelDSVRAMOFfset
-    STA.w DZ.DSStartingVRAMOffset
+    STA.w DZ_DS_StartingVRAMOffset
+endif
 
     LDA.w #!DefaultLevelMaxDataTransferPerFrame
-    STA.w DZ.MaxDataPerFrame
+    STA.w DZ_MaxDataPerFrame
 
     LDA #$0000
-    STA.w DZ.DSTotalSpaceUsed
-    STA.w DZ.DSTotalSpaceUsedOdd
-    STA.w DZ.DSTotalDataSentOdd
-    STA.w DZ.PPUMirrors.CGRAMLastPlayerPal
+if !DynamicSpriteSupport == !True
+    STA.w DZ_DS_TotalSpaceUsed
+    STA.w DZ_DS_TotalSpaceUsedOdd
+    STA.w DZ_DS_TotalDataSentOdd
+endif
+if !SemiDynamicSpriteSupport == !True
+    STA.w DZ_SDS_SpriteNumber_Normal
+    STA.w DZ_SDS_SpriteNumber_Normal+$02
+    STA.w DZ_SDS_SpriteNumber_Normal+$04
+    STA.w DZ_SDS_SpriteNumber_Normal+$06
+    STA.w DZ_SDS_SpriteNumber_Normal+$08
+    STA.w DZ_SDS_SpriteNumber_Normal+$0A
+
+    if !sa1
+    STA.w DZ_SDS_SpriteNumber_Normal+$0C
+    STA.w DZ_SDS_SpriteNumber_Normal+$0E
+    STA.w DZ_SDS_SpriteNumber_Normal+$10
+    STA.w DZ_SDS_SpriteNumber_Normal+$12
+    STA.w DZ_SDS_SpriteNumber_Normal+$14
+    endif
+
+    STA.w DZ_SDS_SpriteNumber_Cluster
+    STA.w DZ_SDS_SpriteNumber_Cluster+$02
+    STA.w DZ_SDS_SpriteNumber_Cluster+$04
+    STA.w DZ_SDS_SpriteNumber_Cluster+$06
+    STA.w DZ_SDS_SpriteNumber_Cluster+$08
+    STA.w DZ_SDS_SpriteNumber_Cluster+$0A
+    STA.w DZ_SDS_SpriteNumber_Cluster+$0C
+    STA.w DZ_SDS_SpriteNumber_Cluster+$0E
+    STA.w DZ_SDS_SpriteNumber_Cluster+$10
+    STA.w DZ_SDS_SpriteNumber_Cluster+$12
+
+    STA.w DZ_SDS_SpriteNumber_Extended
+    STA.w DZ_SDS_SpriteNumber_Extended+$02
+    STA.w DZ_SDS_SpriteNumber_Extended+$04
+    STA.w DZ_SDS_SpriteNumber_Extended+$06
+    STA.w DZ_SDS_SpriteNumber_Extended+$08
+
+    STA.w DZ_SDS_SpriteNumber_OW
+    STA.w DZ_SDS_SpriteNumber_OW+$02
+    STA.w DZ_SDS_SpriteNumber_OW+$04
+    STA.w DZ_SDS_SpriteNumber_OW+$06
+    STA.w DZ_SDS_SpriteNumber_OW+$08
+    STA.w DZ_SDS_SpriteNumber_OW+$0A
+    STA.w DZ_SDS_SpriteNumber_OW+$0C
+    STA.w DZ_SDS_SpriteNumber_OW+$0E
+
+endif
+if !PlayerPalette == !True
+    STA.w DZ_PPUMirrors_CGRAM_LastPlayerPal
+endif
+
+if !PlayerGFX == !True
+    LDA #$2000
+    STA.w DZ_Player_GFX_Addr
+    LDA #$007E
+    STA.w DZ_Player_GFX_BNK
+endif
 
     LDA #$FFFF
-    STA.w DZ.DSLocUsedBy
-    STA.w DZ.DSLocUsedBy+$02
-    STA.w DZ.DSLocUsedBy+$04
-    STA.w DZ.DSLocUsedBy+$06
-    STA.w DZ.DSLocUsedBy+$08
-    STA.w DZ.DSLocUsedBy+$0A
-    STA.w DZ.DSLocUsedBy+$0C
-    STA.w DZ.DSLocUsedBy+$0E
-    STA.w DZ.DSLocUsedBy+$10
-    STA.w DZ.DSLocUsedBy+$12
-    STA.w DZ.DSLocUsedBy+$14
-    STA.w DZ.DSLocUsedBy+$16
-    STA.w DZ.DSLocUsedBy+$18
-    STA.w DZ.DSLocUsedBy+$1A
-    STA.w DZ.DSLocUsedBy+$1C
-    STA.w DZ.DSLocUsedBy+$1E
-    STA.w DZ.DSLocUsedBy+$20
-    STA.w DZ.DSLocUsedBy+$22
-    STA.w DZ.DSLocUsedBy+$24
-    STA.w DZ.DSLocUsedBy+$26
-    STA.w DZ.DSLocUsedBy+$28
-    STA.w DZ.DSLocUsedBy+$2A
-    STA.w DZ.DSLocUsedBy+$2C
-    STA.w DZ.DSLocUsedBy+$2E
+if !DynamicSpriteSupport == !True
+    STA.w DZ_DS_Loc_UsedBy
+    STA.w DZ_DS_Loc_UsedBy+$02
+    STA.w DZ_DS_Loc_UsedBy+$04
+    STA.w DZ_DS_Loc_UsedBy+$06
+    STA.w DZ_DS_Loc_UsedBy+$08
+    STA.w DZ_DS_Loc_UsedBy+$0A
+    STA.w DZ_DS_Loc_UsedBy+$0C
+    STA.w DZ_DS_Loc_UsedBy+$0E
+    STA.w DZ_DS_Loc_UsedBy+$10
+    STA.w DZ_DS_Loc_UsedBy+$12
+    STA.w DZ_DS_Loc_UsedBy+$14
+    STA.w DZ_DS_Loc_UsedBy+$16
+    STA.w DZ_DS_Loc_UsedBy+$18
+    STA.w DZ_DS_Loc_UsedBy+$1A
+    STA.w DZ_DS_Loc_UsedBy+$1C
+    STA.w DZ_DS_Loc_UsedBy+$1E
+    STA.w DZ_DS_Loc_UsedBy+$20
+    STA.w DZ_DS_Loc_UsedBy+$22
+    STA.w DZ_DS_Loc_UsedBy+$24
+    STA.w DZ_DS_Loc_UsedBy+$26
+    STA.w DZ_DS_Loc_UsedBy+$28
+    STA.w DZ_DS_Loc_UsedBy+$2A
+    STA.w DZ_DS_Loc_UsedBy+$2C
+    STA.w DZ_DS_Loc_UsedBy+$2E
 
-    STA.w DZ.DSLocNextSlot
-    STA.w DZ.DSLocNextSlot+$02
-    STA.w DZ.DSLocNextSlot+$04
-    STA.w DZ.DSLocNextSlot+$06
-    STA.w DZ.DSLocNextSlot+$08
-    STA.w DZ.DSLocNextSlot+$0A
-    STA.w DZ.DSLocNextSlot+$0C
-    STA.w DZ.DSLocNextSlot+$0E
-    STA.w DZ.DSLocNextSlot+$10
-    STA.w DZ.DSLocNextSlot+$12
-    STA.w DZ.DSLocNextSlot+$14
-    STA.w DZ.DSLocNextSlot+$16
-    STA.w DZ.DSLocNextSlot+$18
-    STA.w DZ.DSLocNextSlot+$1A
-    STA.w DZ.DSLocNextSlot+$1C
-    STA.w DZ.DSLocNextSlot+$1E
-    STA.w DZ.DSLocNextSlot+$20
-    STA.w DZ.DSLocNextSlot+$22
-    STA.w DZ.DSLocNextSlot+$24
-    STA.w DZ.DSLocNextSlot+$26
-    STA.w DZ.DSLocNextSlot+$28
-    STA.w DZ.DSLocNextSlot+$2A
-    STA.w DZ.DSLocNextSlot+$2C
-    STA.w DZ.DSLocNextSlot+$2E
-    STA.w DZ.DSLocPreviewSlot
-    STA.w DZ.DSLocPreviewSlot+$02
-    STA.w DZ.DSLocPreviewSlot+$04
-    STA.w DZ.DSLocPreviewSlot+$06
-    STA.w DZ.DSLocPreviewSlot+$08
-    STA.w DZ.DSLocPreviewSlot+$0A
-    STA.w DZ.DSLocPreviewSlot+$0C
-    STA.w DZ.DSLocPreviewSlot+$0E
-    STA.w DZ.DSLocPreviewSlot+$10
-    STA.w DZ.DSLocPreviewSlot+$12
-    STA.w DZ.DSLocPreviewSlot+$14
-    STA.w DZ.DSLocPreviewSlot+$16
-    STA.w DZ.DSLocPreviewSlot+$18
-    STA.w DZ.DSLocPreviewSlot+$1A
-    STA.w DZ.DSLocPreviewSlot+$1C
-    STA.w DZ.DSLocPreviewSlot+$1E
-    STA.w DZ.DSLocPreviewSlot+$20
-    STA.w DZ.DSLocPreviewSlot+$22
-    STA.w DZ.DSLocPreviewSlot+$24
-    STA.w DZ.DSLocPreviewSlot+$26
-    STA.w DZ.DSLocPreviewSlot+$28
-    STA.w DZ.DSLocPreviewSlot+$2A
-    STA.w DZ.DSLocPreviewSlot+$2C
-    STA.w DZ.DSLocPreviewSlot+$2E
+    STA.w DZ_DS_Loc_US_Normal
+    STA.w DZ_DS_Loc_US_Normal+$02
+    STA.w DZ_DS_Loc_US_Normal+$04
+    STA.w DZ_DS_Loc_US_Normal+$06
+    STA.w DZ_DS_Loc_US_Normal+$08
+    STA.w DZ_DS_Loc_US_Normal+$0A
 
-    STA.w DZ.DSLastSlot
+    if !sa1
+    STA.w DZ_DS_Loc_US_Normal+$0E
+    STA.w DZ_DS_Loc_US_Normal+$10
+    STA.w DZ_DS_Loc_US_Normal+$12
+    STA.w DZ_DS_Loc_US_Normal+$14
+    endif
+
+    STA.w DZ_DS_Loc_NextSlot
+    STA.w DZ_DS_Loc_NextSlot+$02
+    STA.w DZ_DS_Loc_NextSlot+$04
+    STA.w DZ_DS_Loc_NextSlot+$06
+    STA.w DZ_DS_Loc_NextSlot+$08
+    STA.w DZ_DS_Loc_NextSlot+$0A
+    STA.w DZ_DS_Loc_NextSlot+$0C
+    STA.w DZ_DS_Loc_NextSlot+$0E
+    STA.w DZ_DS_Loc_NextSlot+$10
+    STA.w DZ_DS_Loc_NextSlot+$12
+    STA.w DZ_DS_Loc_NextSlot+$14
+    STA.w DZ_DS_Loc_NextSlot+$16
+    STA.w DZ_DS_Loc_NextSlot+$18
+    STA.w DZ_DS_Loc_NextSlot+$1A
+    STA.w DZ_DS_Loc_NextSlot+$1C
+    STA.w DZ_DS_Loc_NextSlot+$1E
+    STA.w DZ_DS_Loc_NextSlot+$20
+    STA.w DZ_DS_Loc_NextSlot+$22
+    STA.w DZ_DS_Loc_NextSlot+$24
+    STA.w DZ_DS_Loc_NextSlot+$26
+    STA.w DZ_DS_Loc_NextSlot+$28
+    STA.w DZ_DS_Loc_NextSlot+$2A
+    STA.w DZ_DS_Loc_NextSlot+$2C
+    STA.w DZ_DS_Loc_NextSlot+$2E
+    STA.w DZ_DS_Loc_PreviewSlot
+    STA.w DZ_DS_Loc_PreviewSlot+$02
+    STA.w DZ_DS_Loc_PreviewSlot+$04
+    STA.w DZ_DS_Loc_PreviewSlot+$06
+    STA.w DZ_DS_Loc_PreviewSlot+$08
+    STA.w DZ_DS_Loc_PreviewSlot+$0A
+    STA.w DZ_DS_Loc_PreviewSlot+$0C
+    STA.w DZ_DS_Loc_PreviewSlot+$0E
+    STA.w DZ_DS_Loc_PreviewSlot+$10
+    STA.w DZ_DS_Loc_PreviewSlot+$12
+    STA.w DZ_DS_Loc_PreviewSlot+$14
+    STA.w DZ_DS_Loc_PreviewSlot+$16
+    STA.w DZ_DS_Loc_PreviewSlot+$18
+    STA.w DZ_DS_Loc_PreviewSlot+$1A
+    STA.w DZ_DS_Loc_PreviewSlot+$1C
+    STA.w DZ_DS_Loc_PreviewSlot+$1E
+    STA.w DZ_DS_Loc_PreviewSlot+$20
+    STA.w DZ_DS_Loc_PreviewSlot+$22
+    STA.w DZ_DS_Loc_PreviewSlot+$24
+    STA.w DZ_DS_Loc_PreviewSlot+$26
+    STA.w DZ_DS_Loc_PreviewSlot+$28
+    STA.w DZ_DS_Loc_PreviewSlot+$2A
+    STA.w DZ_DS_Loc_PreviewSlot+$2C
+    STA.w DZ_DS_Loc_PreviewSlot+$2E
+
+    STA.w DZ_DS_LastSlot
+endif
     SEP #$20
 
-    STA.w DZ.PPUMirrors.VRAMTransferLength
-    STA.w DZ.PPUMirrors.CGRAMTransferLength
-    STA.w DZ.DSCurrentSlotSearcher
 
-    LDA.b #!DefaultLevelDSMaxSpaceIn16x16Tiles
-    STA.w DZ.DSMaxSpace
+if !GFXFeatures == !True
+    STA.w DZ_PPUMirrors_VRAM_Transfer_Length
+endif
+if !PaletteFeatures == !True
+    STA.w DZ_PPUMirrors_CGRAM_Transfer_Length
+    if !HSVSystem == !True || !RGBSystem == !True
+    STA.w DZ_PPUMirrors_CGRAM_BufferTransfer_Length
+    endif
+endif
 
     LDA.b #!DefaultLevelMaxDataTransferPerFrameIn16x16Tiles
-    STA.w DZ.MaxDataPerFrameIn16x16Tiles
+    STA.w DZ_MaxDataPerFrameIn16x16Tiles
+
+if !DynamicSpriteSupport == !True
+    LDA.b #!DefaultLevelDSMaxSpaceIn16x16Tiles
+    STA.w DZ_DS_MaxSpace
 
     LDA.b #!DefaultLevelFindMethod
-    STA.w DZ.DSFindSpaceMethod
+    STA.w DZ_DS_FindSpaceMethod
 
     LDA.b #!DefaultLevelDSVRAMOffsetIn8x8Tiles
-    STA.w DZ.DSStartingVRAMOffset8x8Tiles
+    STA.w DZ_DS_StartingVRAMOffset8x8Tiles
 
     LDA.b #$00
-    STA.w DZ.PPUMirrors.Reg420B
-    STA.w DZ.DSLength
+    STA.w DZ_DS_Length
+endif
 
+if !PlayerGFX == !True || !PlayerPalette == !True
+    LDA #$01
+if !PlayerGFX == !True
+    STA.w DZ_Player_GFX_Enable
+endif
+if !PlayerPalette == !True
+    STA.w DZ_Player_Palette_Enable
+    LDA #$00
+    STA.w DZ_Player_Palette_BNK
+endif
+endif
     PLB
 RTS
 
@@ -314,11 +527,24 @@ DZBaseHijack2:
 +	
 	JML $0082DF|!rom
 
-incsrc "Library/Routines.asm"
+if !DynamicSpriteSupport
+incsrc "Library/DynamicSpriteRoutines.asm"
+endif
+if !SemiDynamicSpriteSupport == !True
+incsrc "Library/SemiDynamicSpriteRoutines.asm"
+endif
+if !PaletteFeatures == !True
+incsrc "Library/PalettesRoutines.asm"
+endif
+if !GFXFeatures == !True
 incsrc "Features/GraphicsAndTilemapChange.asm"
+endif
+if !PaletteFeatures == !True
 incsrc "Features/ColorPaletteChange.asm"
-if !PlayerFeatures == !True
+endif
+if !PlayerPalette == !True || !PlayerGFX == !True
 incsrc "Features/MarioGFXDMAOptimization.asm"
 endif
-
-print hex(DZ.Timer)
+if !OAMSystem == !True
+incsrc "Features/OAMFeatures.asm"
+endif

@@ -30,7 +30,7 @@
     "Don't use default interaction with Mario": false
   },
   "$1686": {
-    "Inedible": false,
+    "Inedible": true,
     "Stay in Yoshi's mouth": false,
     "Weird ground behaviour": false,
     "Don't interact with other sprites": true,
@@ -57,6 +57,31 @@
   "Additional Byte Count (extra bit clear)": 1,
   "Additional Byte Count (extra bit set)": 1,
   "Map16": "",
-  "Displays": [],
-  "Collection": []
+  "Displays": [
+    {
+      "Description": "Undefined Sprite",
+      "ExtraBit": false,
+      "Tiles": [
+        {
+          "X offset": 0,
+          "Y offset": 0,
+          "map16 tile": 0
+        }
+      ],
+      "X": 0,
+      "Y": 0,
+      "DisplayText": "",
+      "UseText": false
+    }
+  ],
+  "Collection": [
+    {
+      "Name": "Klump",
+      "ExtraBit": false,
+      "Extra Property Byte 1": 0,
+      "Extra Property Byte 2": 0,
+      "Extra Property Byte 3": 0,
+      "Extra Property Byte 4": 0
+    }
+  ]
 }

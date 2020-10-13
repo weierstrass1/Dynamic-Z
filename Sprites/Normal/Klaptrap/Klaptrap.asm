@@ -1,488 +1,10 @@
-	!dp = $0000
-	!addr = $0000
-    !rom = $800000
-	!sa1 = 0
-	!gsu = 0
-    !sram7000 = $000000
-    !sram7008 = $000000
-    !ram7F9A7B = $000000
-    !ram7FC700 = $000000
-	!PaletteFreeRAM = $7F0B44 
-	!MaxSprites = $0C
+;@Klaptrap.bin
+!ResourceIndex = $00
+%GFXTabDef(!ResourceIndex)
+%GFXDef(00)
 
-if read1($00FFD6) == $15
-	sfxrom
-	!dp = $6000
-	!addr = !dp
-	!gsu = 1
-elseif read1($00FFD5) == $23
-	sa1rom
-	!dp = $3000
-	!addr = $6000
-	!sa1 = 1
-    !rom = $000000
-    !sram7000 = $2E4000
-    !sram7008 = $2E6800
-    !ram7F9A7B = $3E127B
-    !ram7FC700 = $3DFF00
-	!PaletteFreeRAM = $418000  
-	!MaxSprites = $16
-endif
-
-;########################################
-;######## Scratchs Rams [$00,$0F] #######
-;########################################
-!Scratch0 = $00
-!Scratch1 = $01
-!Scratch2 = $02
-!Scratch3 = $03
-!Scratch4 = $04
-!Scratch5 = $05
-!Scratch6 = $06
-!Scratch7 = $07
-!Scratch8 = $08
-!Scratch9 = $09
-!ScratchA = $0A
-!ScratchB = $0B
-!ScratchC = $0C
-!ScratchD = $0D
-!ScratchE = $0E
-!ScratchF = $0F
-
-;########################################
-;############## Counters ################
-;########################################
-!TrueFrameCounter = $13
-!EffectiveFrameCounter = $14
-
-;########################################
-;############## Control #################
-;########################################
-!ButtonPressed_BYETUDLR = $15
-!ButtonDown_BYETUDLR = $16
-!ButtonPressed_AXLR0000 = $17
-!ButtonDown_AXLR0000 = $18
-
-;########################################
-;############## Layers ##################
-;########################################
-!Layer1X = $1A
-!Layer1Y = $1C
-!Layer2X = $1E
-!Layer2Y = $20
-!Layer3X = $22
-!Layer3Y = $24
-
-;########################################
-;############## Player ##################
-;########################################
-!PlayerX = $94
-!PlayerY = $96
-!PlayerXSpeed = $7B
-!PlayerYSpeed = $7D
-!PowerUp = $19
-!Lives = $0DBE|!addr
-!Coins = $0DBF|!addr
-!ItemBox = $0DC2|!addr
-!PlayerInAirFlag = $72
-!PlayerDuckingFlag = $73
-!PlayerClimbingFlag_N00SIFHB = $74
-!PlayerWaterFlag = $75
-!PlayerDirection = $76
-!PlayerBlockedStatus_S00MUDLR = $77
-!PlayerHide_DLUCAPLU = $78
-!CurrentPlayer = $0DB3|!addr
-!CapeImage = $13DF|!addr
-!PlayerPose = $13E0|!addr
-!PlayerSlope = $13E1|!addr
-!SpinjumpTimer = $13E2|!addr
-!PlayerWallRunningFlag = $13E3|!addr
-!PlayerFrozenFlag = $13FB|!addr
-!PlayerCarryingFlag = $1470|!addr
-!PlayerCarryingFlagImage = $148F|!addr
-!PlayerAnimationTimer = $1496|!addr
-!PlayerFlashingTimer = $1497|!addr
-!P1PowerUp = $0DB8|!addr
-!P2PowerUp = $0DB9|!addr
-!P1Lives = $0DB4|!addr
-!P2Lives = $0DB5|!addr
-!P1Coins = $0DB6|!addr
-!P2Coins = $0DB7|!addr
-!P1YoshiColor = $0DBA|!addr
-!P2YoshiColor = $0DBB|!addr
-!P1ItemBox = $0DBC|!addr
-!P2ItemBox = $0DBD|!addr
-
-;########################################
-;############### Global #################
-;########################################
-!LockAnimationFlag = $9D
-!HScrollEnable = $1411|!addr
-!VScrollEnable = $1412|!addr
-!HScrollLayer2Type = $1413|!addr
-!VScrollLayer2Type = $1414|!addr
-!WaterFlag = $85
-!SlipperyFlag = $86
-!GameMode = $0100|!addr
-!TwoPlayersFlag = $0DB2|!addr
-
-;########################################
-;################ OAM ###################
-;########################################
-!TileXPosition200 = $0200|!addr
-!TileYPosition200 = $0201|!addr
-!TileCode200 = $0202|!addr
-!TileProperty200 = $0203|!addr
-!TileSize420 = $0420|!addr
-!TileXPosition = $0300|!addr
-!TileYPosition = $0301|!addr
-!TileCode = $0302|!addr
-!TileProperty = $0303|!addr
-!TileSize460 = $0460|!addr
-
-;########################################
-;############### Yoshi ##################
-;########################################
-!YoshiX = $18B0|!addr
-!YoshiY = $18B2|!addr
-!YoshiKeyInMouthFlag = $191C|!addr
-
-;########################################
-;############## Clusters ################
-;########################################
-!ClusterNumber = $1892|!addr
-!ClusterXLow = $1E16|!addr
-!ClusterYLow = $1E02|!addr
-!ClusterXHigh = $1E3E|!addr
-!ClusterYHigh = $1E2A|!addr
-!ClusterMiscTable1 = $0F4A|!addr
-!ClusterMiscTable2 = $0F5E|!addr
-!ClusterMiscTable3 = $0F72|!addr
-!ClusterMiscTable4 = $0F86|!addr
-!ClusterMiscTable5 = $0F9A|!addr
-!ClusterMiscTable6 = $1E52|!addr
-!ClusterMiscTable7 = $1E66|!addr
-!ClusterMiscTable8 = $1E7A|!addr
-!ClusterMiscTable9 = $1E8E|!addr
-
-;########################################
-;############## Extended ################
-;########################################
-!ExtendedNumber = $170B|!addr
-!ExtendedXLow = $171F|!addr
-!ExtendedYLow = $1715|!addr
-!ExtendedXHigh = $1733|!addr
-!ExtendedYHigh = $1729|!addr
-!ExtendedXSpeed = $1747|!addr
-!ExtendedYSpeed = $173D|!addr
-!ExtendedXSpeedAccumulatingFraction = $175B|!addr
-!ExtendedYSpeedAccumulatingFraction = $1751|!addr
-!ExtendedBehindLayersFlag = $1779|!addr
-!ExtendedMiscTable1 = $1765|!addr
-!ExtendedMiscTable2 = $176F|!addr
-
-;########################################
-;############### Sprites ################
-;########################################
-!SpriteIndex = $15E9|!addr
-!SpriteNumber = $9E
-!SpriteStatus = $14C8
-!SpriteXLow = $E4
-!SpriteYLow = $D8
-!SpriteXHigh = $14E0
-!SpriteYHigh = $14D4
-!SpriteXSpeed = $B6
-!SpriteYSpeed = $AA
-!SpriteXSpeedAccumulatingFraction = $14F8
-!SpriteYSpeedAccumulatingFraction = $14EC
-!SpriteDirection = $157C
-!SpriteBlockedStatus_ASB0UDLR = $1588
-!SpriteHOffScreenFlag = $15A0
-!SpriteVOffScreenFlag = $186C
-!SpriteHMoreThan4TilesOffScreenFlag = $15C4
-!SpriteSlope = $15B8
-!SpriteYoshiTongueFlag = $15D0
-!SpriteInteractionWithObjectEnable = $15DC
-!SpriteIndexOAM = $15EA
-!SpriteProperties_YXPPCCCT = $15F6
-!SpriteLoadStatus = $161A
-!SpriteBehindEscenaryFlag = $1632
-!SpriteInLiquidFlag = $164A
-!SpriteDecTimer1 = $1540
-!SpriteDecTimer2 = $154C
-!SpriteDecTimer3 = $1558
-!SpriteDecTimer4 = $1564
-!SpriteDecTimer5 = $15AC
-!SpriteDecTimer6 = $163E
-!SpriteDecTimer7 = $1FE2
-!SpriteTweaker1656_SSJJCCCC = $1656
-!SpriteTweaker1662_DSCCCCCC = $1662
-!SpriteTweaker166E_LWCFPPPG = $166E
-!SpriteTweaker167A_DPMKSPIS = $167A
-!SpriteTweaker1686_DNCTSWYE = $1686
-!SpriteTweaker190F_WCDJ5SDP = $190F
-!SpriteMiscTable1 = $0DF5|!addr
-!SpriteMiscTable2 = $0E0B|!addr
-!SpriteMiscTable3 = $C2
-!SpriteMiscTable4 = $1504
-!SpriteMiscTable5 = $1510
-!SpriteMiscTable6 = $151C
-!SpriteMiscTable7 = $1528
-!SpriteMiscTable8 = $1534
-!SpriteMiscTable9 = $1570
-!SpriteMiscTable10 = $1594
-!SpriteMiscTable11 = $1602
-!SpriteMiscTable12 = $160E
-!SpriteMiscTable13 = $1626
-!SpriteMiscTable14 = $187B
-!SpriteMiscTable15 = $1FD6
-
-;########################################
-;############### GIEPY ##################
-;########################################
-!ExtraBits = $7FAB10
-!NewCodeFlag = $7FAB1C
-!ExtraProp1 = $7FAB28
-!ExtraProp2 = $7FAB34
-!ExtraByte1 = $7FAB40
-!ExtraByte2 = $7FAB4C
-!ExtraByte3 = $7FAB58
-!ExtraByte4 = $7FAB64
-!ShooterExtraByte = $7FAB70
-!GeneratorExtraByte = $7FAB78
-!ScrollerExtraByte = $7FAB79
-!CustomSpriteNumber = $7FAB9E
-!ShooterExtraBits = $7FABAA
-!GeneratorExtraBits = $7FABB2
-!Layer1ExtraBits = $7FABB3
-!Layer2ExtraBits = $7FABB4
-!SpriteFlags = $7FABB5
-
-if !sa1
-
-!SpriteNumber = $3200
-!SpriteYSpeed = $9E
-!SpriteXSpeed = $B6
-!SpriteMiscTable3 = $D8
-!SpriteYLow = $3216
-!SpriteXLow = $322C
-!SpriteStatus = $3242
-!SpriteYHigh = $3258
-!SpriteXHigh = $326E
-!SpriteYSpeedAccumulatingFraction = $74C8
-!SpriteXSpeedAccumulatingFraction = $74DE
-!SpriteMiscTable4 = $74F4
-!SpriteMiscTable5 = $750A
-!SpriteMiscTable6 = $3284
-!SpriteMiscTable7 = $329A
-!SpriteMiscTable8 = $32B0
-!SpriteDecTimer1 = $32C6
-!SpriteDecTimer2 = $32DC
-!SpriteDecTimer3 = $32F2
-!SpriteDecTimer4 = $3308
-!SpriteMiscTable9 = $331E
-!SpriteDirection = $3334
-!SpriteBlockedStatus_ASB0UDLR = $334A
-!SpriteMiscTable10 = $3360
-!SpriteHOffScreenFlag = $3376
-!SpriteDecTimer5 = $338C
-!SpriteSlope = $7520
-!SpriteHMoreThan4TilesOffScreenFlag = $7536
-!SpriteYoshiTongueFlag = $754C
-!SpriteInteractionWithObjectEnable = $7562
-!SpriteIndexOAM = $33A2
-!SpriteProperties_YXPPCCCT = $33B8
-!SpriteMiscTable11 = $33CE
-!SpriteMiscTable12 = $33E4
-!SpriteLoadStatus = $7578
-!SpriteMiscTable13 = $758E
-!SpriteBehindEscenaryFlag = $75A4
-!SpriteDecTimer6 = $33FA
-!SpriteInLiquidFlag = $75BA
-!SpriteTweaker1656_SSJJCCCC = $75D0
-!SpriteTweaker1662_DSCCCCCC = $75EA
-!SpriteTweaker166E_LWCFPPPG = $7600
-!SpriteTweaker167A_DPMKSPIS = $7616
-!SpriteTweaker1686_DNCTSWYE = $762C
-!SpriteVOffScreenFlag = $7642
-!SpriteMiscTable14 = $3410
-!SpriteTweaker190F_WCDJ5SDP = $7658
-!SpriteMiscTable15 = $766E
-!SpriteDecTimer7 = $7FD6
-
-!ExtraBits = $400040
-!NewCodeFlag = $400056
-!ExtraProp1 = $400057
-!ExtraProp2 = $40006D
-!ExtraByte1 = $400099
-!ExtraByte2 = $4000AF
-!ExtraByte3 = $4000C5
-!ExtraByte4 = $4000DB
-!ShooterExtraByte = $400110
-!GeneratorExtraByte = $4000FC
-!ScrollerExtraByte = $4000FD
-!CustomSpriteNumber = $400083
-!ShooterExtraBits = $400099
-!GeneratorExtraBits = $4000A1
-!Layer1ExtraBits = $4000A2
-!Layer2ExtraBits = $4000A3
-!SpriteFlags = $400118
-
-endif 
-
-!Variables = !PaletteFreeRAM+$180
-
-;#################################################
-;############# Dynamic Sprite Support ############
-;#################################################
-
-!DynamicTimer = !Variables
-!SignalSP4SecondHalfBottomLeftQuarter = !Variables+$0001
-!SignalSP4SecondHalfBottomRightQuarter = !Variables+$0002
-!SignalSP4SecondHalfTopLeftQuarter = !Variables+$0003
-!SignalSP4SecondHalfTopRightQuarter = !Variables+$0004
-!SignalSP4FirstHalfBottomLeftQuarter = !Variables+$0005
-!SignalSP4FirstHalfBottomRightQuarter = !Variables+$0006
-!SignalSP4FirstHalfTopLeftQuarter = !Variables+$0007
-!SignalSP4FirstHalfTopRightQuarter = !Variables+$0008
-!SignalSP3SecondHalfBottomLeftQuarter = !Variables+$0009
-!SignalSP3SecondHalfBottomRightQuarter = !Variables+$000A
-!SignalSP3SecondHalfTopLeftQuarter = !Variables+$000B
-!SignalSP3SecondHalfTopRightQuarter = !Variables+$000C
-!SlotsUsedEven = !Variables+$000D
-!SlotsUsedOdd = !Variables+$000E
-!MaxSlots = !Variables+$000F
-!NumberOfBlocks = !Variables+$0010
-!VRAMDispNormalSprite = !Variables+$0011
-!VRAMDispExtendedSprite = !Variables+!MaxSprites+$0011
-!VRAMDispClusterSprite = !Variables+!MaxSprites+$001B
-!VRAMDispOWSprite = !Variables+!MaxSprites+$002F
-!TransferFrameNormalSprite = !Variables+!MaxSprites+$003F
-!TransferFrameExtendedSprite = !Variables+!MaxSprites+!MaxSprites+$003F
-!TransferFrameClusterSprite = !Variables+!MaxSprites+!MaxSprites+$0049
-!TransferFrameOWSprite = !Variables+!MaxSprites+!MaxSprites+$005D
-!SlotsUsedBySprite = !Variables+!MaxSprites+!MaxSprites+$006D
-!FPSSprite = !Variables+!MaxSprites+!MaxSprites+$009D
-!SlotSpriteType = !Variables+!MaxSprites+!MaxSprites+$00CD
-!SlotSpriteID = !Variables+!MaxSprites+!MaxSprites+$00FD
-!SlotSpriteNumber = !Variables+!MaxSprites+!MaxSprites+$012D
-!DMAMapResource = !Variables+!MaxSprites+!MaxSprites+$015D
-!DMAMapBNK = !Variables+!MaxSprites+!MaxSprites+$021D
-!DMAMapLenght = !Variables+!MaxSprites+!MaxSprites+$027D
-!DMAMapNext = !Variables+!MaxSprites+!MaxSprites+$033D
-!FirstSlot = !Variables+!MaxSprites+!MaxSprites+$039D
-!LastSlot = !Variables+!MaxSprites+!MaxSprites+$039E
-!Mode50More = !Variables+!MaxSprites+!MaxSprites+$039F
-
-!Routines = (read1($0082DA+4)<<16)+read2($00823D+4)
-
-!DynamicRoutine16x16 = read3(!Routines+0)
-!DynamicRoutine32x16 = read3(!Routines+3)
-!DynamicRoutine32x32 = read3(!Routines+6)
-!DynamicRoutine48x48 = read3(!Routines+9)
-!DynamicRoutine64x64 = read3(!Routines+12)
-!Reserve16x16NormalSpriteOf30FPS = read3(!Routines+15)
-!Reserve16x16NormalSpriteOf60FPS = read3(!Routines+18)
-!Reserve32x16NormalSpriteOf30FPS = read3(!Routines+21)
-!Reserve32x16NormalSpriteOf60FPS = read3(!Routines+24)
-!Reserve32x32NormalSpriteOf30FPS = read3(!Routines+27)
-!Reserve32x32NormalSpriteOf60FPS = read3(!Routines+30)
-!Reserve48x48NormalSpriteOf30FPS = read3(!Routines+33)
-!Reserve48x48NormalSpriteOf60FPS = read3(!Routines+36)
-!Reserve64x64NormalSpriteOf30FPS = read3(!Routines+39)
-!Reserve64x64NormalSpriteOf60FPS = read3(!Routines+42)
-!Reserve16x16ClusterSpriteOf30FPS = read3(!Routines+45)
-!Reserve16x16ClusterSpriteOf60FPS = read3(!Routines+48)
-!Reserve32x16ClusterSpriteOf30FPS = read3(!Routines+51)
-!Reserve32x16ClusterSpriteOf60FPS = read3(!Routines+54)
-!Reserve32x32ClusterSpriteOf30FPS = read3(!Routines+57)
-!Reserve32x32ClusterSpriteOf60FPS = read3(!Routines+60)
-!Reserve48x48ClusterSpriteOf30FPS = read3(!Routines+63)
-!Reserve48x48ClusterSpriteOf60FPS = read3(!Routines+66)
-!Reserve64x64ClusterSpriteOf30FPS = read3(!Routines+69)
-!Reserve64x64ClusterSpriteOf60FPS = read3(!Routines+72)
-!SendSignal16x16Normal = read3(!Routines+75)
-!SendSignal32x16Normal = read3(!Routines+78)
-!SendSignal32x32Normal = read3(!Routines+81)
-!SendSignal48x48Normal = read3(!Routines+84)
-!SendSignal64x64Normal = read3(!Routines+87)
-!SendSignal16x16Cluster = read3(!Routines+90)
-!SendSignal32x16Cluster = read3(!Routines+93)
-!SendSignal32x32Cluster = read3(!Routines+96)
-!SendSignal48x48Cluster = read3(!Routines+99)
-!SendSignal64x64Cluster = read3(!Routines+102)
-!SendSignal16x16Extended = read3(!Routines+105)
-!SendSignal32x16Extended = read3(!Routines+108)
-!SendSignal32x32Extended = read3(!Routines+111)
-!SendSignal48x48Extended = read3(!Routines+114)
-!SendSignal64x64Extended = read3(!Routines+117)
-!SendSignal16x16OW = read3(!Routines+120)
-!SendSignal32x16OW = read3(!Routines+123)
-!SendSignal32x32OW = read3(!Routines+126)
-!SendSignal48x48OW = read3(!Routines+129)
-!SendSignal64x64OW = read3(!Routines+132)
-
-;Call
-!FrameIndex = $45
-!BNK = $46
-!GFXPointer = $47
-!ResourceOffset = $4A
-!ResourceSize = $4D
-
-macro DynamicRoutine(FPS, SignalRoutine, TransferFrame, FrameIndex, LastFrameIndex, VRAMDisp, BNK, DynamicRoutine, GFXPointer, ResourceOffset, ResourceSize)
-	JSL <SignalRoutine>					;Send Signal to Dynamic Z to avoid be overrited for other dynamic sprite
-
-if <FPS>
-	LDA <TransferFrame>,x	;\
-	AND #$01							;|
-	STA $00								;|Check if it is possible change frame
-										;|
-	LDA !DynamicTimer					;|
-	AND #$01							;|
-	CMP $00								;|
-	BEQ ?+								;/
-RTS
-?+
-endif
-
-	LDA <FrameIndex>,x					;\
-	CMP <LastFrameIndex>,x				;|If the frame didnt change, then don't reupload graphics
-	BNE ?+								;/
-RTS
-?+
-    STA <LastFrameIndex>,x				;Updates last frame
-    STA $02
-
-    LDA <BNK>
-    STA !BNK
-
-    LDA.b #<GFXPointer>&$FF
-    STA !GFXPointer
-    LDA.b #<GFXPointer>>>$08
-    STA !GFXPointer+1
-    LDA.b #<GFXPointer>>>$10
-    STA !GFXPointer+2
-
-    LDA.b #<ResourceOffset>&$FF
-    STA !ResourceOffset
-    LDA.b #<ResourceOffset>>>$08
-    STA !ResourceOffset+1
-    LDA.b #<ResourceOffset>>>$10
-    STA !ResourceOffset+2
-
-    LDA.b #<ResourceSize>&$FF
-    STA !ResourceSize
-    LDA.b #<ResourceSize>>>$08
-    STA !ResourceSize+1
-    LDA.b #<ResourceSize>>>$10
-    STA !ResourceSize+2
-
-    LDA	<VRAMDisp>,x			;|
-    PHX
-    JSL <DynamicRoutine>
-    PLX
-endmacro
-
+!Palette0 = $06
+!Palette1 = $08
 
 ;######################################
 ;############## Defines ###############
@@ -517,11 +39,16 @@ print "INIT ",pc
 	JSL InitWrapperChangeAnimationFromStart
     ;Here you can write your Init Code
     ;This will be excecuted when the sprite is spawned 
-	JSL !Reserve32x32NormalSpriteOf30FPS
-	BCS +
-	RTL
-+
-	JSL !SendSignal32x32Normal
+	
+	%CheckSlotNormalSprite(#$04, $00)
+
+	LDA !ExtraByte1,x
+	AND #$1F
+	CLC
+	ASL
+	ASL
+	ASL
+	STA !ExtraByte1,x
 
 	LDA !Hitpoints,x
 	BEQ +
@@ -550,9 +77,20 @@ RTL
 Return:
 RTS
 SpriteCode:
-    JSR GraphicRoutine                  ;Calls the graphic routine and updates sprite graphics
 	JSR DynamicRoutine
 
+	%SubOffScreen()
+	
+	LDA DZ_DS_Loc_US_Normal,x
+	TAX
+
+	LDA DZ_DS_Loc_IsValid,x
+	BNE +
+	LDX !SpriteIndex
+RTS
++
+	LDX !SpriteIndex
+    JSR GraphicRoutine                  ;Calls the graphic routine and updates sprite graphics
     ;Here you can put code that will be excecuted each frame even if the sprite is locked
 
     LDA !SpriteStatus,x		
@@ -563,8 +101,6 @@ SpriteCode:
 +
 	LDA !LockAnimationFlag				    
 	BNE Return			                    ;if locked animation return.
-
-    %SubOffScreen()
 
     JSR InteractMarioSprite
     ;After this routine, if the sprite interact with mario, Carry is Set.
@@ -674,13 +210,7 @@ Walk:
 	LDA !AnimationIndex,x
 	BEQ +
 
-	LDA !TransferFrameNormalSprite,x
-	AND #$01
-	STA !Scratch0
-
-	LDA !DynamicTimer
-	AND #$01
-	CMP !Scratch0
+	%CheckEvenOrOdd("DZ_DS_Loc_US_Normal")
 	BEQ +
 
 	JSR ChangeAnimationFromStart_walk
@@ -718,13 +248,7 @@ Flip:
 	CMP #$01
 	BEQ +
 
-	LDA !TransferFrameNormalSprite,x
-	AND #$01
-	STA $00
-
-	LDA !DynamicTimer
-	AND #$01
-	CMP $00
+	%CheckEvenOrOdd("DZ_DS_Loc_US_Normal")
 	BEQ +
 
 	LDA !AnimationIndex,x
@@ -753,11 +277,7 @@ Flip:
 	CMP #$01
 	BNE +
 
-	LDA !TransferFrameNormalSprite,x
-	AND #$01
-	STA $00
-
-	LDA !DynamicTimer
+	%CheckEvenOrOdd("DZ_DS_Loc_US_Normal")
 	AND #$01
 	CMP $00
 	BEQ +
@@ -797,13 +317,7 @@ Damage:
 	CMP #$02
 	BEQ +
 
-	LDA !TransferFrameNormalSprite,x
-	AND #$01
-	STA $00
-
-	LDA !DynamicTimer
-	AND #$01
-	CMP $00
+	%CheckEvenOrOdd("DZ_DS_Loc_US_Normal")
 	BEQ +
 
 	JSR ChangeAnimationFromStart_death
@@ -840,18 +354,13 @@ StartDead:
 RTS
 
 Dead:
+	JSL !ClearSlot
 	LDX !SpriteIndex
 	LDA !AnimationIndex,x
 	CMP #$03
 	BEQ +
 
-	LDA !TransferFrameNormalSprite,x
-	AND #$01
-	STA $00
-
-	LDA !DynamicTimer
-	AND #$01
-	CMP $00
+	%CheckEvenOrOdd("DZ_DS_Loc_US_Normal")
 	BEQ +
 
 	JSR ChangeAnimationFromStart_damage
@@ -921,56 +430,127 @@ Frame15_ResourceOffset:
 Frame16_ResourceOffset:
 	dw $1760,$1800
 
-
 ResourceSize:
 Frame0_ResourceSize:
-	dw $00A0,$0080
+	db $05,$04
 Frame1_ResourceSize:
-	dw $00E0,$00C0
+	db $07,$06
 Frame2_ResourceSize:
-	dw $00E0,$00C0
+	db $07,$06
 Frame3_ResourceSize:
-	dw $00C0,$00C0
+	db $06,$06
 Frame4_ResourceSize:
-	dw $00C0,$00A0
+	db $06,$05
 Frame5_ResourceSize:
-	dw $00E0,$00E0
+	db $07,$07
 Frame6_ResourceSize:
-	dw $00E0,$00E0
+	db $07,$07
 Frame7_ResourceSize:
-	dw $00E0,$00E0
+	db $07,$07
 Frame8_ResourceSize:
-	dw $00E0,$00C0
+	db $07,$06
 Frame9_ResourceSize:
-	dw $00C0,$00A0
+	db $06,$05
 Frame10_ResourceSize:
-	dw $00A0,$00A0
+	db $05,$05
 Frame11_ResourceSize:
-	dw $00A0,$00A0
+	db $05,$05
 Frame12_ResourceSize:
-	dw $00A0,$00A0
+	db $05,$05
 Frame13_ResourceSize:
-	dw $00A0,$00A0
+	db $05,$05
 Frame14_ResourceSize:
-	dw $00A0,$00A0
+	db $05,$05
 Frame15_ResourceSize:
-	dw $00E0,$00C0
+	db $07,$06
 Frame16_ResourceSize:
-	dw $00A0,$00A0
+	db $05,$05
 	
 DynamicRoutine:
-	PHB
-	PLA
-	STA $53
-	%DynamicRoutine(1, !SendSignal32x32Normal, !TransferFrameNormalSprite, !FrameIndex, !LastFrameIndex, !VRAMDispNormalSprite, $53, !DynamicRoutine32x32, GFXPointer, ResourceOffset, ResourceSize)
+	%CheckEvenOrOdd("DZ_DS_Loc_US_Normal")
+	BEQ +								;/
 RTS
++
+	%FindSpace("DZ_DS_Loc_US_Normal,x")
+	BCS +
 
-GFXPointer:
-dw resource
+	LDA.l DZ_DS_Loc_US_Normal,x
+	TAX
 
-;fill this with the name of your exgfx (replace "resource.bin" for the name of your graphic.bin)
-resource:
-incbin "sprites\Klaptrap.bin"
+	LDA.l DZ_DS_Loc_IsValid,x
+	BNE ++
+    LDX $15E9|!addr
+    STZ !SpriteStatus,x
+    LDA !SpriteLoadStatus,x
+    TAX
+    LDA #$00
+    STA !SpriteLoadTable,x
+++
+    LDX $15E9|!addr
+RTS
++
+	LDA !ScratchB
+	BNE +
+	
+	LDA !FrameIndex,x					;\
+	CMP !LastFrameIndex,x				;|if last frame is different to new frame then
+	BNE +								;|do dynamic routine
+RTS										;/
++
+	LDA #$00
+	XBA
+	LDA !FrameIndex,x
+	REP #$30
+	ASL
+	TAY
+	PHY
+	SEP #$20
+	LDA ResourceSize,y
+	STA !Scratch0
+	REP #$20
+	TYA
+	ASL
+	TAY
+	PHY
+	LDA ResourceOffset,y
+	STA !Scratch1
+	SEP #$30
+
+	LDA !FrameIndex,x
+	STA !LastFrameIndex,x
+	TAY
+
+	%GetVramDispDynamicRoutine(DZ_DS_Loc_US_Normal)
+	STA !ScratchD
+
+	LDA.l DZ_DS_Loc_US_Normal,x
+	TAX
+
+	LDA #$01
+	STA.l DZ_DS_Loc_IsValid,x
+
+	%DynamicRoutine(!ScratchD, #!GFX00, #!GFX00>>16, !Scratch1, !Scratch0)
+
+	REP #$30
+	PLY
+	LDA ResourceOffset+2,y
+	STA !Scratch1
+	SEP #$20
+	PLY
+	LDA ResourceSize+1,y
+	STA !Scratch0
+	SEP #$10
+	BEQ +
+
+	LDA !ScratchD
+	CLC
+	ADC #$10
+	STA !ScratchD
+	%DynamicRoutine(!ScratchD, #!GFX00, #!GFX00>>16, !Scratch1, !Scratch0)
++
+
+	LDX !SpriteIndex
+RTS
 
 ;Here you can write routines or tables
 
@@ -989,12 +569,6 @@ incbin "sprites\Klaptrap.bin"
 ;>Description: Updates tiles on the oam map
 ;results will be visible the next frame.
 ;>RoutineLength: Short
-
-OAMOffset:
-	db $40,$48,$60,$68
-	db $80,$88,$A0,$A8
-	db $C0,$C8,$E0,$E8
-
 GraphicRoutine:
 	LDA !LastFrameIndex,x
 	CMP #$FF
@@ -1010,22 +584,17 @@ GraphicRoutine:
 
     %GetDrawInfo()                     ;Calls GetDrawInfo to get the free slot and the XDisp and YDisp
 
-	LDA #$08
+	LDA #!Palette0
 	STA !ScratchD
 	LDA !ExtraBits,x
 	AND #$04
 	BEQ +
 
-	LDA #$0C
+	LDA #!Palette1
 	STA !ScratchD
 +
-
-	PHX
-	LDA	!VRAMDispNormalSprite,x
-	TAX  
-	LDA OAMOffset,x
+	%GetVramDisp(DZ_DS_Loc_US_Normal)
 	STA !ScratchE
-	PLX
 
     STZ !Scratch3                       ;$02 = Free Slot but in 16bits
     STY !Scratch2
@@ -1078,9 +647,7 @@ GraphicRoutine:
     CPY #$00FD
     BCS .return                         ;Y can't be more than #$00FD
 -
-    LDA Tiles,x
-	CLC
-	ADC !ScratchE
+    %RemapOamTile("Tiles,x", !ScratchE)
     STA !TileCode,y                     ;Set the Tile code of the tile Y
 
 	LDA #$29
@@ -1561,13 +1128,7 @@ RTS
 ;>Description: Decides what will be the next frame.
 ;>RoutineLength: Short
 AnimationRoutine:
-	LDA !TransferFrameNormalSprite,x
-	AND #$01
-	STA $00
-
-	LDA !DynamicTimer
-	AND #$01
-	CMP $00
+	%CheckEvenOrOdd("DZ_DS_Loc_US_Normal")
 	BNE +
 RTS
 +
@@ -1977,12 +1538,12 @@ NormalInteraction:
 	LDA $1490|!addr	;if player is using the star
 	BEQ +			;kill the sprite
 	%Star()
+	JSR StartDead
 	RTS
 +
 
 	LDA !PlayerYSpeed	;\
-	;SEC					;|Get relative speed between player and the sprite, if it is negative then damage the player
-	;SBC !SpriteYSpeed,x	;/
+	CMP !SpriteYSpeed,x	;/
 	BMI +++				;other wise check the position of the player
 
 	STZ !ScratchD
@@ -2175,3 +1736,420 @@ RTS                       ; Return
 
 YoshiOffset:
 	db $04,$10
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

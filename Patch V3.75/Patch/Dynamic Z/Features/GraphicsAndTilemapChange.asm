@@ -1,7 +1,7 @@
 VRAMDMA:
     LDA #$00
     XBA
-    LDA.l DZ.PPUMirrors.VRAMTransferLength
+    LDA.l DZ_PPUMirrors_VRAM_Transfer_Length
     CMP #$FF
     BNE +
 RTS
@@ -16,16 +16,16 @@ RTS
 	LDA #$1801              
 	STA $00             ;parameter of DMA
 -
-    LDA.l DZ.PPUMirrors.VRAMTransferSourceBNK,x
+    LDA.l DZ_PPUMirrors_VRAM_Transfer_SourceBNK,x
     STA $04
 
-    LDA.l DZ.PPUMirrors.VRAMTransferSourceLength,x
+    LDA.l DZ_PPUMirrors_VRAM_Transfer_SourceLength,x
     STA $05                 ;Load Length
 
-    LDA.l DZ.PPUMirrors.VRAMTransferOffset,x
+    LDA.l DZ_PPUMirrors_VRAM_Transfer_Offset,x
     STA $2116               ;Loads VRAM destination
 
-    LDA.l DZ.PPUMirrors.VRAMTransferSource,x
+    LDA.l DZ_PPUMirrors_VRAM_Transfer_Source,x
     STA $02                 ;Load Resource
 
     STY $420B               ;Start the DMA Transfer
@@ -36,5 +36,5 @@ RTS
 
     SEP #$30
     LDA #$FF
-    STA.l DZ.PPUMirrors.VRAMTransferLength
+    STA.l DZ_PPUMirrors_VRAM_Transfer_Length
 RTS
