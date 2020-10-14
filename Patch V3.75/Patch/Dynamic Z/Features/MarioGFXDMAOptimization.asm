@@ -123,6 +123,12 @@ if !PlayerPalette == !True
     LDA.l DZ_Player_Palette_Enable
     BEQ ++
     REP #$20
+    LDA.l DZ_Player_Palette_BNK
+    AND #$00FF
+    BNE +
+    LDA $0D82|!addr
+    STA.l DZ_Player_Palette_Addr
++
     LDA.l DZ_Player_Palette_Addr
     CMP.l DZ_PPUMirrors_CGRAM_LastPlayerPal
     BEQ +

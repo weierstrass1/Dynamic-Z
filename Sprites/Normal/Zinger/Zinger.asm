@@ -657,7 +657,11 @@ RTS
 	STA DZ_DS_Loc_UsedBy,x
 	LDA #$00
 	STA DZ_DS_Loc_SharedUpdated,x
+
 	LDX !SpriteIndex
+
+	LDA #$FF
+	STA !LastFrameIndex
 
 	LDA #$01
 	SEC
@@ -2740,6 +2744,74 @@ RTS
 	LDA #$02
 	STA !State,x
 RTS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -53,7 +53,7 @@ incsrc "Hijacks/BaseHijack.asm"
 incsrc "Options.asm"
 incsrc "header.asm"
 incsrc "Hijacks/MarioGFXDMAOptimizationHijack.asm"
-incsrc "Hijacks/OAMHijack.asm"
+;incsrc "Hijacks/OAMHijack.asm"
 
 freecode
 
@@ -545,6 +545,6 @@ endif
 if !PlayerPalette == !True || !PlayerGFX == !True
 incsrc "Features/MarioGFXDMAOptimization.asm"
 endif
-if !OAMSystem == !True
-incsrc "Features/OAMFeatures.asm"
-endif
+;if !OAMSystem == !True
+;incsrc "Features/OAMFeatures.asm"
+;endif
