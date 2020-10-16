@@ -1,5 +1,5 @@
 ;@SmallFish.bin
-!ResourceIndex = $05
+!ResourceIndex = $07
 %GFXTabDef(!ResourceIndex)
 %GFXDef(00)
 
@@ -312,8 +312,6 @@ RTS
     STZ !Scratch5
 
 	LDA !ClusterNumber,x
-	SEC
-	SBC #!ClusterOffset
 	%SpawnCluster()
 	BCS +
 	RTS
@@ -1420,6 +1418,88 @@ Animation1_orange_Times:
 ;All code between >Section Hitboxes Interaction and >End Hitboxes Interaction Section will be changed by Dyzen : Sprite Maker
 ;>Section Hitboxes Interaction
 ;>End Hitboxes Interaction Section
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,5 +1,5 @@
 ;@Butterfly.bin
-!ResourceIndex = $04
+!ResourceIndex = $06
 %GFXTabDef(!ResourceIndex)
 %GFXDef(00)
 
@@ -120,6 +120,7 @@ RTL
 ;######################################
 SPEEDXADDER: db $01,$FF
 StartRoutine:
+	WDM
 	LDA #$00
 	STA.l !CurrentRespawnTime,x
 	STA.l !SpawnCounter,x
@@ -303,7 +304,7 @@ RTS
 RTS
 
 Spawn:
-
+	WDM
 	LDA.l !Properties,x
 	AND #$10
 	BEQ +
@@ -334,8 +335,6 @@ RTS
     STZ !Scratch5
 
 	LDA !ClusterNumber,x
-	SEC
-	SBC #!ClusterOffset
 	%SpawnCluster()
 	BCS +
 	RTS
@@ -1206,6 +1205,88 @@ Animation0_fly_Times:
 ;All code between >Section Hitboxes Interaction and >End Hitboxes Interaction Section will be changed by Dyzen : Sprite Maker
 ;>Section Hitboxes Interaction
 ;>End Hitboxes Interaction Section
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

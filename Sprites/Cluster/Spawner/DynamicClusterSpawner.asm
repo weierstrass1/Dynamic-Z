@@ -48,6 +48,8 @@ print "MAIN ",pc
     STZ !Scratch5
 
     LDA !ExtraByte1,x
+    CLC
+    ADC #!ClusterOffset
     %SpawnCluster()
     BCC +
     
@@ -65,6 +67,7 @@ print "MAIN ",pc
     
     LDA #$00
     STA !Started,x
+    STA !SpawnCounter,x
 	JSL $01ACF9|!rom
 	LDA $148D|!addr
     EOR !TrueFrameCounter
