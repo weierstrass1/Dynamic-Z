@@ -1258,3 +1258,99 @@ macro MixPaletteHueSaturationAndValueWithDestSrcAndOffsetNoConstant(NewValue1, N
     %CallFunctionLong(!MixPaletteHueSaturationAndValue, $0A)
     PLB
 endmacro
+
+;--------------------------------Mix with Color------------------------------------------
+macro MixWithColor(NewValue1, NewValue2, NewValue3, Ratio, Length)
+    %MixWithColorWithDestSrcAndOffset("<NewValue1>", "<NewValue2>", "<Ratio>", "<Length>", DZ_PPUMirrors_CGRAM_PaletteWriteMirror, DZ_PPUMirrors_CGRAM_BasePalette, $0000)
+endmacro
+
+macro MixWithColorWithOffset(NewValue1, NewValue2, NewValue3, Ratio, Length, Offset)
+    %MixWithColorWithDestSrcAndOffset("<NewValue1>", "<NewValue2>", "<NewValue3>", "<Ratio>", "<Length>", DZ_PPUMirrors_CGRAM_PaletteWriteMirror, DZ_PPUMirrors_CGRAM_BasePalette, "<Offset>")
+endmacro
+
+macro MixWithColorWithDestAndSrc(NewValue1, NewValue2, NewValue3, Ratio, Length, Destination, Source)
+    %MixWithColorWithDestSrcAndOffset("<NewValue1>", "<NewValue2>", "<NewValue3>", "<Ratio>", "<Length>", "<Destination>", "<Source>", $0000)
+endmacro
+
+macro MixWithColorWithDestSrcAndOffset(NewValue1, NewValue2, NewValue3, Ratio, Length, Destination, Source, Offset)
+    PHB
+
+    LDA.b #<Destination>>>16
+    PHA
+    PLB
+
+    LDA <NewValue3>
+    PHA
+    LDA <NewValue2>
+    PHA
+    LDA <NewValue1>
+    PHA
+    LDA <Ratio>
+    PHA
+
+    REP #$20
+    LDA.w #<Length>
+    PHA
+    LDA.w #<Destination>
+    CLC
+    ADC.w #<Offset>*2
+    PHA
+    LDA.w #<Source>
+    CLC
+    ADC.w #<Offset>*3
+    PHA
+    SEP #$20
+    %CallFunctionLong(!MixWithColor, $0A)
+    PLB
+endmacro
+
+macro MixWithColorNoConstant(NewValue1, NewValue2, NewValue3, Ratio, Length)
+    %MixWithColorWithDestSrcAndOffsetNoConstant("<NewValue1>", "<NewValue2>", "<Ratio>", "<Length>", DZ_PPUMirrors_CGRAM_PaletteWriteMirror, DZ_PPUMirrors_CGRAM_BasePalette, $0000)
+endmacro
+
+macro MixWithColorWithOffsetNoConstant(NewValue1, NewValue2, NewValue3, Ratio, Length, Offset)
+    %MixWithColorWithDestSrcAndOffsetNoConstant("<NewValue1>", "<NewValue2>", "<NewValue3>", "<Ratio>", "<Length>", DZ_PPUMirrors_CGRAM_PaletteWriteMirror, DZ_PPUMirrors_CGRAM_BasePalette, "<Offset>")
+endmacro
+
+macro MixWithColorWithDestAndSrcNoConstant(NewValue1, NewValue2, NewValue3, Ratio, Length, Destination, Source)
+    %MixWithColorWithDestSrcAndOffsetNoConstant("<NewValue1>", "<NewValue2>", "<NewValue3>", "<Ratio>", "<Length>", "<Destination>", "<Source>", $0000)
+endmacro
+
+macro MixWithColorWithDestSrcAndOffsetNoConstant(NewValue1, NewValue2, NewValue3, Ratio, Length, Destination, Source, Offset)
+    PHB
+
+    LDA.b #<Destination>>>16
+    PHA
+    PLB
+
+    LDA <NewValue3>
+    PHA
+    LDA <NewValue2>
+    PHA
+    LDA <NewValue1>
+    PHA
+    LDA <Ratio>
+    PHA
+
+    REP #$20
+    LDA.w #<Length>
+    PHA
+    LDA <Offset>
+    CLC
+    ASL
+    CLC
+    ADC.w #<Destination>
+    PHA
+    LDA <Offset>
+    STA $0E
+    CLC
+    ASL
+    CLC
+    ADC $0E
+    CLC
+    ADC.w #<Source>
+    PHA
+    SEP #$20
+    %CallFunctionLong(!MixWithColor, $0A)
+    PLB
+endmacro

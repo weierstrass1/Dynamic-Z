@@ -828,7 +828,7 @@ endmacro
     STA !NewValue
     %FlipRatio()
 
-    REP #$20
+    REP #$30
 
     LDA #$0000                              ;
     STA !SrcIndex                           ;
@@ -882,7 +882,7 @@ endmacro
     STA !NewValue
     %FlipRatio()
 
-    REP #$20
+    REP #$30
 
     LDA #$0000                              ;
     STA !SrcIndex                           ;
@@ -938,7 +938,7 @@ endmacro
     STA !NewValue
     %FlipRatio()
 
-    REP #$20
+    REP #$30
 
     LDA #$0000                              ;
     STA !SrcIndex                           ;
@@ -995,7 +995,7 @@ endmacro
     STA !NewValue2
     %FlipRatio()
 
-    REP #$20
+    REP #$30
 
     LDA #$0000                              ;
     STA !SrcIndex                           ;
@@ -1067,7 +1067,7 @@ endmacro
     STA !NewValue2
     %FlipRatio()
 
-    REP #$20
+    REP #$30
 
     LDA #$0000                              ;
     STA !SrcIndex                           ;
@@ -1140,7 +1140,7 @@ endmacro
     STA !NewValue2
     %FlipRatio()
 
-    REP #$20
+    REP #$30
 
     LDA #$0000                              ;
     STA !SrcIndex                           ;
@@ -1212,7 +1212,7 @@ endmacro
     STA !NewValue3
     %FlipRatio()
 
-    REP #$20
+    REP #$30
 
     LDA #$0000                              ;
     STA !SrcIndex                           ;
@@ -1380,8 +1380,94 @@ Hi5:
     PLB
 RTS
 
-
-
 RandomizePalette:
-MixWithColor:
+%StartFunction("MixWithColor", $05)
+
+    %RatioToX()
+    %ApplyRatio("!NewValue1")
+    STA !NewValue1
+    %RatioToX()
+    %ApplyRatio("!NewValue2")
+    STA !NewValue2
+    %RatioToX()
+    %ApplyRatio("!NewValue3")
+    STA !NewValue3
+    %FlipRatio()
+
+    REP #$30
+
+    LDA #$0000                              ;
+    STA !SrcIndex                           ;
+    STA !DstIndex                           ;for(!SrcIndex = 0, !DstIndex = 0;
+-
+    LDA !DstIndex
+    CMP !Length
+    BCC +
+    SEP #$30
+    
+%RTLN($05)
++
+    LDA !SrcIndex
+    TAY
+
+    SEP #$20
+
+    LDA !Ratio
+    REP #$20
+    ASL
+    SEP #$20
+    %ApplyRatio("(!Source),y")
+    CLC
+    ADC !NewValue1
+    LSR
+    LSR
+    LSR
+    STA !R
+    INY
+
+    LDA !Ratio
+    REP #$20
+    ASL
+    SEP #$20
+    %ApplyRatio("(!Source),y")
+    CLC
+    ADC !NewValue2
+    LSR
+    LSR
+    LSR
+    STA !G
+    INY
+
+    LDA !Ratio
+    REP #$20
+    ASL
+    SEP #$20
+    %ApplyRatio("(!Source),y")
+    CLC
+    ADC !NewValue3
+    LSR
+    LSR
+    LSR
+    STA !B
+    INY
+    REP #$20
+    TYA
+    STA !SrcIndex
+    SEP #$20
+
+    %JoinChannels()
+
+    REP #$20
+    LDA !DstIndex
+    TAY
+
+    LDA !G
+    STA (!Destination),y
+
+    INY
+    INY
+    TYA
+    STA !DstIndex
+
+    JMP -
 MixWithBaseColor:

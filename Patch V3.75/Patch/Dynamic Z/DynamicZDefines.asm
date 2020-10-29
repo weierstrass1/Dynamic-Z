@@ -132,10 +132,9 @@ endif
 ;############# Dynamic Sprite Support ############
 ;#################################################
 
-pushpc : freecode
+pushpc
 namespace nested on
-
-base !Variables
+org !Variables
 
 namespace DZ
     Timer: skip 1                               ;$7F0B44
@@ -226,26 +225,8 @@ if !SemiDynamicSpriteSupport == !True
         namespace off
     namespace off
 endif
-if !PlayerGFX == !True || !PlayerPalette == !True
-    namespace Player
-if !PlayerGFX == !True
-        namespace GFX
-            Enable: skip 1
-            Addr: skip 2
-            BNK: skip 2
-        namespace off
-endif
-if !PlayerPalette == !True
-        namespace Palette
-            Enable: skip 1
-            Addr: skip 2
-            BNK: skip 1
-        namespace off
-endif
-    namespace off
-endif
     FreeRams:
-    base !Variables2
+org !Variables2
     namespace PPUMirrors                          ;$7FB080
 if !PaletteFeatures == !True
         namespace CGRAM

@@ -1806,8 +1806,10 @@ CheckIfLastNormalSharedProcessed:
     LDA !SpriteStatus,x
     BEQ +
 
-    PHX
     LDA.l DZ_DS_Loc_US_Normal,x
+    CMP #$30
+    BCS +
+    PHX
     TAX
     LDA.l DZ_DS_Loc_UsedBy,x
     PLX
