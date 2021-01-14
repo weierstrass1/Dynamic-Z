@@ -6,7 +6,7 @@ incsrc "Options.asm"
     !rom = $800000
 	!sa1 = 0
     !Variables = $7F0B44 
-    !Variables2 = $7FB080
+    !Variables2 = $7FB408
     !MaxSprites = $0C
     !SpriteStatus = $14C8
     !SpriteNumberNormal = $7FAB9E
@@ -24,7 +24,7 @@ incsrc "Options.asm"
     !UberASMTool = 0
 
 if read1($00FFD5) == $23
-sa1rom
+	sa1rom
 	!dp = $3000
 	!addr = $6000
 	!sa1 = 1
@@ -166,6 +166,7 @@ if !GFXFeatures == !True && !DynamicSpriteSupport == !True
             FrameRateMethod: skip 48            ;$7F0C77
             NextSlot: skip 48                   ;$7F0CA7
             PreviewSlot: skip 48                ;$7F0CD7
+            SafeFrame: skip 48
     if !SharedDynamicSpriteSupport == !True
             SharedFrame: skip 48                ;$7F0D07
             SharedUpdated: skip 48              ;$7F0BB7
@@ -225,8 +226,28 @@ if !SemiDynamicSpriteSupport == !True
         namespace off
     namespace off
 endif
+if !PlayerGFX == !True || !PlayerPalette == !True
+    namespace Player
+if !PlayerGFX == !True
+        CustomPlayer: skip 1
+        LastCustomPlayer: skip 1
+        namespace GFX
+            Enable: skip 1
+            Addr: skip 2
+            BNK: skip 2
+        namespace off
+endif
+if !PlayerPalette == !True
+        namespace Palette
+            Enable: skip 1
+            Addr: skip 2
+            BNK: skip 1
+        namespace off
+endif
+    namespace off
+endif
     FreeRams:
-org !Variables2
+    org !Variables2
     namespace PPUMirrors                          ;$7FB080
 if !PaletteFeatures == !True
         namespace CGRAM
@@ -248,7 +269,7 @@ if !PaletteFeatures == !True
                 Destination: skip 128               ;$7FB080
                 DestinationBNK: skip 128            ;$7FB080
             namespace off
-            BasePalette: skip 768                   ;$7FB080
+            BasePalette: skip 1280                   ;$7FB080
             PaletteWriteMirror: skip 512            ;$7FB080
     endif
         namespace off
@@ -390,6 +411,8 @@ pullpc
 !FindCopyExtended = read3(!Routines+$78)
 !LoadGraphicsSDSOW = read3(!Routines+$7B)
 !FindCopyOW = read3(!Routines+$7E)
+!EasyNormalSpriteDynamicRoutine = read3(!Routines+$81)
+!EasySpriteDynamicRoutine = read3(!Routines+$84)
 
 incsrc "../Macros/STDCall.asm"
 incsrc "../Macros/MultAndDiv.asm"

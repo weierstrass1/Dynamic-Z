@@ -1,5 +1,7 @@
 macro FindSpace(DSSlotUsed)
-    LDA.l <DSSlotUsed>
+    JSL !ClearSlot
+
+    LDA <DSSlotUsed>
     STA !Scratch0
 
     JSL !FindSpace
@@ -219,11 +221,11 @@ macro DynamicRoutine(VRAMOffset, ResourceAddr, ResourceBNK, ResourceOffset, size
     LDA <VRAMOffset>        ;9
     PHA
 
-    LDA.b <ResourceBNK>     ;8
+    LDA <ResourceBNK>     ;8
     PHA
 
     REP #$20
-    LDA.w <ResourceAddr>
+    LDA <ResourceAddr>
     CLC
     ADC <ResourceOffset>
     PHA                     ;6
@@ -267,7 +269,7 @@ macro GetVramDisp(DSLocUS)
 endmacro
 
 macro GetVramDispDynamicRoutine(DSLocUS)
-	LDA.l <DSLocUS>,x
+	LDA <DSLocUS>,x
     JSL !GetVramDispDynamicRoutine
 endmacro
 
@@ -281,4 +283,97 @@ macro RemapOamTile(Tile, Offset)
     JSL !RemapOamTile
     PLA
     PLA
+endmacro
+
+macro EasyNormalSpriteDynamicRoutine(CurrentFrame, LastFrame, GFXAddr, GFXBNK, OffsetTable, SizeTable, LastLineOffset)
+
+    LDA <CurrentFrame>
+    STA !Scratch4F
+    LDA <LastFrame>
+    STA !Scratch50
+
+    LDA <GFXBNK>
+    STA !Scratch49
+
+    LDA <LastLineOffset>
+    STA !Scratch4E
+
+    REP #$20
+    LDA <GFXAddr>
+    STA !Scratch47
+    LDA <OffsetTable>
+    STA !Scratch4A
+    LDA <SizeTable>
+    STA !Scratch4C
+    SEP #$20
+
+    JSL !EasyNormalSpriteDynamicRoutine
+    BCC ?+
+
+    LDA <CurrentFrame>
+    STA <LastFrame>
+    SEC
+?+
+endmacro
+
+macro EasyNormalSpriteDynamicRoutineFixedGFX(CurrentFrame, LastFrame, GFX, OffsetTable, SizeTable, LastLineOffset)
+    %EasyNormalSpriteDynamicRoutine("<CurrentFrame>", "<LastFrame>", "#<GFX>", "#<GFX>>>16", "<OffsetTable>", "<SizeTable>", "<LastLineOffset>")
+endmacro
+
+macro EasySpriteDynamicRoutine(DSLocUS,CurrentFrame, LastFrame, GFXAddr, GFXBNK, OffsetTable, SizeTable, LastLineOffset)
+
+    PHX
+
+    PHX
+    LDA <DSLocUS>
+    STA !Scratch51
+	TAX
+    LDA.l DZ_Timer
+    CMP DZ_DS_Loc_SafeFrame,x
+    BNE ?+
+    PLX
+    PLX
+    CLC
+    BRA ?++
+?+
+    STA.l DZ_DS_Loc_SafeFrame,x
+    PLX
+
+    LDA <CurrentFrame>
+    STA !Scratch4F
+    LDA <LastFrame>
+    STA !Scratch50
+
+    LDA <GFXBNK>
+    STA !Scratch49
+
+    LDA <LastLineOffset>
+    STA !Scratch4E
+
+    REP #$20
+    LDA <GFXAddr>
+    STA !Scratch47
+    LDA <OffsetTable>
+    STA !Scratch4A
+    LDA <SizeTable>
+    STA !Scratch4C
+    SEP #$20
+
+    LDX #$00
+    JSL !EasySpriteDynamicRoutine
+    BCC ?+
+
+    PLX
+    LDA <CurrentFrame>
+    STA <LastFrame>
+    SEC
+    BRA ?++
+?+
+    PLX
+    CLC
+?++
+endmacro
+
+macro EasySpriteDynamicRoutineFixedGFX(DSLocUS,CurrentFrame, LastFrame, GFX, OffsetTable, SizeTable, LastLineOffset)
+    %EasySpriteDynamicRoutine("<DSLocUS>","<CurrentFrame>", "<LastFrame>", "#<GFX>", "#<GFX>>>16", "<OffsetTable>", "<SizeTable>", "<LastLineOffset>")
 endmacro

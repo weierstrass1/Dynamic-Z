@@ -2,118 +2,6 @@
 ;############################################ Find Space ############################################
 ;####################################################################################################
 ;X = Slot
-;!ScratchF = Space used
-FindFreeSpace:
-    TXA                     ;
-    CMP.l DZ_DS_FirstSlot    ;
-    BNE +                   ;if(X == first)
-RTS                         ;   return
-+
-    
-    PHX                     ;
-    LDA.l DZ_DS_FirstSlot    ;i = first
-    TAX                     ;
--
-    LDA.l DZ_DS_Loc_UsedBy,x      ;
-    CMP #$FF                    ;if(i.UsedBy == null || !i.isValid())
-    BEQ +                       ;{
-                                ;
-    PHX                         ;
-    JSR CallCheck2              ;
-    BCS ++                      ;
-                                ;
-    PLX                         ;
-+                               ;
-    LDA.l DZ_DS_Loc_NextSlot,x    ;
-    PHA                         ;
-    JSR RemoveAt                ;   RemoveAt(i);
-    PLX                         ;   i = i.next;
-    TXA                         ;   
-    CMP $01,s                   ;   if(i == X)
-    BEQ +                       ;       return;
-    BPL -                       ;
-+                               ;
-    PLX                         ;}
-RTS                             ;else
-++                              ;{
-    PLX                         ;
-                                ;
-    LDA.l DZ_DS_Loc_PreviewSlot,x ;   if(i == first)
-    BPL +                       ;   {
-                                ;
-    LDA.l DZ_DS_FindSpaceMethod  ;       if(FindSpaceMethod == Top To Bottom)
-    BNE ++                      ;
-    LDA #$00                    ;           InitialOffset = 0;
-    BRA +++                     ;       
-++                              ;       else
-    LDA.l DZ_DS_MaxSpace         ;           IntitialOffset = Max Space;
-    BRA +++                     ;   }
-+                               ;   else
-    PHX                         ;   {
-    TAX                         ;
-                                ;       if(FindSpaceMethod == Top To Bottom)
-    LDA.l DZ_DS_FindSpaceMethod  ;       
-    BNE ++                      ;
-                                ;
-    LDA.l DZ_DS_Loc_SpaceUsedOffset,x ;       InitialOffset = i.preview.OffSet + i.preview.SpaceUsed;
-    CLC                             ;
-    ADC.l DZ_DS_Loc_SpaceUsed,x       ;
-    PLX                             ;
-    BRA +++                         ;   else
-++                                  ;
-    LDA.l DZ_DS_Loc_SpaceUsedOffset,x ;       InitialOffset = i.preview.OffSet;
-    PLX                         ;   }
-+++                             ;
-    PHA                         ;
-
-    LDA.l DZ_DS_FindSpaceMethod  ;    if(FindSpaceMethod == Top To Bottom)
-    BNE ++                          ;{
-                                    ;
-    LDA.l DZ_DS_Loc_SpaceUsedOffset,x ;   if(i.OffSet - InitialOffset < RequiredSpace)
-    SEC                             ;   
-    SBC $01,s                       ;       Go To Next
-    CMP !ScratchF                   ;
-    BCC .next                       ;   else
-                                    ;   {
-    PHX                             ;
-    LDA $01,s                       ;
-    TAX                             ;
-    LDA.l DZ_DS_Loc_PreviewSlot,x     ;                  
-    JSR MoveAt                      ;       MoveAt(X, i.preview);
-    PLX                             ;   
-    PLX                             ;       return;
-RTS                                 ;   }
-++                                  ;
-    PLA                             ;else
-    SEC                             ;{
-    SBC.l DZ_DS_Loc_SpaceUsedOffset,x ;   if(InitialOffset - i.OffSet - i.SpaceUsed < RequiredSpace)       
-    SEC
-    SBC.l DZ_DS_Loc_SpaceUsed,x       ;
-    CMP !ScratchF                   ;       Go To Next
-    BCC .next                       ;
-                                    ;   else
-    PHX                             ;   {
-    LDA $01,s                       ;       
-    TAX                             ;   
-    LDA.l DZ_DS_Loc_PreviewSlot,x     ;       MoveAt(X, i.preview);
-    JSR MoveAt                      ;
-    PLX                             ;
-    PLX                             ;       return;
-RTS                                 ;   }
-                                    ;}
-
-.next                               ;Next:
-    LDA.l DZ_DS_Loc_NextSlot,x        ;
-    CMP $01,s                       ;if(i.next == X)
-    BEQ +                           ;   return;
-    TAX                             ;i = i.next
-    BMI +                           ;if(i < 0)
-    JMP -                           ;   return;
-+
-    PLX
-RTS
-
-;X = Slot
 GetFirstSpace:
     LDA.l DZ_DS_FindSpaceMethod          ;if(FindSpaceMethod == Top To Bottom)
     BNE +
@@ -127,19 +15,6 @@ RTS
     STA.l DZ_DS_Loc_SpaceUsedOffset,x     ;   X.Offset = MaxSpace - X.SpaceUsed;
 RTS
 ;X = Slot
-AssignSpaceBasedOnSlot2:
-    LDA.l DZ_DS_Loc_PreviewSlot,x         ;if(X == first)
-    BPL +                               ;{
-                                        ;
-    JSR GetFirstSpace                   ;   GetFirstSpace(X);
-    SEC                                 ;   return CarrySet;
-RTS                                     ;}
-
-+
-    STX !ScratchE                       ;
-
-    BRA AssignSpaceBasedOnSlot_Start
-;X = Slot
 AssignSpaceBasedOnSlot:
     LDA.l DZ_DS_Loc_PreviewSlot,x
     BPL +
@@ -148,75 +23,50 @@ AssignSpaceBasedOnSlot:
     SEC
 RTS
 +
-    PHA
     PHX
-    STX !ScratchE
-    LDA.l DZ_DS_Loc_SpaceUsed,x
-    STA !ScratchF
-    JSR FindFreeSpace                   ;FindFreeSpace(X, X.SpaceUsed);
+    TAX
+    LDA.l DZ_DS_FindSpaceMethod
+    BNE +
+    
+    LDA DZ_DS_Loc_SpaceUsedOffset,x
+    CLC
+    ADC DZ_DS_Loc_SpaceUsed,x
     PLX
-    PLA
-
-.Start
-
-    PHX                                 ;
-    TAX                                 ;i = X.preview;
--
-    LDA.l DZ_DS_Loc_UsedBy,x              ;if(i.UsedBy == null || !i.isValid())
-    CMP #$FF                            ;{
-    BEQ +                               ;
-                                        ;
-    PHX                                 ;
-    JSR CallCheck2                      ;
-    BCS ++                              ;
-                                        ;
-    PLX                                 ;
-+                                       ;
-    LDA.l DZ_DS_Loc_PreviewSlot,x         ;
-    PHA                                 ;
-    JSR RemoveAt                        ;   RemoveAt(i);
-    PLX                                 ;   i = i.preview;
-    BPL -                               ;   if(i<0)
-                                        ;
-    PLX                                 ;    
-    JSR GetFirstSpace                   ;       GetFirstSpace(X);  
-    SEC                                 ;   return Carry Set;
-RTS                                     ;}
-                                        ;else
-++                                      ;{
-    PLX                                 ;
-                                        ;
-    LDA.l DZ_DS_FindSpaceMethod          ;   if(FindSpaceMethod == Top To Bottom)
-    BNE +                               ;
-                                        ;       
-    LDA.l DZ_DS_Loc_SpaceUsedOffset,x     ;       
-    CLC                                 ;
-    ADC.l DZ_DS_Loc_SpaceUsed,x           ;
-    PLX                                 ;
-    STA.l DZ_DS_Loc_SpaceUsedOffset,x     ;       X.Offset = i.Offset + i.SpaceUsed;
-                                        ;
-    BRA ++                              ;
-+                                       ;   else
-    LDA.l DZ_DS_Loc_SpaceUsedOffset,x     ;
-    SEC                                 ;       X.Offset = i.Offset - X.SpaceUsed;
-    PLX                                 ;
-    SBC.l DZ_DS_Loc_SpaceUsed,x           ;
-    STA.l DZ_DS_Loc_SpaceUsedOffset,x     ;}
-++                                      ;
-                                        ;
-    LDA.l DZ_DS_Loc_SpaceUsedOffset,x     ;
-    BMI +                               ;if(X.Offset < 0 || X.Offset + X.SpaceUsed > MaxSpace)
-    CLC                                 ;   return Carry Clear;
-    ADC.l DZ_DS_Loc_SpaceUsed,x           ;
-    CMP.l DZ_DS_MaxSpace                 ;
-    BCC ++                              ;
-    BEQ ++                              ;
-    BRA +                               ;
-++                                      ;
-    SEC                                 ;return Carry Set
+    STA DZ_DS_Loc_SpaceUsedOffset,x
+    CMP #$80
+    BCC ++
+    CLC
+RTS
+++
+    CLC
+    ADC DZ_DS_Loc_SpaceUsed,x
+    CMP DZ_DS_MaxSpace
+    BEQ ++
+    BCC ++
+    CLC
+RTS
+++
+    SEC
 RTS
 +
+    LDA DZ_DS_Loc_SpaceUsedOffset,x
+    PLX
+    SEC
+    SBC DZ_DS_Loc_SpaceUsed,x
+    STA DZ_DS_Loc_SpaceUsedOffset,x
+    CMP #$80
+    BCC ++
     CLC
+RTS
+    CLC
+    ADC DZ_DS_Loc_SpaceUsed,x
+    CMP DZ_DS_MaxSpace
+    BEQ ++
+    BCC ++
+    CLC
+RTS
+++
+    SEC
 RTS
 
 ;####################################################################################################
@@ -430,6 +280,7 @@ RTS                                 ;
     LDA.l DZ_DS_Length   ;
     DEC A               ;Length--;
     STA.l DZ_DS_Length   ;
+    CMP #$00
     BNE +
 
     LDA #$FF                    ;
@@ -461,7 +312,7 @@ RTS
     PHX                             ;if(X.next != null)                 //Preserve X
     PHA                             ;   X.next.preview = X.preview;     //Preserve X.next
     LDA.l DZ_DS_Loc_PreviewSlot,x     ;                                   //A = X.preview                     
-    PLX                             ;                                   //X reg = X.preview
+    PLX                             ;                                   //X reg = X.next
     STA.l DZ_DS_Loc_PreviewSlot,x     ;                                   //X.next.preview = X.preview;
     PLX                             ;                                   //X reg = X
     BRA ++
@@ -586,6 +437,12 @@ RTL                             ;|used slots
     BEQ +                   ;/
 
     PHX
+
+    LDA.l DZ_DS_Loc_SafeFrame,x
+    CMP DZ_Timer
+    BEQ ++
+
+    LDA.l DZ_DS_Loc_UsedBy,x 
     JSR .CallCheck
     BCS ++
 
@@ -719,11 +576,11 @@ RTS
     BEQ +
     LDA !ClusterSpriteNumber,x      ;|
     CMP !sn                         ;|
-    BEQ +                           ;|
-    CLC                             ;|Check if the sprite number is equals to registered sprite number
+    BNE +                           ;|
+    SEC                             ;|Check if the sprite number is equals to registered sprite number
 RTS                                 ;|
 +                                   ;|
-    SEC                             ;|
+    CLC                             ;|
 RTS                                 ;/
 
 .Extended                           ;\
@@ -733,11 +590,11 @@ RTS                                 ;/
     BEQ +
     LDA !ExtendedSpriteNumber,x     ;|
     CMP !sn                         ;|
-    BEQ +                           ;|
-    CLC                             ;|Check if the sprite number is equals to registered sprite number
+    BNE +                           ;|
+    SEC                             ;|Check if the sprite number is equals to registered sprite number
 RTS                                 ;|
 +                                   ;|
-    SEC                             ;|
+    CLC                             ;|
 RTS                                 ;/
 
 .OW                                 ;\
@@ -747,11 +604,11 @@ RTS                                 ;/
     BEQ +
     LDA !OWSpriteNumber,x           ;|
     CMP !sn                         ;|
-    BEQ +                           ;|
-    CLC                             ;|Check if the sprite number is equals to registered sprite number
+    BNE +                           ;|
+    SEC                             ;|Check if the sprite number is equals to registered sprite number
 RTS                                 ;|
 +                                   ;|
-    SEC                             ;|
+    CLC                             ;|
 RTS                                 ;/
 
 .NormalShared                       
@@ -986,6 +843,8 @@ RTL
     LDA #$00
     STA.l DZ_DS_Loc_IsValid,x            ;Sprite is Invalid, must wait dynamic routine
     STA.l DZ_DS_Loc_SharedUpdated,x      ;If the sprite is Shared Dynamic, it is not updated yet
+    LDA DZ_Timer
+    STA DZ_DS_Loc_SafeFrame,x
 
     LDA !csNumberOf16x16Tiles
     STA.l DZ_DS_Loc_SpaceUsed,x          ;Set number of 16x16 tiles
@@ -993,53 +852,7 @@ RTL
     JSR AddLast
 
     JSR AssignSpaceBasedOnSlot
-    BCS +
-
-    CLC
 RTL
-+
-
-    SEC
-RTL
-
-CallCheck2:
-    AND #$1F            ;\
-    STA !ind            ;/!ind = index of the sprite.
-
-    CPX !ScratchE
-    BNE +               ;if slot to check is this slot then return carry set
-    SEC
-RTS
-+
-    LDA.l DZ_DS_Loc_SpriteNumber,x    ;\
-    STA !sn                         ;/!sn = sprite number
-
-    LDA.l DZ_DS_Loc_UsedBy,x      ;\
-    CLC                         ;|
-    ROL                         ;|
-    ROL                         ;|x = Sprite Type
-    ROL                         ;|0 = Normal, 1 = Cluster, 2 = extended, 3 = overworld
-    ROL                         ;|4 = Shared Normal, 5 = Shared Cluster, 6 = Shared extended, 7 = Shared overworld
-    AND #$07
-    ASL                         ;|
-    TAX                         ;/x = Sprite Type*2
-
-    LDA !Scratch46
-    CMP #$80
-    BNE +                       ;if this slot is a shared dynamic sprite skip to check routine
-
-    LDA !ind                    ;otherwise check if type and slot is the same then return carry clear.
-    CMP !Scratch45
-    BNE +
-    CPX !Scratch46
-    BNE +
-    CLC
-RTS
-+
-
-    JSR (ClearSlot_Check,x)    ;\check if the sprite is alive.
-RTS
-
 
 ;###############################################################################################################
 
@@ -1063,7 +876,7 @@ FindSpace:
     LDA.l DZ_DS_Loc_SpaceUsedOffset,x
     PHA
 
-    JSR AssignSpaceBasedOnSlot2
+    JSR AssignSpaceBasedOnSlot
     BCS +
 -
     PLA
@@ -1072,22 +885,12 @@ FindSpace:
 RTL
 +
     STZ !ScratchB
-    LDA $01,s
+    PLA
     CMP.l DZ_DS_Loc_SpaceUsedOffset,x
     BEQ +
     LDA #$01
     STA !ScratchB
 +
-    LDA.l DZ_DS_Loc_SpaceUsedOffset,x
-    BMI -
-    CLC
-    ADC.l DZ_DS_Loc_SpaceUsed,x
-    CMP.l DZ_DS_MaxSpace
-    BCC +
-    BEQ +
-    BRA -
-+
-    PLA
     PLX
     SEC
 RTL 
@@ -1161,6 +964,23 @@ Sizes:
 !drBNK = $08,s
 !drAddr = $06,s
 
+
+;Summary:
+;
+;$00 = First Limit
+;
+;if(Vram Offset + Size < First Limit || VramOffset % 0x10 == 0)
+;{
+;   One Transfer
+;}
+;else
+;{
+;    if(Size < 0x11)
+;       Two Transfers
+;    else
+;       More Than 2 Transfers
+;}
+;
 DynamicRoutine:
 
     PHX
@@ -1186,6 +1006,24 @@ DynamicRoutine:
     AND #$0F
     BNE .TwoOrThreeTransfer     
 
+;Summary:
+;
+;VramDMAQueue.Lenght++;
+;
+;X reg = VramDMAQueue.Last
+;
+;VramDMAQueue.Last().BNK = BNK
+;
+;Y reg = Vram Offset
+;
+;Stack.Push(Size*2)
+;
+;VramDMAQueue.Last().VramOffset = Starting VRAM Offset + VRAM Offset
+;
+;Y reg = Size (Stack.Pull())
+;VramDMAQueue.Last().Size = Size
+;
+;VramDMAQueue.Last().Addr = Addr
 .OneTransfer
 
     LDA.l DZ_PPUMirrors_VRAM_Transfer_Length   ;\
@@ -1231,6 +1069,7 @@ RTL
     BCC +
     JMP .moreThanOneLine    ;/
 +
+.TwoTransfers
     LDA !Scratch0           ;\
     SEC                     ;|!Scratch1 = size to transfer on the first transfer
     SBC !drVRAMOffset       ;|
@@ -1301,247 +1140,202 @@ RTL
     PLB
     PLX
 RTL
-
+;Summary:
+;
+;Vars:
+;$00 = Offset2 = Second Transfer VRAM Offset
+;$01 = Offset1 = First Transfer VRAM Offset
+;$02 = Size2 = Size Second Transfer
+;$03 = Size1 = Size First Transfer
+;$04 = Counter
+;-------------------------------------------
+;Offset1 = VRAM Offset
+;Size1 = First Limit-Offset1
+;Offset2 = First Limit + 0x10
+;Size2 = 0x10-Size1
+;Counter = 0
+;While(Counter<Size)
+;{
+;   if(Counter + Size1 > Size)
+;       Size1 = Size-Counter
+;   Transfer(Offset1,Size1)
+;   
+;   Counter += Size1
+;
+;   if(Counter + Size2 > Size)
+;       Size2 = Size - Counter
+;
+;   if(Size2!=0)
+;       Transfer(Offset2,Size2)
+;
+;   Counter += Size2   
+;
+;   offset1+=0x10
+;   offset2+=0x10
+;   
+;}
+!DynRoutOffset1 = !Scratch1
+!DynRoutOffset2 = !Scratch0
+!DynRoutSize1 = !Scratch3
+!DynRoutSize2 = !Scratch2
+!DynRoutCounter = !Scratch4
+!DynRoutAddr = !Scratch5
+!DynRoutBNK = !Scratch7
 .moreThanOneLine
-    LDA.l DZ_PPUMirrors_VRAM_Transfer_Length   ;\
-    INC A                       ;|
-    ASL                         ;|X = last Transfer Slot
-    TAX                         ;/
+    LDA !drVRAMOffset
+    STA !DynRoutOffset1         ;Offset1 = VRAM Offset
 
-    LDA !drSize                 ;\!Scratch4 = Last position on the vram
-    STA !Scratch4               ;/
-
-    LDA !Scratch0           ;\
-    SEC                     ;|!Scratch1 = size to transfer on the first and second transfer
-    SBC !drVRAMOffset       ;|
-    STA !Scratch1           ;/
-
-    STZ !ScratchE
-    LDA !Scratch1
-    STA !ScratchF
+    LDA !Scratch0
+    SEC
+    SBC !DynRoutOffset1         ;Size1 = First Limit-Offset1
+    STA !DynRoutSize1
 
     LDA !Scratch0
     CLC
     ADC #$10
-    STA !Scratch0
+    STA !DynRoutOffset2         ;Offset2 = First Limit + 0x10
 
-    LDA #$10                ;\
-    SEC                     ;|!Scratch3 = size to transfer on the third and fourth transfer
-    SBC !Scratch1           ;|
-    STA !Scratch3           ;/
-
-    LDA !drVRAMOffset       ;\
-    STA !Scratch2           ;/!Scratch2 = offset of first transfer
-
--
-    LDA !ScratchF           ;\
-    CMP !Scratch4           ;|Check if must do third transfer
-    BCC +                   ;|
-    JMP .StartFromFirstLine ;/if not then skip third and fourth transfer
-+
-    CLC                     ;\
-    ADC #$10                ;|Check if must do fourth transfer
-    CMP !Scratch4           ;|
-    BCC +                   ;/
-
-    LDA !ScratchF           ;\
-    CLC                     ;|
-    ADC !Scratch3           ;|check if offset + size of third transfer is more than last position then recalculate size
-    CMP !Scratch4           ;|otherwise keep same size, then skip fourth transfer
-    BCC ++                  ;/
-    STA !Scratch7
-
-    LDA !Scratch4
+    LDA #$10
     SEC
-    SBC !ScratchF
-    BRA .skipLastLine
-++
-    LDA !Scratch3
-    BRA .skipLastLine
-+
-    STA !Scratch5
-    LDA !Scratch0 
-    CLC
-    ADC #$10
-    STA !Scratch7
+    SBC !DynRoutSize1
+    STA !DynRoutSize2           ;Size2 = 0x10-Size1
 
-    LDA !Scratch5           ;\
-    CLC                     ;|
-    ADC !Scratch3           ;|check if offset + size of fourth transfer is more than last position then recalculate size
-    CMP !Scratch4           ;|otherwise keep same size
-    BCC .noLast             ;/
-    BEQ .noLast
-    LDA !Scratch4
+    STZ !DynRoutCounter         ;Counter = 0
+
+    LDA !drBNK
+    STA !DynRoutBNK
+
+    REP #$20
+    LDA !drAddr
+    STA !DynRoutAddr
+    SEP #$20
+
+-                               ;While(Counter<Size)
+                                ;{
+    LDA !DynRoutCounter
+    CLC
+    ADC !DynRoutSize1
+    CMP !drSize
+    BEQ +
+    BCC +
+
+    LDA !drSize
     SEC
-    SBC !Scratch5
-    BRA +
-.noLast
-    LDA !Scratch3
-+
-    CLC
-    ASL
-    STA !Scratch6
-
-    LDA !ScratchF
-    CLC
-    ADC #$10
-    STA !ScratchC
-
-    %Transfer($0007|!dp, $0006|!dp, $000C|!dp) ;fourth transfer
-
-    INX
-    INX
-
-    LDA !Scratch3
-
-.skipLastLine
-    CLC
-    ASL
-    STA !Scratch6
-
-    %Transfer($0000|!dp, $0006|!dp, $000F|!dp) ;third transfer
-
-    INX
-    INX
-
-    LDA !Scratch1 
-    CLC
-    ASL
-    STA !Scratch6
-
-    LDA !ScratchE
-    CLC
-    ADC #$10
-    STA !ScratchC
-
-    CMP !Scratch4
-    BCS +
-
-    LDA !Scratch2
-    CLC
-    ADC #$10
-    STA !Scratch5
-
-    %Transfer($0005|!dp, $0006|!dp, $000C|!dp) ;second transfer
-
-    INX
-    INX
-
-+
-
-    %Transfer($0002|!dp, $0006|!dp, $000E|!dp) ;first transfer
-
-    LDA !Scratch2       ;|
-    CLC                 ;|
-    ADC #$20            ;|
-    STA !Scratch2       ;|Update third line offset
-                        ;|
-    LDA !Scratch0       ;|
-    CLC                 ;|
-    ADC #$20            ;|
-    STA !Scratch0       ;/Update first line offset
-
-    LDA !ScratchE
-    CLC
-    ADC #$20
-    STA !ScratchE
-
-    LDA !ScratchF
-    CLC
-    ADC #$20
-    STA !ScratchF
-
-    INX
-    INX
-
-    JMP -               ;Go to next transfer
-
-.StartFromFirstLine
-
-    LDA !ScratchE       ;\
-    CMP !Scratch4       ;|Check if must do more transfer
-    BCC +               ;/
-
-    DEX                         ;\
-    DEX                         ;|
-    TXA                         ;|Updates number of transfers
-    LSR                         ;|
-    STA.l DZ_PPUMirrors_VRAM_Transfer_Length   ;/
-
-    PLB
-    PLX
-RTL
-
-+
-    CLC                 ;\
-    ADC #$10            ;|Check if must do second transfer
-    CMP !Scratch4       ;|
-    BCC +               ;/
-
-    LDA !ScratchE           ;\
-    CLC                     ;|
-    ADC !Scratch1           ;|check if offset + size of first transfer is more than last position then recalculate size
-    CMP !Scratch4           ;|otherwise keep same size, then skip second transfer
-    BCC ++                  ;/
-    STA !Scratch7
-    LDA !Scratch4
-    SEC
-    SBC !ScratchE
-    BRA .skipSecondLine
-++
-    LDA !Scratch1
-    BRA .skipSecondLine
-+
-    STA !Scratch5
-
-    LDA !Scratch2
-    CLC
-    ADC #$10
-    STA !Scratch7
-
-    LDA !Scratch5           ;\
-    CLC                     ;|
-    ADC !Scratch1           ;|check if offset + size of second transfer is more than last position then recalculate size
-    CMP !Scratch4           ;|otherwise keep same size
-    BCC .noThird            ;/
-    BEQ .noThird
-    LDA !Scratch4
-    SEC
-    SBC !Scratch5
-    BRA +
-.noThird
-    LDA !Scratch1
-+
-    CLC
-    ASL
-    STA !Scratch6
-
-    LDA !ScratchE
-    CLC
-    ADC #$10
-    STA !ScratchC
+    SBC !DynRoutCounter
+    STA !DynRoutSize1           ;   if(Counter + Size1 > Size)
+                                ;       Size1 = Size-Counter
     
-    %Transfer($0005|!dp, $0006|!dp, $000C|!dp) ;second transfer
++
 
-    INX
-    INX
+    LDA !DynRoutOffset1
+    XBA
+    LDA !DynRoutSize1
+    JSR TransferLine
 
-    LDA !Scratch1
-
-.skipSecondLine
+    LDA !DynRoutCounter
     CLC
-    ASL
-    STA !Scratch6
+    ADC !DynRoutSize1
+    STA !DynRoutCounter         ;   Counter += Size1
 
-    %Transfer($0002|!dp, $0006|!dp, $000E|!dp) ;first transfer
+    LDA !DynRoutCounter
+    CLC
+    ADC !DynRoutSize2
+    CMP !drSize
+    BEQ +
+    BCC +
 
-    TXA                         ;|Updates number of transfers
-    LSR                         ;|
-    STA.l DZ_PPUMirrors_VRAM_Transfer_Length   ;/
+    LDA !drSize
+    SEC
+    SBC !DynRoutCounter
+    STA !DynRoutSize2           ;   if(Counter + Size2 > Size)
+                                ;       Size2 = Size-Counter
+
++
+    LDA !DynRoutSize2
+    BEQ +                       ;   if(Size2!=0)
+                                ;       Transfer(Offset2,Size2)
+
+    LDA !DynRoutOffset2
+    XBA
+    LDA !DynRoutSize2
+    JSR TransferLine
+
++
+    LDA !DynRoutCounter
+    CLC
+    ADC !DynRoutSize2
+    STA !DynRoutCounter         ;   Counter += Size2
+
+    LDA !DynRoutOffset1
+    CLC
+    ADC #$10
+    STA !DynRoutOffset1         ;   offset1+=0x10
+
+    LDA !DynRoutOffset2
+    CLC
+    ADC #$10
+    STA !DynRoutOffset2         ;   offset2+=0x10
+
+    LDA !DynRoutCounter
+    CMP !drSize
+    BCC -
 
     PLB
     PLX
 RTL
+
+;Al = Size
+;Ah = Offset
+TransferLine:
+    PHA
+    XBA
+    PHA
+
+    LDA.l DZ_PPUMirrors_VRAM_Transfer_Length    ;\
+    INC A                                       ;|
+    STA.l DZ_PPUMirrors_VRAM_Transfer_Length    ;|Number of transfer ++
+    ASL                                         ;|
+    TAX                                         ;/X = number of transfer*2
+
+    LDA !DynRoutBNK                                         ;\
+    STA.l DZ_PPUMirrors_VRAM_Transfer_SourceBNK,x           ;|BNK (low byte) = source bnk
+    LDA #$00                                                ;|BNK (high byte) = 0
+    STA.l DZ_PPUMirrors_VRAM_Transfer_SourceBNK+$01,x       ;/
+
+    PLA                         ;\      
+    TAY                         ;/
+
+    PLA                         ;\
+    ASL                         ;|Push Size
+    PHA                         ;/
+
+    LDA #$00
+    XBA
+    LDA !DynRoutCounter
+    REP #$20
+    ASL
+    PHA
+
+    LDA Sizes,y                                 ;\
+    CLC                                         ;|
+    ADC.l DZ_DS_StartingVRAMOffset              ;|MapVRAMOffset = Starting VRAM Offset + VRAM Offset
+    STA.l DZ_PPUMirrors_VRAM_Transfer_Offset,x  ;/
+
+    REP #$10
+    PLY
+    LDA Sizes,y
+    SEP #$10
+    CLC
+    ADC !DynRoutAddr
+    STA.l DZ_PPUMirrors_VRAM_Transfer_Source,x          ;/MapAddr = Addr
+
+    PLY                                                 ;\
+    LDA Sizes,y                                         ;|MapLength = Size
+    STA.l DZ_PPUMirrors_VRAM_Transfer_SourceLength,x    ;/
+    
+    SEP #$20
+
+RTS
 
 ;###############################################################################################################
 
@@ -1840,3 +1634,218 @@ CheckIfLastExtendedSharedProcessed:
 
 CheckIfLastOWSharedProcessed:
     %CheckIfLastSharedProcessed($60)
+
+;########################################
+
+EasyNormalSpriteDynamicRoutine:
+    PHX
+	LDA.l DZ_DS_Loc_US_Normal,x
+	TAX
+    LDA.l DZ_Timer
+    CMP DZ_DS_Loc_SafeFrame,x
+    BNE +
+    PLX
+    CLC
+RTL
++
+    STA.l DZ_DS_Loc_SafeFrame,x
+    PLX
+
+	%CheckEvenOrOdd("DZ_DS_Loc_US_Normal")
+	BEQ +	
+    CLC							;/
+RTL
++
+	%FindSpace("DZ_DS_Loc_US_Normal,x")
+	BCS +
+
+	LDA.l DZ_DS_Loc_US_Normal,x
+	TAX
+
+	LDA.l DZ_DS_Loc_IsValid,x
+	BNE ++
+    LDX $15E9|!addr
+    STZ !SpriteStatus,x
+    LDA !SpriteLoadStatus,x
+    TAX
+    LDA #$00
+    STA !SpriteLoadTable,x
+++
+    LDX $15E9|!addr
+    CLC
+RTL
++
+	LDA !ScratchB
+	BNE +
+	
+	LDA #$00
+	XBA
+	LDA !Scratch4F					;\
+	CMP !Scratch50				        ;|if last frame is different to new frame then
+	BNE ++								;|do dynamic routine
+    CLC
+RTL										;/
++
+	LDA #$00
+	XBA
+	LDA !Scratch4F
+++
+	REP #$30
+	ASL
+	TAY
+	PHY
+	SEP #$20
+	LDA (!Scratch4C),y
+	STA !Scratch0
+	REP #$20
+	TYA
+	ASL
+	TAY
+	PHY
+	LDA (!Scratch4A),y
+	STA !Scratch1
+	SEP #$30
+
+	LDA !Scratch4F
+	TAY
+
+
+	%GetVramDispDynamicRoutine(DZ_DS_Loc_US_Normal)
+	STA !ScratchD
+
+	LDA.l DZ_DS_Loc_US_Normal,x
+	TAX
+
+	LDA #$01
+	STA.l DZ_DS_Loc_IsValid,x
+
+	%DynamicRoutine(!ScratchD, !Scratch47, !Scratch49, !Scratch1, !Scratch0)
+
+	REP #$30
+	PLY
+    LDA !Scratch4A
+    INC A
+    INC A
+    STA !Scratch4A
+
+	LDA (!Scratch4A),y
+	STA !Scratch1
+	PLY
+
+    LDA !Scratch4C
+    INC A
+    STA !Scratch4C
+	SEP #$20
+
+	LDA (!Scratch4C),y
+	STA !Scratch0
+	SEP #$10
+	BEQ +
+
+	LDA !ScratchD
+	CLC
+	ADC !Scratch4E
+	STA !ScratchE
+
+	%DynamicRoutine(!ScratchE, !Scratch47, !Scratch49, !Scratch1, !Scratch0)
++
+
+    LDX $15E9|!addr
+    SEC
+RTL
+
+EasySpriteDynamicRoutine:
+	LDA !Scratch51
+    JSL !CheckEvenOrOdd
+	BEQ +	
+    CLC							;/
+RTL
++
+    JSL !ClearSlot
+
+    LDA !Scratch51
+    STA !Scratch0
+
+    JSL !FindSpace
+	BCS +
+
+    CLC
+RTL
++
+	LDA !ScratchB
+	BNE +
+	
+	LDA #$00
+	XBA
+	LDA !Scratch4F					;\
+	CMP !Scratch50				        ;|if last frame is different to new frame then
+	BNE ++								;|do dynamic routine
+    CLC
+RTL										;/
++
+	LDA #$00
+	XBA
+	LDA !Scratch4F
+++
+	REP #$30
+	ASL
+	TAY
+	PHY
+	SEP #$20
+	LDA (!Scratch4C),y
+	STA !Scratch0
+	REP #$20
+	TYA
+	ASL
+	TAY
+	PHY
+	LDA (!Scratch4A),y
+	STA !Scratch1
+	SEP #$30
+
+	LDA !Scratch4F
+	TAY
+
+
+	LDA !Scratch51
+    JSL !GetVramDispDynamicRoutine
+	STA !ScratchD
+
+	LDA !Scratch51
+	TAX
+
+	LDA #$01
+	STA.l DZ_DS_Loc_IsValid,x
+
+	%DynamicRoutine(!ScratchD, !Scratch47, !Scratch49, !Scratch1, !Scratch0)
+
+	REP #$30
+	PLY
+    LDA !Scratch4A
+    INC A
+    INC A
+    STA !Scratch4A
+
+	LDA (!Scratch4A),y
+	STA !Scratch1
+	PLY
+
+    LDA !Scratch4C
+    INC A
+    STA !Scratch4C
+	SEP #$20
+
+	LDA (!Scratch4C),y
+	STA !Scratch0
+	SEP #$10
+	BEQ +
+
+	LDA !ScratchD
+	CLC
+	ADC !Scratch4E
+	STA !ScratchE
+
+	%DynamicRoutine(!ScratchE, !Scratch47, !Scratch49, !Scratch1, !Scratch0)
++
+    SEC
+RTL

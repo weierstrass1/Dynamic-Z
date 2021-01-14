@@ -4,7 +4,7 @@
     !rom = $800000
 	!sa1 = 0
     !Variables = $7F0B44 
-    !Variables2 = $7FB080
+    !Variables2 = $7FB408
     !MaxSprites = $0C
     !SpriteStatus = $14C8
     !SpriteNumberNormal = $7FAB9E
@@ -22,7 +22,7 @@
     !UberASMTool = 0
 
 if read1($00FFD5) == $23
-sa1rom
+	sa1rom
 	!dp = $3000
 	!addr = $6000
 	!sa1 = 1
@@ -164,6 +164,7 @@ if !GFXFeatures == !True && !DynamicSpriteSupport == !True
             FrameRateMethod: skip 48            ;$7F0C77
             NextSlot: skip 48                   ;$7F0CA7
             PreviewSlot: skip 48                ;$7F0CD7
+            SafeFrame: skip 48
     if !SharedDynamicSpriteSupport == !True
             SharedFrame: skip 48                ;$7F0D07
             SharedUpdated: skip 48              ;$7F0BB7
@@ -226,6 +227,8 @@ endif
 if !PlayerGFX == !True || !PlayerPalette == !True
     namespace Player
 if !PlayerGFX == !True
+        CustomPlayer: skip 1
+        LastCustomPlayer: skip 1
         namespace GFX
             Enable: skip 1
             Addr: skip 2
@@ -339,6 +342,7 @@ print "DZ_DS_Loc_IsValid $", hex(DZ_DS_Loc_IsValid)
 print "DZ_DS_Loc_FrameRateMethod $", hex(DZ_DS_Loc_FrameRateMethod)
 print "DZ_DS_Loc_NextSlot $", hex(DZ_DS_Loc_NextSlot)
 print "DZ_DS_Loc_PreviewSlot $", hex(DZ_DS_Loc_PreviewSlot)
+print "DZ_DS_Loc_SafeFrame $", hex(DZ_DS_Loc_SafeFrame)
 if !SharedDynamicSpriteSupport == !True
 print "DZ_DS_Loc_SharedUpdated $", hex(DZ_DS_Loc_SharedUpdated)
 print "DZ_DS_Loc_SharedFrame $", hex(DZ_DS_Loc_SharedFrame)
@@ -463,6 +467,8 @@ if !PlayerGFX == !True
 print "GFX Player Change"
 print "-------------------------------------------------------------------------------"
 print " "
+print "DZ_Player_CustomPlayer $", hex(DZ_Player_CustomPlayer)
+print "DZ_Player_LastCustomPlayer", hex(DZ_Player_LastCustomPlayer)
 print "DZ_Player_GFX_Enable $", hex(DZ_Player_GFX_Enable)
 print "DZ_Player_GFX_BNK $", hex(DZ_Player_GFX_BNK)
 print "DZ_Player_GFX_Addr $", hex(DZ_Player_GFX_Addr)
@@ -574,6 +580,8 @@ print " "
 !FindCopyExtended = read3(!Routines+$78)
 !LoadGraphicsSDSOW = read3(!Routines+$7B)
 !FindCopyOW = read3(!Routines+$7E)
+!EasyNormalSpriteDynamicRoutine = read3(!Routines+$81)
+!EasySpriteDynamicRoutine = read3(!Routines+$84)
 
 incsrc "./Macros/STDCall.asm"
 incsrc "./Macros/MultAndDiv.asm"

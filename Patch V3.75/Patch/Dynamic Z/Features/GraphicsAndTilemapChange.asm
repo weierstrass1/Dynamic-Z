@@ -12,7 +12,8 @@ RTS
     REP #$30
     ASL
     TAX
-
+    LDA #$0000
+    STA $0045|!dp
 	LDA #$1801              
 	STA $00             ;parameter of DMA
 -
@@ -21,6 +22,17 @@ RTS
 
     LDA.l DZ_PPUMirrors_VRAM_Transfer_SourceLength,x
     STA $05                 ;Load Length
+    BNE +
+    WDM
++
+    CLC
+    ADC $0045|!dp
+    STA $0045|!dp
+    CMP #$0C00
+    BCC +
+
+    WDM
++
 
     LDA.l DZ_PPUMirrors_VRAM_Transfer_Offset,x
     STA $2116               ;Loads VRAM destination
